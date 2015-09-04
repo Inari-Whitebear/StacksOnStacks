@@ -11,7 +11,6 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraftforge.common.MinecraftForge;
 
 @Mod(modid = SoS.MODID, name = SoS.MODID, version = SoS.VERSION)
@@ -29,7 +28,7 @@ public class SoS {
 		config = new Config(e.getSuggestedConfigurationFile());
 		config.load();
 		CompatHandler.config();
-		GameRegistry.registerTileEntity(TileIngotPile.class, "tileIngotPile");
+		proxy.registerTiles();
 		ingotPile = new BlockIngotPile("ingotPile");
 		MinecraftForge.EVENT_BUS.register(new IngotPileHandler());
 		config.save();
@@ -50,4 +49,5 @@ public class SoS {
 		IngotFinder.registerIngots();
 		proxy.serverLoad(e);
 	}
+
 }

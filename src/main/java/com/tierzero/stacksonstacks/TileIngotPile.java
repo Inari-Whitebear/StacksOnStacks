@@ -22,11 +22,6 @@ public class TileIngotPile extends TileEntity {
 	public boolean placeMod = false;
 
 	@Override
-	public boolean receiveClientEvent(int p_145842_1_, int p_145842_2_) {
-		return true;
-	}
-
-	@Override
 	public boolean canUpdate() {
 		return false;
 	}
@@ -56,7 +51,7 @@ public class TileIngotPile extends TileEntity {
 		else
 			remove(player, stack);
 
-		if ((getInventoryCount() <= 0))
+		if (!(getInventoryCount() > 0))
 			worldObj.setBlockToAir(xCoord, yCoord, zCoord);
 		update();
 	}
@@ -69,8 +64,6 @@ public class TileIngotPile extends TileEntity {
 
 	public void create(EntityPlayer player, ItemStack stack) {
 		int add = 1;
-		// if (placeMod)
-		// add = stack.stackSize;
 		inventory = StackUtils.getItemsFromStack(stack, add);
 		if (!player.capabilities.isCreativeMode)
 			StackUtils.decrementStack(stack, add);
@@ -83,8 +76,6 @@ public class TileIngotPile extends TileEntity {
 		if (inventory.stackSize != 64) {
 			int add = 1;
 			int diff = 64 - inventory.stackSize;
-			// if (placeMod)
-			// add = (stack.stackSize > diff) ? diff : stack.stackSize;
 			inventory.stackSize += add;
 			if (!player.capabilities.isCreativeMode)
 				StackUtils.decrementStack(stack, add);
@@ -132,8 +123,6 @@ public class TileIngotPile extends TileEntity {
 			tag.setInteger("meta", this.inventory.getItemDamage());
 		} else
 			worldObj.setBlockToAir(xCoord, yCoord, zCoord);
-		if (worldObj.isRemote)
-			System.out.println("HEO");
 	}
 
 	public void readIngotsFromNBT(NBTTagCompound tag) {
@@ -143,9 +132,6 @@ public class TileIngotPile extends TileEntity {
 			this.inventory = stack;
 		} else
 			worldObj.setBlockToAir(xCoord, yCoord, zCoord);
-
-		// int[] rgb = tag.getIntArray("color");
-		// this.color = new Color(rgb[0], rgb[1], rgb[2]);
 	}
 
 	@Override

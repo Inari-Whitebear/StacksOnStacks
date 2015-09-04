@@ -2,7 +2,11 @@ package com.tierzero.stacksonstacks;
 
 import com.tierzero.stacksonstacks.api.Ingot;
 
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -11,6 +15,11 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
 public class IngotPileHandler {
+	@SideOnly(Side.CLIENT)
+	@EventHandler
+	public void playerJoin(PlayerLoggedInEvent e) {
+		SoS.proxy.joinServer(e);
+	}
 
 	@SubscribeEvent
 	public void handleIngotPilePlacement(PlayerInteractEvent e) {
@@ -28,7 +37,7 @@ public class IngotPileHandler {
 			TileIngotPile tile = (TileIngotPile) e.world.getTileEntity(x, y, z);
 			canPlace = (tile.getInventoryCount() == 64 && e.face == 1);
 		}
-		
+
 		if (current != null && Ingot.isValidIngot(current) && canPlace) {
 			int[] coords = getPlacementCoords(x, y, z, e.face);
 			x = coords[0];
