@@ -23,7 +23,7 @@ public class IngotFinder {
 
 	public static void registerIngots() {
 		for (String ore : OreDictionary.getOreNames()) {
-			if (!ore.isEmpty() && ore.startsWith("ignot")) {
+			if (!ore.isEmpty() && ore.startsWith("ingot")) {
 				boolean invalidOre = false;
 				for (String invalid : invalidNames) {
 					if (ore.startsWith(invalid)) {
@@ -33,7 +33,7 @@ public class IngotFinder {
 
 				if(!invalidOre) {
 					for (ItemStack stack : OreDictionary.getOres(ore)) {
-						Ingot.newIngot(stack);
+						IngotRegistry.registerIngot(stack);
 					}
 				}
 			}
@@ -42,10 +42,10 @@ public class IngotFinder {
 
 	@SideOnly(Side.CLIENT)
 	public static void registerIngotColors() {
-		for (Ingot ingot : Ingot.ingots) {
-			ingot.setColor(getColour(ingot.getIngotStack()));
+		for (Ingot ingot : IngotRegistry.getRegisteredIngots()) {
+			ingot.setColor(getColor(ingot.getIngotStack()));
 		}
-		Ingot.getIngot(Items.gold_ingot, 0).setIcon(Blocks.gold_block.getIcon(0, 0));
+		IngotRegistry.getIngot(Items.gold_ingot, 0).setIcon(Blocks.gold_block.getIcon(0, 0));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -54,12 +54,12 @@ public class IngotFinder {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static Color getColour(ItemStack stack) {
-		List<Color> colours = new ArrayList<Color>();
+	public static Color getColor(ItemStack stack) {
+		List<Color> colors = new ArrayList<Color>();
 		try {
 			BufferedImage texture = ImageIO.read(Minecraft.getMinecraft().getResourceManager().getResource(ClientUtils.getIconResource(stack)).getInputStream());
-			Color textureColour = getAverageColour(texture);
-			colours.add(textureColour);
+			Color textureColour = getAverageColor(texture);
+			colors.add(textureColour);
 
 			for (int pass = 0; pass < stack.getItem().getRenderPasses(stack.getItemDamage()); pass++) {
 
@@ -67,8 +67,8 @@ public class IngotFinder {
 				
 				/* Check to see if color is white, because white looks awful */
 				if (stackColor != 16777215) {
-					colours.add(new Color(stackColor));
-					colours.remove(textureColour);
+					colors.add(new Color(stackColor));
+					colors.remove(textureColour);
 				}
 			}
 		} catch (Exception e) {
@@ -76,12 +76,12 @@ public class IngotFinder {
 
 		if (GregTechCompat.INSTANCE.isEnabled()) {
 			try {
-				Class<?> cls = Class.forName("gregapi.item.prefixitem.PrefixItem");
-				Class<?> itemCls = stack.getItem().getClass();
-				if (cls.isAssignableFrom(itemCls)) {
-					int c = getStackColour(stack, 0);
-					if (c != 16777215) {
-						colours.add(new Color(c));
+				Class clazz = Class.forName("gregapi.item.prefixitem.PrefixItem");
+				Class itemClazz = stack.getItem().getClass();
+				if (clazz.isAssignableFrom(itemClazz)) {
+					int stackColor = getStackColour(stack, 0);
+					if (stackColor != 16777215) {
+						colors.add(new Color(stackColor));
 					}
 				}
 			} catch (ClassNotFoundException e) {
@@ -90,36 +90,40 @@ public class IngotFinder {
 		float red = 0;
 		float green = 0;
 		float blue = 0;
-		for (Color c : colours) {
+		for (Color c : colors) {
 			red += c.getRed();
 			green += c.getGreen();
 			blue += c.getBlue();
 		}
-		float count = colours.size();
+		float count = colors.size();
 
 		return new Color((int) (red / count), (int) (green / count), (int) (blue / count));
 	}
 
 	@SideOnly(Side.CLIENT)
-	private static Color getAverageColour(BufferedImage image) {
-		float red = 0;
-		float green = 0;
-		float blue = 0;
-		float count = 0;
+	private static Color getAverageColor(BufferedImage image) {
+		int red = 0;
+		int green = 0;
+		int blue = 0;
+		int count = 0;
 		int offset = 4;
-		for (int i = offset; i < image.getWidth() - offset; i++)
+		for (int i = offset; i < image.getWidth() - offset; i++) {
 			for (int j = offset; j < image.getHeight() - offset; j++) {
-				Color c = new Color(image.getRGB(i, j));
-				if (c.getAlpha() != 255 || c.getRed() <= 10 && c.getBlue() <= 10 && c.getGreen() <= 10)
+				Color imageColor = new Color(image.getRGB(i, j));
+				
+				if (imageColor.getAlpha() != 255 || imageColor.getRed() <= 10 && imageColor.getBlue() <= 10 && imageColor.getGreen() <= 10) {
 					continue;
-				red += c.getRed();
-				green += c.getGreen();
-				blue += c.getBlue();
+				}
+				
+				red += imageColor.getRed();
+				green += imageColor.getGreen();
+				blue += imageColor.getBlue();
 				count++;
 			}
-
+		}
+		
 		return new Color((int) (red / count), (int) (green / count), (int) (blue / count));
 	}
-	
+		
 
 }

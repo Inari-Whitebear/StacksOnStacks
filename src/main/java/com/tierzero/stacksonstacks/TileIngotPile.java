@@ -3,6 +3,7 @@ package com.tierzero.stacksonstacks;
 import java.awt.Color;
 
 import com.tierzero.stacksonstacks.api.Ingot;
+import com.tierzero.stacksonstacks.api.IngotRegistry;
 import com.tierzero.stacksonstacks.util.StackUtils;
 
 import net.minecraft.block.Block;
@@ -18,7 +19,6 @@ import net.minecraft.tileentity.TileEntity;
 
 public class TileIngotPile extends TileEntity {
 	private ItemStack inventory;
-	private Color color;
 	public boolean placeMod = false;
 
 	@Override
@@ -38,13 +38,9 @@ public class TileIngotPile extends TileEntity {
 		return null;
 	}
 
-	public Color getColor() {
-		return color;
-	}
-
 	public void handlePlacement(EntityPlayer player, ItemStack stack) {
 
-		if (inventory == null && Ingot.isValidIngot(stack))
+		if (inventory == null && IngotRegistry.isValidIngot(stack))
 			create(player, stack);
 		else if (!player.isSneaking())
 			add(player, stack);
@@ -67,7 +63,6 @@ public class TileIngotPile extends TileEntity {
 		inventory = StackUtils.getItemsFromStack(stack, add);
 		if (!player.capabilities.isCreativeMode)
 			StackUtils.decrementStack(stack, add);
-		color = Ingot.getIngotColor(stack);
 	}
 
 	public void add(EntityPlayer player, ItemStack stack) {
@@ -79,7 +74,6 @@ public class TileIngotPile extends TileEntity {
 			inventory.stackSize += add;
 			if (!player.capabilities.isCreativeMode)
 				StackUtils.decrementStack(stack, add);
-			color = Ingot.getIngotColor(StackUtils.getOneFromStack(stack));
 		} else {
 			Block nextBlock = worldObj.getBlock(xCoord, yCoord + 1, zCoord);
 			if (nextBlock == Blocks.air) {
@@ -99,7 +93,6 @@ public class TileIngotPile extends TileEntity {
 			if (!player.inventory.addItemStackToInventory(StackUtils.getOneFromStack(inventory)))
 				StackUtils.spawnItemInWorld(worldObj, xCoord, yCoord, zCoord, stack);
 			StackUtils.decrementStack(inventory, 1);
-			color = Ingot.getIngotColor(StackUtils.getOneFromStack(stack));
 		}
 	}
 

@@ -1,6 +1,6 @@
 package com.tierzero.stacksonstacks;
 
-import com.tierzero.stacksonstacks.api.Ingot;
+import com.tierzero.stacksonstacks.api.IngotRegistry;
 
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -38,7 +38,7 @@ public class IngotPileHandler {
 			canPlace = (tile.getInventoryCount() == 64 && e.face == 1);
 		}
 
-		if (current != null && Ingot.isValidIngot(current) && canPlace) {
+		if (current != null && IngotRegistry.isValidIngot(current) && canPlace) {
 			int[] coords = getPlacementCoords(x, y, z, e.face);
 			x = coords[0];
 			y = coords[1];

@@ -1,6 +1,6 @@
 package com.tierzero.stacksonstacks.compat;
 
-import com.tierzero.stacksonstacks.api.Ingot;
+import com.tierzero.stacksonstacks.api.IngotRegistry;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -40,9 +40,9 @@ public class AvaritiaCompat extends ModCompat {
 	@SideOnly(Side.CLIENT)
 	public void customIngots() {
 
-		Ingot.getIngot(findItem("Resource"), 1).setIcon(findBlock("Crystal_Matrix").getIcon(0, 0));
-		Ingot.getIngot(findItem("Resource"), 4).setIcon(findBlock("Resource_Block").getIcon(0, 0));
-		Ingot.getIngot(findItem("Resource"), 6).setIcon(findBlock("Resource_Block").getIcon(0, 1));
+		IngotRegistry.getIngot(findItem("Resource"), 1).setIcon(findBlock("Crystal_Matrix").getIcon(0, 0));
+		IngotRegistry.getIngot(findItem("Resource"), 4).setIcon(findBlock("Resource_Block").getIcon(0, 0));
+		IngotRegistry.getIngot(findItem("Resource"), 6).setIcon(findBlock("Resource_Block").getIcon(0, 1));
 
 	}
 
