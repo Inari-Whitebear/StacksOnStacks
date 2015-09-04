@@ -1,0 +1,16 @@
+[
+{
+  "modid": "StacksOnStacks",
+  "name": "Stacks on Stacks!",
+  "description": "A mod that adds ingot piles like those of Terrafirmacraft",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["PRIMETOXINZ"],
+  "credits": "Madxmike, DeathDragon58, Xaeryne",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
