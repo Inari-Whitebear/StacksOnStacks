@@ -22,7 +22,6 @@ public class ClientProxy extends CommonProxy {
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void joinServer(PlayerLoggedInEvent event) {
-		System.out.println("TEST");
 		IngotFinder.registerIngotColors();
 		CompatHandler.serverLoad();
 	}

@@ -2,9 +2,8 @@ package com.tierzero.stacksonstacks.api;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -18,30 +17,27 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import scala.actors.threadpool.Arrays;
 
 public class IngotFinder {
-	public static Set<String> invalid = new HashSet<String>(
-			Arrays.asList(new String[] { "ingotDouble", "ingotTriple", "ingotQuad", "ingotQuin" }));
+	private static String[] invalidNames = new String[] { "ingotDouble", "ingotTriple", "ingotQuad", "ingotQuin" };
 
 	public static void registerIngots() {
 		for (String ore : OreDictionary.getOreNames()) {
-			if (ore.isEmpty())
-				continue;
-			boolean skip = false;
-			for (String inv : invalid)
-				if (ore.startsWith(inv))
-					skip = true;
-			if (skip)
-				continue;
-			else if (ore.startsWith("ingot")) {
-				for (ItemStack stack : OreDictionary.getOres(ore)) {
+			if (!ore.isEmpty() && ore.startsWith("ignot")) {
+				boolean invalidOre = false;
+				for (String invalid : invalidNames) {
+					if (ore.startsWith(invalid)) {
+						invalidOre = true;
+					}
+				}
 
-					Ingot.newIngot(stack);
+				if(!invalidOre) {
+					for (ItemStack stack : OreDictionary.getOres(ore)) {
+						Ingot.newIngot(stack);
+					}
 				}
 			}
 		}
-
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -54,33 +50,31 @@ public class IngotFinder {
 
 	@SideOnly(Side.CLIENT)
 	public static int getStackColour(ItemStack stack, int pass) {
-
 		return stack.getItem().getColorFromItemStack(stack, pass);
 	}
 
 	@SideOnly(Side.CLIENT)
 	public static Color getColour(ItemStack stack) {
-
-		Set<Color> colours = new LinkedHashSet<Color>();
+		List<Color> colours = new ArrayList<Color>();
 		try {
-			BufferedImage texture = ImageIO.read(Minecraft.getMinecraft().getResourceManager()
-					.getResource(ClientUtils.getIconResource(stack)).getInputStream());
-			Color texColour = getAverageColour(texture);
-			colours.add(texColour);
+			BufferedImage texture = ImageIO.read(Minecraft.getMinecraft().getResourceManager().getResource(ClientUtils.getIconResource(stack)).getInputStream());
+			Color textureColour = getAverageColour(texture);
+			colours.add(textureColour);
 
 			for (int pass = 0; pass < stack.getItem().getRenderPasses(stack.getItemDamage()); pass++) {
 
-				int c = getStackColour(stack, pass);
-				if (c != 16777215) {
-					colours.add(new Color(c));
-					colours.remove(texColour);
+				int stackColor = getStackColour(stack, pass);
+				
+				/* Check to see if color is white, because white looks awful */
+				if (stackColor != 16777215) {
+					colours.add(new Color(stackColor));
+					colours.remove(textureColour);
 				}
 			}
 		} catch (Exception e) {
 		}
 
 		if (GregTechCompat.INSTANCE.isEnabled()) {
-
 			try {
 				Class<?> cls = Class.forName("gregapi.item.prefixitem.PrefixItem");
 				Class<?> itemCls = stack.getItem().getClass();
@@ -126,5 +120,6 @@ public class IngotFinder {
 
 		return new Color((int) (red / count), (int) (green / count), (int) (blue / count));
 	}
+	
 
 }
