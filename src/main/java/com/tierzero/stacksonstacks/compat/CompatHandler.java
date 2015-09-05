@@ -14,8 +14,10 @@ public class CompatHandler {
 	}
 
 	public static void config() {
+
 		for (ModCompat mod : modcompat) {
 			mod.config();
+
 		}
 	}
 

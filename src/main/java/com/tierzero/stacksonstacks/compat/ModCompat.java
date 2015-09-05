@@ -20,10 +20,11 @@ public abstract class ModCompat {
 
 	public void config() {
 		if (Loader.isModLoaded(name)) {
-			FMLLog.info("Loading Compat for " + name);
+			FMLLog.info("StacksOnStacks:Loading Compat for " + name);
 			compatEnabled = SoS.config.getBoolean("enableCompat" + StringUtils.capitalize(name),
 					SoS.config.CATEGORY_COMPAT, true, "Enable Compatiablity For " + StringUtils.capitalize(name));
-		}
+		} else
+			FMLLog.info("StacksOnStacks:" + name + " is not loaded");
 	}
 
 	public abstract void preInit();
