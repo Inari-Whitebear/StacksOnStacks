@@ -6,7 +6,7 @@ public class GregTech5Compat extends ModCompat {
 	public static GregTech5Compat INSTANCE = new GregTech5Compat();
 
 	public GregTech5Compat() {
-		super("gregtech");
+		super("gregtech5");
 	}
 
 	@Override
@@ -28,6 +28,6 @@ public class GregTech5Compat extends ModCompat {
 
 	@Override
 	public boolean isEnabled() {
-		return super.isEnabled() && !Loader.isModLoaded("gregapi");
+		return Loader.isModLoaded("gregtech") && !Loader.isModLoaded("gregapi") && compatEnabled;
 	}
 }

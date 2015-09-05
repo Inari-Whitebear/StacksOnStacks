@@ -23,4 +23,5 @@ public class GregTech6Compat extends ModCompat {
 	public void serverLoad() {
 
 	}
+
 }
