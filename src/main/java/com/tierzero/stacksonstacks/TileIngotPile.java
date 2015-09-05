@@ -1,8 +1,5 @@
 package com.tierzero.stacksonstacks;
 
-import java.awt.Color;
-
-import com.tierzero.stacksonstacks.api.Ingot;
 import com.tierzero.stacksonstacks.api.IngotRegistry;
 import com.tierzero.stacksonstacks.util.StackUtils;
 
@@ -46,7 +43,6 @@ public class TileIngotPile extends TileEntity {
 			add(player, stack);
 		else
 			remove(player, stack);
-
 		if (!(getInventoryCount() > 0))
 			worldObj.setBlockToAir(xCoord, yCoord, zCoord);
 		update();

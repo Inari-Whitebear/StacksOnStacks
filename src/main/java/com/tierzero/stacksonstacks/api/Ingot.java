@@ -1,7 +1,6 @@
 package com.tierzero.stacksonstacks.api;
 
 import java.awt.Color;
-import java.util.ArrayList;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -33,13 +32,17 @@ public class Ingot {
 	public Color getColor() {
 		return this.colour;
 	}
-	
+
 	public String getName() {
 		return this.item.getUnlocalizedName();
 	}
-	
+
 	public int getMeta() {
 		return this.meta;
+	}
+
+	public Item getItem() {
+		return item;
 	}
 
 	public ItemStack getIngotStack() {

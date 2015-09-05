@@ -10,10 +10,9 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.common.MinecraftForge;
 
-@Mod(modid = SoS.MODID, name = SoS.MODID, version = SoS.VERSION)
+@Mod(modid = SoS.MODID, name = SoS.MODID, version = SoS.VERSION, dependencies = "after:gregtech;after:gregapi;after:Avaritia;after:Botania;")
 public class SoS {
 	public static final String VERSION = "0.8";
 	public static final String MODID = "StacksOnStacks";
@@ -41,13 +40,8 @@ public class SoS {
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
-
-	}
-
-	@EventHandler
-	public void serverLoad(FMLServerStartingEvent e) {
 		IngotFinder.registerIngots();
-		proxy.serverLoad(e);
+		proxy.postInit();
 	}
 
 }

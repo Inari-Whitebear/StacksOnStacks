@@ -1,14 +1,10 @@
 package com.tierzero.stacksonstacks.util;
 
-import java.awt.Color;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
@@ -19,7 +15,6 @@ public class ClientUtils {
 	public static Tessellator tes() {
 		return Tessellator.instance;
 	}
-
 
 	@SideOnly(Side.CLIENT)
 	private static String getIconName(ItemStack stack) {
@@ -52,37 +47,42 @@ public class ClientUtils {
 	}
 
 	public static void drawRectangularPrism(double width, double length, double height, double slantX, double slantZ,
-			double Umin, double Vmin, double Umax, double Vmax) {
+			double Umin, double Vmin, double Umax, double Vmax, int[] lightLevel, boolean r) {
 		Tessellator tes = tes();
+		for (int i = 0; i < lightLevel.length; i++)
+			if (lightLevel[i] == 0)
+				lightLevel[i] = 15728640;
+		tes.setBrightness(lightLevel[0]);
 		tes.addVertexWithUV(width, 0, 0, Umin, Vmax);
 		tes.addVertexWithUV(width, 0, length, Umin, Vmin);
 		tes.addVertexWithUV(0, 0, length, Umax, Vmin);
 		tes.addVertexWithUV(0, 0, 0, Umax, Vmax);
 		// Render side 1(up)
+		tes.setBrightness(lightLevel[1]);
 		tes.addVertexWithUV(width - slantX, height, length - slantZ, Umax, Vmax);
 		tes.addVertexWithUV(width - slantX, height, 0 + slantZ, Umax, Vmin);
 		tes.addVertexWithUV(0 + slantX, height, 0 + slantZ, Umin, Vmin);
 		tes.addVertexWithUV(0 + slantX, height, length - slantZ, Umin, Vmax);
 		// Render side 2 (north)
-
+		tes.setBrightness(lightLevel[2]);
 		tes.addVertexWithUV(0, 0, 0, Umin, Vmin);
 		tes.addVertexWithUV(0 + slantX, height, 0 + slantZ, Umin, Vmax);
 		tes.addVertexWithUV(width - slantX, height, 0 + slantZ, Umax, Vmax);
 		tes.addVertexWithUV(width, 0, 0, Umax, Vmin);
 		// Render side 3 (south)
-
+		tes.setBrightness(lightLevel[3]);
 		tes.addVertexWithUV(width, 0, length, Umax, Vmin);
 		tes.addVertexWithUV(width - slantX, height, length - slantZ, Umax, Vmax);
 		tes.addVertexWithUV(0 + slantX, height, length - slantZ, Umin, Vmax);
 		tes.addVertexWithUV(0, 0, length, Umin, Vmin);
 		// Render side 4 (west)
-
+		tes.setBrightness(lightLevel[4]);
 		tes.addVertexWithUV(0, 0, 0, Umin, Vmax);
 		tes.addVertexWithUV(0, 0, length, Umax, Vmax);
 		tes.addVertexWithUV(0 + slantX, height, length - slantZ, Umax, Vmin);
 		tes.addVertexWithUV(0 + slantX, height, 0 + slantZ, Umin, Vmin);
 		// Render side 5 (east)
-
+		tes.setBrightness(lightLevel[5]);
 		tes.addVertexWithUV(width, 0, 0, Umax, Vmin);
 		tes.addVertexWithUV(width - slantX, height, 0 + slantZ, Umax, Vmax);
 		tes.addVertexWithUV(width - slantX, height, length - slantZ, Umin, Vmax);

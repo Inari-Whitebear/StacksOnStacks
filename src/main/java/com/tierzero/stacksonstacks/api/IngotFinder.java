@@ -2,12 +2,14 @@ package com.tierzero.stacksonstacks.api;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import com.tierzero.stacksonstacks.compat.GregTechCompat;
+import com.tierzero.stacksonstacks.compat.GregTech5Compat;
+import com.tierzero.stacksonstacks.compat.GregTech6Compat;
 import com.tierzero.stacksonstacks.util.ClientUtils;
 
 import cpw.mods.fml.relauncher.Side;
@@ -30,8 +32,7 @@ public class IngotFinder {
 						invalidOre = true;
 					}
 				}
-
-				if(!invalidOre) {
+				if (!invalidOre) {
 					for (ItemStack stack : OreDictionary.getOres(ore)) {
 						IngotRegistry.registerIngot(stack);
 					}
@@ -57,14 +58,15 @@ public class IngotFinder {
 	public static Color getColor(ItemStack stack) {
 		List<Color> colors = new ArrayList<Color>();
 		try {
-			BufferedImage texture = ImageIO.read(Minecraft.getMinecraft().getResourceManager().getResource(ClientUtils.getIconResource(stack)).getInputStream());
+			BufferedImage texture = ImageIO.read(Minecraft.getMinecraft().getResourceManager()
+					.getResource(ClientUtils.getIconResource(stack)).getInputStream());
 			Color textureColour = getAverageColor(texture);
 			colors.add(textureColour);
 
 			for (int pass = 0; pass < stack.getItem().getRenderPasses(stack.getItemDamage()); pass++) {
 
 				int stackColor = getStackColour(stack, pass);
-				
+
 				/* Check to see if color is white, because white looks awful */
 				if (stackColor != 16777215) {
 					colors.add(new Color(stackColor));
@@ -74,7 +76,7 @@ public class IngotFinder {
 		} catch (Exception e) {
 		}
 
-		if (GregTechCompat.INSTANCE.isEnabled()) {
+		if (GregTech6Compat.INSTANCE.isEnabled()) {
 			try {
 				Class clazz = Class.forName("gregapi.item.prefixitem.PrefixItem");
 				Class itemClazz = stack.getItem().getClass();
@@ -85,6 +87,20 @@ public class IngotFinder {
 					}
 				}
 			} catch (ClassNotFoundException e) {
+			}
+		} else if (GregTech5Compat.INSTANCE.isEnabled()) {
+			try {
+				Class<?> cls = Class.forName("gregtech.api.items.GT_MetaGenerated_Item");
+				Class<?> itemCls = stack.getItem().getClass();
+				if (cls.isAssignableFrom(itemCls)) {
+					Method m = itemCls.getMethod("getRGBa", ItemStack.class);
+					short[] rgba = (short[]) m.invoke(stack.getItem(), stack);
+					Color c = new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
+					colors.clear();
+					colors.add(c);
+
+				}
+			} catch (Exception e) {
 			}
 		}
 		float red = 0;
@@ -110,20 +126,20 @@ public class IngotFinder {
 		for (int i = offset; i < image.getWidth() - offset; i++) {
 			for (int j = offset; j < image.getHeight() - offset; j++) {
 				Color imageColor = new Color(image.getRGB(i, j));
-				
-				if (imageColor.getAlpha() != 255 || imageColor.getRed() <= 10 && imageColor.getBlue() <= 10 && imageColor.getGreen() <= 10) {
+
+				if (imageColor.getAlpha() != 255
+						|| imageColor.getRed() <= 10 && imageColor.getBlue() <= 10 && imageColor.getGreen() <= 10) {
 					continue;
 				}
-				
+
 				red += imageColor.getRed();
 				green += imageColor.getGreen();
 				blue += imageColor.getBlue();
 				count++;
 			}
 		}
-		
+
 		return new Color((int) (red / count), (int) (green / count), (int) (blue / count));
 	}
-		
 
 }

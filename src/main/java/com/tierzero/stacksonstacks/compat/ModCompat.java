@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.tierzero.stacksonstacks.SoS;
 
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
@@ -18,9 +19,11 @@ public abstract class ModCompat {
 	}
 
 	public void config() {
-		if (Loader.isModLoaded(name))
+		if (Loader.isModLoaded(name)) {
+			FMLLog.info("Loading Compat for " + name);
 			compatEnabled = SoS.config.getBoolean("enableCompat" + StringUtils.capitalize(name),
 					SoS.config.CATEGORY_COMPAT, true, "Enable Compatiablity For " + StringUtils.capitalize(name));
+		}
 	}
 
 	public abstract void preInit();

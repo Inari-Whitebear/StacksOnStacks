@@ -2,11 +2,7 @@ package com.tierzero.stacksonstacks;
 
 import com.tierzero.stacksonstacks.api.IngotRegistry;
 
-import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -15,11 +11,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
 public class IngotPileHandler {
-	@SideOnly(Side.CLIENT)
-	@EventHandler
-	public void playerJoin(PlayerLoggedInEvent e) {
-		SoS.proxy.joinServer(e);
-	}
 
 	@SubscribeEvent
 	public void handleIngotPilePlacement(PlayerInteractEvent e) {

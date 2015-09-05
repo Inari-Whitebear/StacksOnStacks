@@ -1,10 +1,10 @@
 package com.tierzero.stacksonstacks.compat;
 
-public class GregTechCompat extends ModCompat {
-	public static GregTechCompat INSTANCE = new GregTechCompat();
+public class GregTech6Compat extends ModCompat {
+	public static GregTech6Compat INSTANCE = new GregTech6Compat();
 
-	public GregTechCompat() {
-		super("gregtech");
+	public GregTech6Compat() {
+		super("gregapi");
 	}
 
 	@Override
@@ -23,5 +23,4 @@ public class GregTechCompat extends ModCompat {
 	public void serverLoad() {
 
 	}
-
 }

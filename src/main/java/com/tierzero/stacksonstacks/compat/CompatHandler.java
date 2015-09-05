@@ -7,7 +7,8 @@ public class CompatHandler {
 
 	static {
 		add(AvaritiaCompat.INSTANCE);
-		add(GregTechCompat.INSTANCE);
+		add(GregTech6Compat.INSTANCE);
+		add(GregTech5Compat.INSTANCE);
 		add(BotaniaCompat.INSTANCE);
 	}
 
