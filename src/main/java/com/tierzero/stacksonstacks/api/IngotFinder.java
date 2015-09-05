@@ -8,8 +8,10 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.compat.GregTech5Compat;
 import com.tierzero.stacksonstacks.compat.GregTech6Compat;
+import com.tierzero.stacksonstacks.compat.ReikaCompat;
 import com.tierzero.stacksonstacks.util.ClientUtils;
 
 import cpw.mods.fml.relauncher.Side;
@@ -46,7 +48,8 @@ public class IngotFinder {
 		for (Ingot ingot : IngotRegistry.getRegisteredIngots()) {
 			ingot.setColor(getColor(ingot.getIngotStack()));
 		}
-		IngotRegistry.getIngot(Items.gold_ingot, 0).setIcon(Blocks.gold_block.getIcon(0, 0));
+		if (SoS.config.goldAltTexture)
+			IngotRegistry.getIngot(Items.gold_ingot, 0).setIcon(new ItemStack(Blocks.gold_block).getIconIndex());
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -78,8 +81,8 @@ public class IngotFinder {
 
 		if (GregTech6Compat.INSTANCE.isEnabled()) {
 			try {
-				Class clazz = Class.forName("gregapi.item.prefixitem.PrefixItem");
-				Class itemClazz = stack.getItem().getClass();
+				Class<?> clazz = Class.forName("gregapi.item.prefixitem.PrefixItem");
+				Class<?> itemClazz = stack.getItem().getClass();
 				if (clazz.isAssignableFrom(itemClazz)) {
 					int stackColor = getStackColour(stack, 0);
 					if (stackColor != 16777215) {
@@ -101,6 +104,18 @@ public class IngotFinder {
 
 				}
 			} catch (Exception e) {
+			}
+		}
+		if (ReikaCompat.INSTANCE.isEnabled()) {
+			try {
+				Class<?> clazz = Class.forName("Reika.DragonAPI.ModRegistry.ModOreList");
+				if (clazz != null) {
+
+					Method m = clazz.getMethod("getModOreFromOre", ItemStack.class);
+
+				}
+			} catch (Exception e) {
+
 			}
 		}
 		float red = 0;

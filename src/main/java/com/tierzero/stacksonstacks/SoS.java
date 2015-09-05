@@ -26,6 +26,8 @@ public class SoS {
 	public void preInit(FMLPreInitializationEvent e) {
 		config = new Config(e.getSuggestedConfigurationFile());
 		config.load();
+		config.goldAltTexture = config.getBoolean("goldAltTexture", "ALT_TEXTURES", false,
+				"make gold ingots use the gold block texture, may not work somethings for unknown reasons");
 		CompatHandler.config();
 		proxy.registerTiles();
 		ingotPile = new BlockIngotPile("ingotPile");
