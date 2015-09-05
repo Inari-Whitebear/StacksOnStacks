@@ -23,7 +23,7 @@ public class GregTech5Compat extends ModCompat {
 
 	@Override
 	public boolean isEnabled() {
-		return Loader.isModLoaded("gregtech") && !Loader.isModLoaded("gregapi") && compatEnabled;
+		return Loader.isModLoaded("gregtech_addon") && compatEnabled;
 	}
 
 	@Override

@@ -25,6 +25,22 @@ public class BlockIngotPile extends BlockContainer {
 		GameRegistry.registerBlock(this, name);
 		this.renderID = RenderingRegistry.getNextAvailableRenderId();
 		this.setHardness(25f);
+
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride() {
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(World world, int x, int y, int z, int side) {
+		TileIngotPile tile;
+		if (world.getTileEntity(x, y, z) != null) {
+			tile = (TileIngotPile) world.getTileEntity(x, y, z);
+		} else
+			return 0;
+		return tile.getInventoryCount() / 4;
 	}
 
 	@Override
