@@ -20,7 +20,8 @@ public class GregTech6Compat extends ModCompat {
 	}
 
 	@Override
-	public void serverLoad() {
+	public void clientSide() {
+		// TODO Auto-generated method stub
 
 	}
 

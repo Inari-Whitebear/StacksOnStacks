@@ -31,8 +31,7 @@ public class AvaritiaCompat extends ModCompat {
 
 	}
 
-	@Override
-	public void serverLoad() {
+	public void clientSide() {
 		if (!GregTech6Compat.INSTANCE.isEnabled())
 			customIngots();
 	}

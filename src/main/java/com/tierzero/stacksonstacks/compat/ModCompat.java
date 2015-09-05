@@ -32,7 +32,7 @@ public abstract class ModCompat {
 
 	public abstract void postInit();
 
-	public abstract void serverLoad();
+	public abstract void clientSide();
 
 	public boolean isEnabled() {
 		return Loader.isModLoaded(name) && compatEnabled;

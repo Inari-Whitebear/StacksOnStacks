@@ -14,7 +14,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 @Mod(modid = SoS.MODID, name = SoS.MODID, version = SoS.VERSION, dependencies = "after:gregtech;after:gregapi;after:Avaritia;after:Botania;")
 public class SoS {
-	public static final String VERSION = "0.8";
+	public static final String VERSION = "0.9.4";
 	public static final String MODID = "StacksOnStacks";
 	public static final String TEXTURE_BASE = MODID + ":";
 	public static BlockIngotPile ingotPile;
@@ -43,6 +43,7 @@ public class SoS {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
 		IngotFinder.registerIngots();
+		CompatHandler.postInit();
 		proxy.postInit();
 	}
 

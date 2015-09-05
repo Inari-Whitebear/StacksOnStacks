@@ -37,8 +37,7 @@ public class BotaniaCompat extends ModCompat {
 		IngotRegistry.getIngot(findItem("manaResource"), 7).setColor(new Color(224, 88, 254));
 	}
 
-	@Override
-	public void serverLoad() {
+	public void clientSide() {
 		if (!GregTech6Compat.INSTANCE.isEnabled())
 			customIngots();
 	}

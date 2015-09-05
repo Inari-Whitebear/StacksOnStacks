@@ -1,6 +1,7 @@
 package com.tierzero.stacksonstacks;
 
 import com.tierzero.stacksonstacks.api.IngotFinder;
+import com.tierzero.stacksonstacks.compat.CompatHandler;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
@@ -12,5 +13,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void postInit() {
 		IngotFinder.registerIngotColors();
+		CompatHandler.clientSide();
 	}
 }

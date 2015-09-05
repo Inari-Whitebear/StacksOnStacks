@@ -22,12 +22,12 @@ public class GregTech5Compat extends ModCompat {
 	}
 
 	@Override
-	public void serverLoad() {
-
+	public boolean isEnabled() {
+		return Loader.isModLoaded("gregtech") && !Loader.isModLoaded("gregapi") && compatEnabled;
 	}
 
 	@Override
-	public boolean isEnabled() {
-		return Loader.isModLoaded("gregtech") && !Loader.isModLoaded("gregapi") && compatEnabled;
+	public void clientSide() {
+
 	}
 }

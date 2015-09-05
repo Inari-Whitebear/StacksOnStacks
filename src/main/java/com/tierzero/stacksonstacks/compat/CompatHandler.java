@@ -40,13 +40,14 @@ public class CompatHandler {
 				mod.postInit();
 	}
 
-	public static void serverLoad() {
+	public static void clientSide() {
 		for (ModCompat mod : modcompat)
 			if (mod.isEnabled())
-				mod.serverLoad();
+				mod.clientSide();
 	}
 
 	public static void add(ModCompat mod) {
 		modcompat.add(mod);
 	}
+
 }
