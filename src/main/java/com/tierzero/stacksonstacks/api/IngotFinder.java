@@ -93,7 +93,6 @@ public class IngotFinder {
 			}
 		}
 		if (GregTech5Compat.INSTANCE.isEnabled()) {
-			System.out.println("TESTERIO");
 			try {
 				Class<?> cls = Class.forName("gregtech.api.items.GT_MetaGenerated_Item");
 				Class<?> itemCls = stack.getItem().getClass();
