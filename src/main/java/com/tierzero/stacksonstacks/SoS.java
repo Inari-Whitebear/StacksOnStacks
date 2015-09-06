@@ -1,6 +1,7 @@
 package com.tierzero.stacksonstacks;
 
 import com.tierzero.stacksonstacks.api.IngotFinder;
+import com.tierzero.stacksonstacks.block.BlockIngotPile;
 import com.tierzero.stacksonstacks.compat.CompatHandler;
 import com.tierzero.stacksonstacks.util.Config;
 

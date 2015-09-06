@@ -10,7 +10,7 @@ public class CompatHandler {
 		add(GregTech6Compat.INSTANCE);
 		add(GregTech5Compat.INSTANCE);
 		add(BotaniaCompat.INSTANCE);
-		add(ReikaCompat.INSTANCE);
+		add(RotaryCompat.INSTANCE);
 	}
 
 	public static void config() {

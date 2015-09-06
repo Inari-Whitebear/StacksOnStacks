@@ -1,6 +1,8 @@
-package com.tierzero.stacksonstacks;
+package com.tierzero.stacksonstacks.block.tile;
 
+import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.api.IngotRegistry;
+import com.tierzero.stacksonstacks.block.BlockIngotPile;
 import com.tierzero.stacksonstacks.util.StackUtils;
 
 import net.minecraft.block.Block;

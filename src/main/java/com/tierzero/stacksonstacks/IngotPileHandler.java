@@ -1,6 +1,7 @@
 package com.tierzero.stacksonstacks;
 
 import com.tierzero.stacksonstacks.api.IngotRegistry;
+import com.tierzero.stacksonstacks.block.tile.TileIngotPile;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;

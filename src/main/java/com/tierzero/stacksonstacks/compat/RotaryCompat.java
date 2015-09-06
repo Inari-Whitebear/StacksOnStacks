@@ -7,11 +7,11 @@ import com.tierzero.stacksonstacks.api.IngotRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.ItemStack;
 
-public class ReikaCompat extends ModCompat {
-	public static final ReikaCompat INSTANCE = new ReikaCompat();
+public class RotaryCompat extends ModCompat {
+	public static final RotaryCompat INSTANCE = new RotaryCompat();
 
-	public ReikaCompat() {
-		super("DragonAPI");
+	public RotaryCompat() {
+		super("Rotarycraft");
 	}
 
 	@Override
@@ -19,20 +19,22 @@ public class ReikaCompat extends ModCompat {
 
 	}
 
+	ItemStack hsla;
+	ItemStack bedrockIngot;
+	ItemStack sinisterTungstenIngot;
+	ItemStack inductiveIngot;
+	ItemStack springAlloyIngot;
+	ItemStack aluminiumAlloyIngot;
+
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-
+		hsla = new ItemStack(GameRegistry.findItem("RotaryCraft", "rotarycraft_item_shaftcraft"), 1, 1);
+		bedrockIngot = new ItemStack(GameRegistry.findItem("RotaryCraft", "rotarycraft_item_compacts"), 1, 3);
+		sinisterTungstenIngot = new ItemStack(GameRegistry.findItem("RotaryCraft", "rotarycraft_item_compacts"), 1, 5);
+		inductiveIngot = new ItemStack(GameRegistry.findItem("RotaryCraft", "rotarycraft_item_compacts"), 1, 6);
+		springAlloyIngot = new ItemStack(GameRegistry.findItem("RotaryCraft", "rotarycraft_item_compacts"), 1, 9);
+		aluminiumAlloyIngot = new ItemStack(GameRegistry.findItem("RotaryCraft", "rotarycraft_item_compacts"), 1, 11);
 	}
-
-	ItemStack hsla = new ItemStack(GameRegistry.findItem("RotaryCraft", "rotarycraft_item_shaftcraft"), 1, 1);
-	ItemStack bedrockIngot = new ItemStack(GameRegistry.findItem("RotaryCraft", "rotarycraft_item_compacts"), 1, 3);
-	ItemStack sinisterTungstenIngot = new ItemStack(GameRegistry.findItem("RotaryCraft", "rotarycraft_item_compacts"),
-			1, 5);
-	ItemStack inductiveIngot = new ItemStack(GameRegistry.findItem("RotaryCraft", "rotarycraft_item_compacts"), 1, 6);
-	ItemStack springAlloyIngot = new ItemStack(GameRegistry.findItem("RotaryCraft", "rotarycraft_item_compacts"), 1, 9);
-	ItemStack aluminiumAlloyIngot = new ItemStack(GameRegistry.findItem("RotaryCraft", "rotarycraft_item_compacts"), 1,
-			11);
 
 	@Override
 	public void postInit() {

@@ -2,6 +2,7 @@ package com.tierzero.stacksonstacks;
 
 import com.tierzero.stacksonstacks.api.IngotFinder;
 import com.tierzero.stacksonstacks.compat.CompatHandler;
+import com.tierzero.stacksonstacks.render.RenderTileIngotPile;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
 

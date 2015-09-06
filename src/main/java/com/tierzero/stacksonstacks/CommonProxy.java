@@ -1,5 +1,7 @@
 package com.tierzero.stacksonstacks;
 
+import com.tierzero.stacksonstacks.block.tile.TileIngotPile;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy {

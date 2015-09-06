@@ -11,7 +11,7 @@ import javax.imageio.ImageIO;
 import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.compat.GregTech5Compat;
 import com.tierzero.stacksonstacks.compat.GregTech6Compat;
-import com.tierzero.stacksonstacks.compat.ReikaCompat;
+import com.tierzero.stacksonstacks.compat.RotaryCompat;
 import com.tierzero.stacksonstacks.util.ClientUtils;
 
 import cpw.mods.fml.relauncher.Side;
@@ -107,7 +107,7 @@ public class IngotFinder {
 			} catch (Exception e) {
 			}
 		}
-		if (ReikaCompat.INSTANCE.isEnabled()) {
+		if (RotaryCompat.INSTANCE.isEnabled()) {
 			try {
 				Class<?> clazz = Class.forName("Reika.DragonAPI.ModRegistry.ModOreList");
 				if (clazz != null) {

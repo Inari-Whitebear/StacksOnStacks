@@ -1,10 +1,12 @@
-package com.tierzero.stacksonstacks;
+package com.tierzero.stacksonstacks.render;
 
 import java.awt.Color;
 import java.util.ArrayList;
 
+import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.api.Ingot;
 import com.tierzero.stacksonstacks.api.IngotRegistry;
+import com.tierzero.stacksonstacks.block.tile.TileIngotPile;
 import com.tierzero.stacksonstacks.compat.GregTech6Compat;
 import com.tierzero.stacksonstacks.util.ClientUtils;
 
