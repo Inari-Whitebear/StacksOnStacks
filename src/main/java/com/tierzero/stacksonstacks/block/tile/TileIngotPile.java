@@ -100,7 +100,6 @@ public class TileIngotPile extends TileEntity {
 		
 		NBTTagCompound inventoryTag = tag.getCompoundTag(TAG_INVENTORY);
 		inventory = ItemStack.loadItemStackFromNBT(inventoryTag);
-
 	}
 
 	@Override

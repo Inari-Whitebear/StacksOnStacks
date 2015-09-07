@@ -38,12 +38,12 @@ public class BlockIngotPile extends BlockContainer {
 
 	@Override
 	public int getComparatorInputOverride(World world, int x, int y, int z, int side) {
-		TileIngotPile tile;
-		if (world.getTileEntity(x, y, z) != null) {
-			tile = (TileIngotPile) world.getTileEntity(x, y, z);
-		} else
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if (tile != null) {
+			return ((TileIngotPile) tile).getInventoryCount() / 4;
+		} else {
 			return 0;
-		return tile.getInventoryCount() / 4;
+		}
 	}
 
 	@Override
@@ -65,65 +65,55 @@ public class BlockIngotPile extends BlockContainer {
 	@Override
 	public boolean onBlockEventReceived(World world, int x, int y, int z, int eventNum, int eventArg) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		return tile != null ? tile.receiveClientEvent(eventNum, eventArg) : false;
+		if (tile != null) {
+			return tile.receiveClientEvent(eventNum, eventArg);
+		}
+		
+		return false;		
 	}
 
 	public void handleTileEntity(EntityPlayer player, World world, int x, int y, int z, ItemStack stack) {
 
-		TileIngotPile tile;
-		if (world.getTileEntity(x, y, z) != null) {
-			tile = (TileIngotPile) world.getTileEntity(x, y, z);
-		} else {
-
-			return;
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if (tile != null) {
+			((TileIngotPile) tile).handlePlacement(player, stack);
 		}
 
-		tile.handlePlacement(player, stack);
 	}
 
 	@Override
 	public boolean canBlockStay(World world, int x, int y, int z) {
-		TileIngotPile tile;
-		if (world.getTileEntity(x, y, z) != null) {
-			tile = (TileIngotPile) world.getTileEntity(x, y, z);
-		} else {
-			return false;
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if (tile != null) {
+			return ((TileIngotPile) tile).getInventoryCount() > 0;
 		}
-		return tile.getInventoryCount() > 0;
-
+		
+		return false;
 	}
 
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-		TileIngotPile tile;
-		if (world.getTileEntity(x, y, z) != null) {
-			tile = (TileIngotPile) world.getTileEntity(x, y, z);
-		} else {
-			return;
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if (tile != null) {
 		}
 	}
 
 	@Override
 	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
-		TileIngotPile tile;
-		if (world.getTileEntity(x, y, z) != null) {
-			tile = (TileIngotPile) world.getTileEntity(x, y, z);
-		} else {
-			return null;
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if (tile != null) {
+			return ((TileIngotPile) tile).getInventory();
 		}
-		return tile.getInventory();
-
+		
+		return null;
 	}
 
 	@Override
 	public void onBlockPreDestroy(World world, int x, int y, int z, int meta) {
-		TileIngotPile tile;
-		if (world.getTileEntity(x, y, z) != null) {
-			tile = (TileIngotPile) world.getTileEntity(x, y, z);
-		} else {
-			return;
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if (tile != null) {
+			dropBlockAsItem(world, x, y, z, ((TileIngotPile) tile).getInventory());
 		}
-		dropBlockAsItem(world, x, y, z, tile.getInventory());
 	}
 
 	@Override
@@ -144,8 +134,7 @@ public class BlockIngotPile extends BlockContainer {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_,
-			float p_149727_7_, float p_149727_8_, float p_149727_9_) {
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_,	float p_149727_7_, float p_149727_8_, float p_149727_9_) {
 
 		this.handleTileEntity(player, world, x, y, z, player.getCurrentEquippedItem());
 
@@ -156,16 +145,18 @@ public class BlockIngotPile extends BlockContainer {
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
 		this.handleTileEntity(player, world, x, y, z, player.getCurrentEquippedItem());
 		world.markBlockForUpdate(x, y, z);
+	
 	}
 
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
-		if (!entity.isSneaking())
+		if (!entity.isSneaking()) {
 			this.handleTileEntity((EntityPlayer) entity, world, x, y, z, stack);
+		}
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
+	public TileEntity createNewTileEntity(World world, int meta) {
 		return new TileIngotPile();
 	}
 
