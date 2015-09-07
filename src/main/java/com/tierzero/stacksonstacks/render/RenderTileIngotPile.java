@@ -14,6 +14,7 @@ import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
@@ -24,52 +25,57 @@ public class RenderTileIngotPile implements ISimpleBlockRenderingHandler {
 	}
 
 	@Override
-	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId,
-			RenderBlocks renderer) {
+	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
 		ArrayList<IngotRender> ingots = new ArrayList<IngotRender>();
 		TileIngotPile tile = (TileIngotPile) world.getTileEntity(x, y, z);
 
-		Ingot ingot = IngotRegistry.getIngot(tile.getInventory());
-		int length = tile.getInventoryCount();
+		ItemStack ingotStack = tile.getInventory();
 
-		ClientUtils.pushMatrix();
-		{
 
-			float w = 0f, h = 0f, l = 0f;
-			float a = 0f, s = 0f, d = 0f;
-			boolean r = true;
-			int e = 0;
-			for (int i = 0; i < length; i++) {
-				w = a / 4;
-				l = d / 2;
-				h = s / 8;
+		//The block wants to render before the tile is loaded so this check is necessary
+		if(ingotStack != null) {
+			Ingot ingot = IngotRegistry.getIngot(tile.getInventory());
+			int length = tile.getInventoryCount();
+			ClientUtils.pushMatrix();
+			{
 
-				ingots.add(new IngotRender(x + (r ? w : l), y + h, z + (r ? l : w), ingot, r));
-				if (a < 3)
-					a++;
-				else {
-					w = 0;
-					a = 0;
-					if (d == 0)
-						d++;
+				float w = 0f, h = 0f, l = 0f;
+				float a = 0f, s = 0f, d = 0f;
+				boolean r = true;
+				int e = 0;
+				for (int i = 0; i < length; i++) {
+					w = a / 4;
+					l = d / 2;
+					h = s / 8;
+
+					ingots.add(new IngotRender(x + (r ? w : l), y + h, z + (r ? l : w), ingot, r));
+					if (a < 3)
+						a++;
 					else {
-						d = 0;
-						if (s < 8)
-							s++;
+						w = 0;
+						a = 0;
+						if (d == 0)
+							d++;
+						else {
+							d = 0;
+							if (s < 8)
+								s++;
+						}
 					}
+					if (e == 7) {
+						e = 0;
+						r = !r;
+					} else
+						e++;
 				}
-				if (e == 7) {
-					e = 0;
-					r = !r;
-				} else
-					e++;
-			}
 
-			for (IngotRender render : ingots) {
-				render.render(world, block, tile);
+				for (IngotRender render : ingots) {
+					render.render(world, block, tile);
+				}
 			}
+			ClientUtils.popMatrix();
 		}
-		ClientUtils.popMatrix();
+
 		return ingots.size() > 0;
 
 	}

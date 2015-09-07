@@ -17,6 +17,8 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileIngotPile extends TileEntity {
+	private static final String TAG_INVENTORY = "inventory";
+	
 	private ItemStack inventory;
 	public boolean placeMod = false;
 
@@ -32,9 +34,7 @@ public class TileIngotPile extends TileEntity {
 	}
 
 	public ItemStack getInventory() {
-		if (inventory != null)
-			return inventory;
-		return null;
+		return inventory;
 	}
 
 	public void handlePlacement(EntityPlayer player, ItemStack stack) {
@@ -97,32 +97,19 @@ public class TileIngotPile extends TileEntity {
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		this.readIngotsFromNBT(tag);
+		
+		NBTTagCompound inventoryTag = tag.getCompoundTag(TAG_INVENTORY);
+		inventory = ItemStack.loadItemStackFromNBT(inventoryTag);
 
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		this.writeIngotsToNBT(tag);
-	}
-
-	public void writeIngotsToNBT(NBTTagCompound tag) {
-		if (inventory != null) {
-			tag.setInteger("ingot", Item.getIdFromItem(this.inventory.getItem()));
-			tag.setByte("stackSize", (byte) this.inventory.stackSize);
-			tag.setInteger("meta", this.inventory.getItemDamage());
-		} else
-			worldObj.setBlockToAir(xCoord, yCoord, zCoord);
-	}
-
-	public void readIngotsFromNBT(NBTTagCompound tag) {
-		ItemStack stack = StackUtils.getStackFromInfo(tag.getInteger("ingot"), tag.getByte("stackSize"),
-				tag.getInteger("meta"));
-		if (stack != null) {
-			this.inventory = stack;
-		} else
-			worldObj.setBlockToAir(xCoord, yCoord, zCoord);
+		
+		NBTTagCompound inventoryTag = new NBTTagCompound();		
+		inventory.writeToNBT(inventoryTag);
+		tag.setTag(TAG_INVENTORY, inventoryTag);
 	}
 
 	@Override
