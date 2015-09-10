@@ -46,10 +46,7 @@ public class BlockIngotPile extends BlockContainer {
 				if(tile != null) {
 					
 					ItemStack ingotStack = tile.getInventory();
-					System.out.println(ingotStack.stackSize);
-					
-					this.dropBlockAsItem(tile.getWorldObj(), x, y, z, ingotStack);
-					tile.getWorldObj().setBlockToAir(x, y, z);
+					world.setBlockToAir(x, y, z);
 				}
 			}
 		}
@@ -70,10 +67,6 @@ public class BlockIngotPile extends BlockContainer {
 		}
 	}
 
-	@Override
-	public float getBlockHardness(World world, int x, int y, int z) {
-		return 1;
-	}
 
 	@Override
 	public IIcon getIcon(int side, int meta) {
