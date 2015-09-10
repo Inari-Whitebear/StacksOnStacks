@@ -1,7 +1,5 @@
 package com.tierzero.stacksonstacks.block;
 
-import java.util.Random;
-
 import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.block.tile.TileIngotPile;
 
@@ -9,11 +7,10 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.BlockSand;
+import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -26,6 +23,8 @@ public class BlockIngotPile extends BlockContainer {
 	public IIcon icon;
 	private int renderID;
 
+	public static final int INGOTS_NEEDED_TO_SUPPORT = 64;
+	
 	public BlockIngotPile(String name) {
 		super(Material.iron);
 		this.setBlockName(name);
@@ -34,19 +33,19 @@ public class BlockIngotPile extends BlockContainer {
 		this.setHardness(25f);
 
 	}
-
-	
-
     
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
 		if(!world.isRemote) {
-			if(world.isAirBlock(x, y - 1, z)) {
-				TileIngotPile tile = (TileIngotPile) world.getTileEntity(x, y, z);
-				if(tile != null) {
-					
-					ItemStack ingotStack = tile.getInventory();
-					world.setBlockToAir(x, y, z);
+			if(world.isAirBlock(x, y - 1, z)) {					
+				world.setBlockToAir(x, y, z);
+			} else if(world.getBlock(x, y - 1, z) instanceof BlockIngotPile) {
+				TileIngotPile ingotPile = (TileIngotPile) world.getTileEntity(x, y - 1, z);
+				
+				if(ingotPile != null) {
+					if(ingotPile.getInventoryCount() < INGOTS_NEEDED_TO_SUPPORT) {
+						world.setBlockToAir(x, y, z);
+					}
 				}
 			}
 		}
@@ -87,16 +86,6 @@ public class BlockIngotPile extends BlockContainer {
 		}
 		
 		return false;		
-	}
-
-	public void handleTileEntity(EntityPlayer player, World world, int x, int y, int z, ItemStack stack) {
-
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile != null) {
-			((TileIngotPile) tile).handlePlacement(player, stack);
-		}
-
-		BlockSand g;
 	}
 
 	@Override
@@ -152,41 +141,28 @@ public class BlockIngotPile extends BlockContainer {
 		return;
 	}
 
-	/*
-	@Override
-	public void dropBlockAsItem(World world, int x, int y, int z, ItemStack stack) {
-
-		if (!world.isRemote && world.getGameRules().getGameRuleBooleanValue("doTileDrops")) {
-			EntityItem item = new EntityItem(world);
-			item.setPosition(x, y, z);
-			item.delayBeforeCanPickup = 10;
-			item.setEntityItemStack(stack);
-			world.spawnEntityInWorld(item);
-		}
-	}
-	*/
-
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_,	float p_149727_7_, float p_149727_8_, float p_149727_9_) {
-
-		this.handleTileEntity(player, world, x, y, z, player.getCurrentEquippedItem());
-
-		return true;
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if (tile != null) {
+			((TileIngotPile) tile).onActivated(player, player.getCurrentEquippedItem());
+			return true;
+		}
+		
+		return false;
 	}
 
 	@Override
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player) {
-		this.handleTileEntity(player, world, x, y, z, player.getCurrentEquippedItem());
-		world.markBlockForUpdate(x, y, z);
-	
-	}
 
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
-		if (!entity.isSneaking()) {
-			this.handleTileEntity((EntityPlayer) entity, world, x, y, z, stack);
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if (tile != null) {
+			((TileIngotPile) tile).onClicked(player);
+		
+			world.notifyBlocksOfNeighborChange(x, y, z, this);
 		}
 	}
+
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {

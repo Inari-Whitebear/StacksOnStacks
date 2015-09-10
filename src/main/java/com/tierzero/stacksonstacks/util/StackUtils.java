@@ -1,6 +1,7 @@
 package com.tierzero.stacksonstacks.util;
 
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -10,11 +11,6 @@ public class StackUtils {
 		return new ItemStack(Item.getItemById(id), stackSize, meta);
 	}
 
-	public static boolean compareTypes(ItemStack stack1, ItemStack stack2) {
-		if (stack1 == null || stack2 == null)
-			return false;
-		return (stack1.getItem() == stack2.getItem()) && (stack1.getItemDamage() == stack2.getItemDamage());
-	}
 
 	public static ItemStack getOneFromStack(ItemStack stack) {
 		if (stack == null)
@@ -32,11 +28,16 @@ public class StackUtils {
 		return copy;
 	}
 
-	public static void decrementStack(ItemStack stack, int num) {
-		if (num > 0) {
-
-			stack.stackSize -= num;		
+	public static void decrementStack(ItemStack stack, int amount) {
+		stack.stackSize -= amount;		
+		
+	}
+	
+	public static void decrementStack(EntityPlayer player, ItemStack stack, int amount) {
+		if(!player.capabilities.isCreativeMode) {
+			decrementStack(stack, amount);
 		}
+		removeStackIfEmpty(player, stack);
 	}
 
 	public static void spawnItemInWorld(World world, int x, int y, int z, ItemStack stack) {
@@ -47,4 +48,11 @@ public class StackUtils {
 		item.setPosition(x, y, z);
 		world.spawnEntityInWorld(item);
 	}
+	
+	private static void removeStackIfEmpty(EntityPlayer player, ItemStack stack) {
+		if(stack.stackSize <= 0) {
+			player.setCurrentItemOrArmor(0, null);
+		}
+	}
+
 }

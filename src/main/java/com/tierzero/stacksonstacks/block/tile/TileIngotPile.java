@@ -18,6 +18,7 @@ import net.minecraft.tileentity.TileEntity;
 
 public class TileIngotPile extends TileEntity {
 	private static final String TAG_INVENTORY = "inventory";
+	private static final int MAX_STACK_SIZE = 64;
 	
 	private ItemStack inventory;
 	public boolean placeMod = false;
@@ -28,8 +29,10 @@ public class TileIngotPile extends TileEntity {
 	}
 
 	public int getInventoryCount() {
-		if (inventory != null)
+		if (inventory != null) {
 			return inventory.stackSize;
+		}
+		
 		return 0;
 	}
 
@@ -37,17 +40,32 @@ public class TileIngotPile extends TileEntity {
 		return inventory;
 	}
 
-	public void handlePlacement(EntityPlayer player, ItemStack stack) {
-
-		if (inventory == null && IngotRegistry.isValidIngot(stack))
-			create(player, stack);
-		else if (!player.isSneaking())
-			add(player, stack);
-		else
-			remove(player, stack);
-		if (!(getInventoryCount() > 0))
-			worldObj.setBlockToAir(xCoord, yCoord, zCoord);
+	public void onClicked(EntityPlayer player) {
+		removeFromPile(player);
 		update();
+	}
+	
+	public boolean onActivated(EntityPlayer player, ItemStack stack) {	
+		if(stack != null) {
+			if (inventory == null && IngotRegistry.isValidIngot(stack)) {
+				createPile(player, stack, shouldUseEntireStack(player));
+				update();
+				return true;
+			} else if (inventory.isItemEqual(stack)) {
+				addToPile(player, stack, shouldUseEntireStack(player));
+				update();
+				return true;
+			}
+			
+			return false;
+		}
+
+		return false;
+		
+	}
+	
+	private boolean shouldUseEntireStack(EntityPlayer player) {
+		return player.isSneaking();
 	}
 
 	public void update() {
@@ -56,48 +74,66 @@ public class TileIngotPile extends TileEntity {
 
 	}
 
-	public void create(EntityPlayer player, ItemStack stack) {
-		int add = 1;
-		inventory = StackUtils.getItemsFromStack(stack, add);
-		if (!player.capabilities.isCreativeMode)
-			StackUtils.decrementStack(stack, add);
+	private void createPile(EntityPlayer player, ItemStack stack, boolean entireStack) {
+		int initialAmount = entireStack ? stack.stackSize : 1;
+		inventory = StackUtils.getItemsFromStack(stack, initialAmount);
+		if (!player.capabilities.isCreativeMode) {
+			StackUtils.decrementStack(player, stack, initialAmount);
+		}
 	}
 
-	public void add(EntityPlayer player, ItemStack stack) {
-		if (!StackUtils.compareTypes(stack, inventory))
-			return;
-		if (inventory.stackSize != 64) {
-			int add = 1;
-			int diff = 64 - inventory.stackSize;
-			inventory.stackSize += add;
-			if (!player.capabilities.isCreativeMode) {
-				StackUtils.decrementStack(stack, add);
-				if(stack.stackSize <= 0) {
-					player.setCurrentItemOrArmor(0, null);
+	private void addToPile(EntityPlayer player, ItemStack stack, boolean entireStack) {
+		if (inventory.isItemEqual(stack)) {
+			int amountToAdd = 1;
+			if(entireStack) {
+				amountToAdd = stack.stackSize;
+			}
+			
+			System.out.println(amountToAdd);
+			
+			int remainingSpace = MAX_STACK_SIZE - this.inventory.stackSize;
+			
+			if(remainingSpace >= amountToAdd) {				
+				this.inventory.stackSize += amountToAdd;
+				StackUtils.decrementStack(player, stack, amountToAdd);
+			} else {
+				this.inventory.stackSize += remainingSpace;
+				StackUtils.decrementStack(player, stack, remainingSpace);
+				
+				Block blockAbove = this.getWorldObj().getBlock(xCoord, yCoord + 1, zCoord);
+				//TileIngotPile tileAbove = (TileIngotPile) this.getWorldObj().getTileEntity(xCoord, yCoord + 1, zCoord);
+
+				if (blockAbove instanceof BlockIngotPile ) {
+					blockAbove.onBlockActivated(getWorldObj(), xCoord, yCoord + 1, zCoord, player, 0, 0, 0, 0);
+				} else if(blockAbove == Blocks.air) {
+					worldObj.setBlock(xCoord, yCoord + 1, zCoord, SoS.ingotPile);
+					worldObj.getBlock(xCoord, yCoord + 1, zCoord).onBlockPlacedBy(worldObj, xCoord, yCoord + 1, zCoord,	player, stack);					
 				}
 			}
-
-		} else {
-			Block nextBlock = worldObj.getBlock(xCoord, yCoord + 1, zCoord);
-			if (nextBlock == Blocks.air) {
-				worldObj.setBlock(xCoord, yCoord + 1, zCoord, SoS.ingotPile);
-				worldObj.getBlock(xCoord, yCoord + 1, zCoord).onBlockPlacedBy(worldObj, xCoord, yCoord + 1, zCoord,
-						player, stack);
-			} else if (nextBlock instanceof BlockIngotPile)
-				nextBlock.onBlockClicked(worldObj, xCoord, yCoord + 1, zCoord, player);
 		}
 	}
 
-	public void remove(EntityPlayer player, ItemStack stack) {
-		Block nextBlock = worldObj.getBlock(xCoord, yCoord + 1, zCoord);
-		if (nextBlock instanceof BlockIngotPile) {
-			nextBlock.onBlockClicked(worldObj, xCoord, yCoord + 1, zCoord, player);
+	private void removeFromPile(EntityPlayer player) {
+		Block blockAbove = this.getWorldObj().getBlock(xCoord, yCoord + 1, zCoord);
+		TileIngotPile tileAbove = (TileIngotPile) this.getWorldObj().getTileEntity(xCoord, yCoord + 1, zCoord);
+
+		
+		if (blockAbove instanceof BlockIngotPile && tileAbove != null && inventory.isItemEqual(tileAbove.getInventory())) {
+			
+			blockAbove.onBlockClicked(getWorldObj(), xCoord, yCoord + 1, zCoord, player);
 		} else {
-			if (!player.inventory.addItemStackToInventory(StackUtils.getOneFromStack(inventory)))
-				StackUtils.spawnItemInWorld(worldObj, xCoord, yCoord, zCoord, stack);
+			if (!player.inventory.addItemStackToInventory(StackUtils.getOneFromStack(inventory))) {
+				StackUtils.spawnItemInWorld(worldObj, xCoord, yCoord, zCoord, StackUtils.getOneFromStack(inventory));
+			}
+			
 			StackUtils.decrementStack(inventory, 1);
 		}
+		
+		if(this.inventory.stackSize <= 0) {
+			this.getWorldObj().setBlockToAir(xCoord, yCoord, zCoord);
+		}
 	}
+	
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
