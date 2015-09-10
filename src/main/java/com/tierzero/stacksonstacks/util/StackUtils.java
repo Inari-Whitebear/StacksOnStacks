@@ -33,11 +33,9 @@ public class StackUtils {
 	}
 
 	public static void decrementStack(ItemStack stack, int num) {
-		int i = num;
-		if (i > 0 && stack.stackSize - 1 >= 0) {
+		if (num > 0) {
 
-			stack.stackSize -= num;
-			i--;
+			stack.stackSize -= num;		
 		}
 	}
 

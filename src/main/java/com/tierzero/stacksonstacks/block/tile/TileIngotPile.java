@@ -70,8 +70,13 @@ public class TileIngotPile extends TileEntity {
 			int add = 1;
 			int diff = 64 - inventory.stackSize;
 			inventory.stackSize += add;
-			if (!player.capabilities.isCreativeMode)
+			if (!player.capabilities.isCreativeMode) {
 				StackUtils.decrementStack(stack, add);
+				if(stack.stackSize <= 0) {
+					player.setCurrentItemOrArmor(0, null);
+				}
+			}
+
 		} else {
 			Block nextBlock = worldObj.getBlock(xCoord, yCoord + 1, zCoord);
 			if (nextBlock == Blocks.air) {
