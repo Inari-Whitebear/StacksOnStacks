@@ -1,11 +1,15 @@
 package com.tierzero.stacksonstacks.block;
 
+import java.util.Random;
+
 import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.block.tile.TileIngotPile;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockSand;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -29,6 +33,26 @@ public class BlockIngotPile extends BlockContainer {
 		this.renderID = RenderingRegistry.getNextAvailableRenderId();
 		this.setHardness(25f);
 
+	}
+
+	
+
+    
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+		if(!world.isRemote) {
+			if(world.isAirBlock(x, y - 1, z)) {
+				TileIngotPile tile = (TileIngotPile) world.getTileEntity(x, y, z);
+				if(tile != null) {
+					
+					ItemStack ingotStack = tile.getInventory();
+					System.out.println(ingotStack.stackSize);
+					
+					this.dropBlockAsItem(tile.getWorldObj(), x, y, z, ingotStack);
+					tile.getWorldObj().setBlockToAir(x, y, z);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -79,6 +103,7 @@ public class BlockIngotPile extends BlockContainer {
 			((TileIngotPile) tile).handlePlacement(player, stack);
 		}
 
+		BlockSand g;
 	}
 
 	@Override
@@ -89,12 +114,25 @@ public class BlockIngotPile extends BlockContainer {
 		}
 		
 		return false;
+		
+		
 	}
 
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-		TileEntity tile = world.getTileEntity(x, y, z);
+		TileIngotPile tile = (TileIngotPile) world.getTileEntity(x, y, z);
 		if (tile != null) {
+			ItemStack ingotStack = tile.getInventory();
+			if(ingotStack != null) {
+				int numberOfIngots = tile.getInventory().stackSize;
+				int height = 1 + numberOfIngots / 8;
+				
+				if(numberOfIngots % 8 == 0) {
+					height -= 1;
+				}
+			
+				this.setBlockBounds(0, 0, 0, 1,  height / 8.0f, 1);
+			}
 		}
 	}
 
@@ -121,6 +159,7 @@ public class BlockIngotPile extends BlockContainer {
 		return;
 	}
 
+	/*
 	@Override
 	public void dropBlockAsItem(World world, int x, int y, int z, ItemStack stack) {
 
@@ -132,6 +171,7 @@ public class BlockIngotPile extends BlockContainer {
 			world.spawnEntityInWorld(item);
 		}
 	}
+	*/
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_,	float p_149727_7_, float p_149727_8_, float p_149727_9_) {

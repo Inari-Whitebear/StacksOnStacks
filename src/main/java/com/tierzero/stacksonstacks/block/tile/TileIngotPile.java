@@ -100,8 +100,13 @@ public class TileIngotPile extends TileEntity {
 		
 		NBTTagCompound inventoryTag = tag.getCompoundTag(TAG_INVENTORY);
 		inventory = ItemStack.loadItemStackFromNBT(inventoryTag);
+		
+		//If null then its probably saved as the pre 0.9.5 nbt format
+		if(inventory == null) {
+			inventory = StackUtils.getStackFromInfo(tag.getInteger("ingot"), tag.getByte("stackSize"), tag.getInteger("meta"));
+		}
 	}
-
+	
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);

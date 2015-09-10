@@ -61,8 +61,7 @@ public class IngotFinder {
 	public static Color getColor(ItemStack stack) {
 		List<Color> colors = new ArrayList<Color>();
 		try {
-			BufferedImage texture = ImageIO.read(Minecraft.getMinecraft().getResourceManager()
-					.getResource(ClientUtils.getIconResource(stack)).getInputStream());
+			BufferedImage texture = ImageIO.read(Minecraft.getMinecraft().getResourceManager().getResource(ClientUtils.getIconResource(stack)).getInputStream());
 			Color textureColour = getAverageColor(texture);
 			colors.add(textureColour);
 

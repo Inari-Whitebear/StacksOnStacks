@@ -12,6 +12,7 @@ import com.tierzero.stacksonstacks.util.ClientUtils;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
@@ -114,11 +115,8 @@ public class RenderTileIngotPile implements ISimpleBlockRenderingHandler {
 			Color color = ingot.getColor();
 			ClientUtils.pushMatrix();
 			{
-				IIcon icon = null;
-				try {
-					icon = ingot.getIcon();
-				} catch (Throwable e) {
-				}
+				IIcon icon = ingot.getIcon();
+
 				Tessellator tessellator = Tessellator.instance;
 				tessellator.addTranslation(x, y, z);
 				if (GregTech6Compat.INSTANCE.isEnabled() || icon == null) {
@@ -132,15 +130,9 @@ public class RenderTileIngotPile implements ISimpleBlockRenderingHandler {
 				double Vmax = icon.getMaxV();
 				double Vmin = icon.getMinV();
 				double Umax = icon.getMaxU();
-				// Render side 0 (down)
-				int[] lightLevel = new int[6];
-				lightLevel[0] = block.getMixedBrightnessForBlock(world, (int) x, (int) y - 1, (int) z);
-				lightLevel[1] = world.getLightBrightnessForSkyBlocks((int) x, (int) y, (int) z, 1);
-				lightLevel[2] = block.getMixedBrightnessForBlock(world, (int) x, (int) y, (int) z - 1);
-				lightLevel[3] = block.getMixedBrightnessForBlock(world, (int) x, (int) y, (int) z + 1);
-				lightLevel[4] = block.getMixedBrightnessForBlock(world, (int) x - 1, (int) y, (int) z);
-				lightLevel[5] = block.getMixedBrightnessForBlock(world, (int) x + 1, (int) y, (int) z);
-
+				
+				int lightLevel = block.getMixedBrightnessForBlock(world, (int) x, (int) y, (int) z);
+				
 				ClientUtils.drawRectangularPrism(r ? width : length, r ? length : width, height, slantW, slantL, Umin,
 						Vmin, Umax, Vmax, lightLevel, r);
 				tessellator.addTranslation(-x, -y, -z);
