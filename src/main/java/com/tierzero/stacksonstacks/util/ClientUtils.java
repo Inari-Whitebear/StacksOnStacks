@@ -1,11 +1,17 @@
 package com.tierzero.stacksonstacks.util;
 
+import java.io.IOException;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import com.tierzero.stacksonstacks.api.IngotRegistry;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.resources.IResource;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
@@ -24,33 +30,71 @@ public class ClientUtils {
 			return icon.getIconName();
 		return null;
 	}
+	
+	private static String[] seperateName(String unlocalizedName) {
+		unlocalizedName = unlocalizedName.replaceAll("item.", "");
+		
+		String[] seperatedName;
+		if(unlocalizedName.contains(":")) {
+			seperatedName = unlocalizedName.split("[':']+");
+		} else {
+			seperatedName = unlocalizedName.split("['.']+");
+		}
+		
+
+		
+		System.out.print("\n");
+
+		return seperatedName;
+	}
+
 
 	@SideOnly(Side.CLIENT)
-	public static ResourceLocation getIconResource(ItemStack stack) {
+	public static IResource getIconResource(ItemStack stack) {
 		
-		String iconName = getIconName(stack);
-		if (iconName == null) {
-			iconName = stack.getUnlocalizedName().replaceAll("item.", "");
-		}
-		System.out.println(iconName);
-		String string = "minecraft";
+		IResource resource = null;
 
-		int colonIndex = iconName.indexOf(58);
-		if (colonIndex >= 0) {
-			if (colonIndex > 1)
-				string = iconName.substring(0, colonIndex);
+			
+			String[] seperatedUnlocalizedName = seperateName(IngotRegistry.getIngot(stack).getRegisteredName());
 
-			iconName = iconName.substring(colonIndex + 1, iconName.length());
-		}
+			String iconName = "textures/items/";
+			String domain = seperatedUnlocalizedName[0].toLowerCase();
+			String itemName = seperatedUnlocalizedName[seperatedUnlocalizedName.length - 1];
+			
+			for(int i = 1; i < seperatedUnlocalizedName.length - 1; i++) {
+				iconName += seperatedUnlocalizedName[i] + "/";
+			}
+			
+			iconName += seperatedUnlocalizedName[seperatedUnlocalizedName.length - 1] + ".png";
+			
+			System.out.println(iconName);
+			try {
+				resource = getResource(domain, iconName);
+			} catch (IOException e) {
+			}
+			
+			if(resource == null) {
+				
+				iconName = iconName.replaceFirst(itemName, itemName.replace(itemName.charAt(0), Character.toUpperCase(itemName.charAt(0))));
+			
+				try {
+					resource = getResource(domain, iconName);
+				} catch (IOException e) {
+				}
+			}
+		
 
-		string = string.toLowerCase();
-		iconName = "textures/items/" + iconName + ".png";
-		return new ResourceLocation(string, iconName);
+		
+		return resource;
+	}
+	
+	private static IResource getResource(String domain, String path) throws IOException {
+		return Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(domain, path));
 	}
 	
 	
 	public static void drawRectangularPrism(double width, double length, double height, double slantX, double slantZ,
-			double Umin, double Vmin, double Umax, double Vmax, int lightLevel, boolean r) {
+			double Umin, double Vmin, double Umax, double Vmax, int lightLevel) {
 		Tessellator tes = tes();		
 
 		tes.setBrightness(lightLevel);

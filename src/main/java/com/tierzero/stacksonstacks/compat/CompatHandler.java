@@ -6,11 +6,7 @@ public class CompatHandler {
 	public static ArrayList<ModCompat> modcompat = new ArrayList<ModCompat>();
 
 	static {
-		add(AvaritiaCompat.INSTANCE);
-		add(GregTech6Compat.INSTANCE);
-		add(GregTech5Compat.INSTANCE);
-		add(BotaniaCompat.INSTANCE);
-		add(RotaryCompat.INSTANCE);
+		add(new GeneralCompat());
 	}
 
 	public static void config() {

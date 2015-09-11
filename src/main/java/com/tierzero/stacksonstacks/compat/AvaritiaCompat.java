@@ -8,7 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class AvaritiaCompat extends ModCompat {
-	public static AvaritiaCompat INSTANCE = new AvaritiaCompat();
 
 	public AvaritiaCompat() {
 		super("Avaritia");
@@ -21,9 +20,9 @@ public class AvaritiaCompat extends ModCompat {
 
 	@Override
 	public void init() {
-		OreDictionary.registerOre("ingotInfinity", new ItemStack(findItem("Resource"), 1, 6));
-		OreDictionary.registerOre("ingotCrystalMatrix", new ItemStack(findItem("Resource"), 1, 1));
-		OreDictionary.registerOre("ingotNeutronium", new ItemStack(findItem("Resource"), 1, 4));
+		//OreDictionary.registerOre("ingotInfinity", new ItemStack(findItem("Resource"), 1, 6));
+		//OreDictionary.registerOre("ingotCrystalMatrix", new ItemStack(findItem("Resource"), 1, 1));
+		//OreDictionary.registerOre("ingotNeutronium", new ItemStack(findItem("Resource"), 1, 4));
 	}
 
 	@Override
@@ -39,9 +38,9 @@ public class AvaritiaCompat extends ModCompat {
 	@SideOnly(Side.CLIENT)
 	public void customIngots() {
 
-		IngotRegistry.getIngot(findItem("Resource"), 1).setIcon(findBlock("Crystal_Matrix").getIcon(0, 0));
-		IngotRegistry.getIngot(findItem("Resource"), 4).setIcon(findBlock("Resource_Block").getIcon(0, 0));
-		IngotRegistry.getIngot(findItem("Resource"), 6).setIcon(findBlock("Resource_Block").getIcon(0, 1));
+		//IngotRegistry.getIngot(findItem("Resource"), 1).setIcon(findBlock("Crystal_Matrix").getIcon(0, 0));
+		//IngotRegistry.getIngot(findItem("Resource"), 4).setIcon(findBlock("Resource_Block").getIcon(0, 0));
+		//IngotRegistry.getIngot(findItem("Resource"), 6).setIcon(findBlock("Resource_Block").getIcon(0, 1));
 
 	}
 

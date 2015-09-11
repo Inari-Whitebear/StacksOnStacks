@@ -11,14 +11,16 @@ public class Ingot {
 	private int meta;
 	private Color colour;
 	private IIcon icon;
-
-	public Ingot(ItemStack stack) {
-		this(stack.getItem(), stack.getItemDamage());
+	private String registeredName;
+	
+	public Ingot(ItemStack stack, String registeredName) {
+		this(stack.getItem(), stack.getItemDamage(), registeredName);
 	}
 
-	public Ingot(Item item, int meta) {
+	public Ingot(Item item, int meta, String registeredName) {
 		this.item = item;
 		this.meta = meta;
+		this.registeredName = registeredName;
 	}
 
 	public IIcon getIcon() {
@@ -56,5 +58,9 @@ public class Ingot {
 	@Override
 	public String toString() {
 		return String.format("Registered %s as valid ingot", new ItemStack(item, 1, meta).getDisplayName());
+	}
+
+	public String getRegisteredName() {
+		return this.registeredName;
 	}
 }

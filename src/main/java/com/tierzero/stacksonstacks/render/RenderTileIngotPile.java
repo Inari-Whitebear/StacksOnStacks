@@ -35,7 +35,7 @@ public class RenderTileIngotPile implements ISimpleBlockRenderingHandler {
 
 		//The block wants to render before the tile is loaded so this check is necessary
 		if(ingotStack != null) {
-			Ingot ingot = IngotRegistry.getIngot(ingotStack);
+			Ingot ingot = IngotRegistry.getIngot(tile.getInventory());
 			int length = tile.getInventoryCount();
 			ClientUtils.pushMatrix();
 			{
@@ -134,7 +134,7 @@ public class RenderTileIngotPile implements ISimpleBlockRenderingHandler {
 				int lightLevel = block.getMixedBrightnessForBlock(world, (int) x, (int) y, (int) z);
 				
 				ClientUtils.drawRectangularPrism(r ? width : length, r ? length : width, height, slantW, slantL, Umin,
-						Vmin, Umax, Vmax, lightLevel, r);
+						Vmin, Umax, Vmax, lightLevel);
 				tessellator.addTranslation(-x, -y, -z);
 			}
 			ClientUtils.popMatrix();

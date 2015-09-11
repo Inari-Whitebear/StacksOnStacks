@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 
@@ -14,30 +15,35 @@ import com.tierzero.stacksonstacks.compat.GregTech6Compat;
 import com.tierzero.stacksonstacks.compat.RotaryCompat;
 import com.tierzero.stacksonstacks.util.ClientUtils;
 
+import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
+import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class IngotFinder {
 	private static String[] invalidNames = new String[] { "ingotDouble", "ingotTriple", "ingotQuad", "ingotQuin" };
 
 	public static void registerIngots() {
-		for (String ore : OreDictionary.getOreNames()) {
-			if (!ore.isEmpty() && ore.startsWith("ingot")) {
-				boolean invalidOre = false;
-				for (String invalid : invalidNames) {
-					if (ore.startsWith(invalid)) {
-						invalidOre = true;
+		
+		FMLControlledNamespacedRegistry<Item> itemRegistry = GameData.getItemRegistry();
+		Set<String> registeredItemNames = itemRegistry.getKeys();
+		for (String registeredName : registeredItemNames) {
+			if (!registeredName.isEmpty() && registeredName.contains("ingot")) {
+
+				boolean invalid = false;
+				for (String invalidName : invalidNames) {
+					if (registeredName.startsWith(invalidName)) {
+						invalid = true;
 					}
 				}
-				if (!invalidOre) {
-					for (ItemStack stack : OreDictionary.getOres(ore)) {
-						IngotRegistry.registerIngot(stack);
-					}
+				if (!invalid) {
+					
+					ItemStack stack = new ItemStack(itemRegistry.getObject(registeredName));
+					IngotRegistry.registerIngot(stack, registeredName);
 				}
 			}
 		}
@@ -61,7 +67,7 @@ public class IngotFinder {
 	public static Color getColor(ItemStack stack) {
 		List<Color> colors = new ArrayList<Color>();
 		try {
-			BufferedImage texture = ImageIO.read(Minecraft.getMinecraft().getResourceManager().getResource(ClientUtils.getIconResource(stack)).getInputStream());
+			BufferedImage texture = ImageIO.read(ClientUtils.getIconResource(stack).getInputStream());
 			Color textureColour = getAverageColor(texture);
 			colors.add(textureColour);
 

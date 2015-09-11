@@ -51,6 +51,7 @@ public class IngotPileHandler {
 		}
 
 		if(heldItemStack != null && event.entityPlayer.isSneaking()) {
+			
 			event.world.getBlock(x, y, z).onBlockActivated(event.world, x, y, z, event.entityPlayer, 0, 0, 0, 0);
 		}
 	}
