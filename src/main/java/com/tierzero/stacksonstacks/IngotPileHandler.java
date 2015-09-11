@@ -17,9 +17,10 @@ public class IngotPileHandler {
 
 	@SubscribeEvent
 	public void handleIngotPilePlacement(PlayerInteractEvent event) {
-		if (event.action != Action.RIGHT_CLICK_BLOCK)
+		if (event.action != Action.RIGHT_CLICK_BLOCK) {
 			return;
-
+		}
+		
 		ItemStack heldItemStack = event.entityPlayer.getCurrentEquippedItem();
 		int x = event.x; 
 		int y = event.y; 
@@ -33,7 +34,7 @@ public class IngotPileHandler {
 			return;
 		if (tile instanceof TileIngotPile) {
 			TileIngotPile ingotPileTile = (TileIngotPile) tile;
-			canPlace = ingotPileTile.getInventoryCount() <= 64 && event.face == 1;
+			canPlace = ingotPileTile.getInventoryCount() == 64 && event.face == 1;
 		}
 
 		if (heldItemStack != null && IngotRegistry.isValidIngot(heldItemStack) && canPlace) {
@@ -44,11 +45,14 @@ public class IngotPileHandler {
 			z = coords[2];
 			if (event.world.getBlock(x, y - 1, z).getMaterial().isSolid()) {
 				event.world.setBlock(x, y, z, SoS.ingotPile);
+				event.world.getBlock(x, y, z).onBlockPlacedBy(event.world, x, y, z, event.entityPlayer, heldItemStack);
 			}
 			
-			event.world.getBlock(x, y, z).onBlockActivated(event.world, x, y, z, event.entityPlayer, 0, 0, 0, 0);
 		}
 
+		if(heldItemStack != null && event.entityPlayer.isSneaking()) {
+			event.world.getBlock(x, y, z).onBlockActivated(event.world, x, y, z, event.entityPlayer, 0, 0, 0, 0);
+		}
 	}
 
 	public static int[] getPlacementCoords(int x, int y, int z, int side) {

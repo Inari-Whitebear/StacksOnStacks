@@ -41,7 +41,7 @@ public class TileIngotPile extends TileEntity {
 	}
 
 	public void onClicked(EntityPlayer player) {
-		removeFromPile(player);
+		removeFromPile(player, shouldUseEntireStack(player));
 		update();
 	}
 	
@@ -113,20 +113,27 @@ public class TileIngotPile extends TileEntity {
 		}
 	}
 
-	private void removeFromPile(EntityPlayer player) {
+	private void removeFromPile(EntityPlayer player, boolean entireStack) {
 		Block blockAbove = this.getWorldObj().getBlock(xCoord, yCoord + 1, zCoord);
 		TileIngotPile tileAbove = (TileIngotPile) this.getWorldObj().getTileEntity(xCoord, yCoord + 1, zCoord);
 
 		
 		if (blockAbove instanceof BlockIngotPile && tileAbove != null && inventory.isItemEqual(tileAbove.getInventory())) {
-			
 			blockAbove.onBlockClicked(getWorldObj(), xCoord, yCoord + 1, zCoord, player);
 		} else {
-			if (!player.inventory.addItemStackToInventory(StackUtils.getOneFromStack(inventory))) {
-				StackUtils.spawnItemInWorld(worldObj, xCoord, yCoord, zCoord, StackUtils.getOneFromStack(inventory));
+			int amountToRemove = 1;
+			
+			if(entireStack) {
+				amountToRemove = inventory.stackSize;
 			}
 			
-			StackUtils.decrementStack(inventory, 1);
+			
+			ItemStack drop = StackUtils.getItemsFromStack(inventory, amountToRemove);
+			if (!player.inventory.addItemStackToInventory(drop)) {
+				StackUtils.spawnItemInWorld(worldObj, xCoord, yCoord, zCoord, drop);
+			}
+			
+			StackUtils.decrementStack(inventory, amountToRemove);
 		}
 		
 		if(this.inventory.stackSize <= 0) {
@@ -152,9 +159,11 @@ public class TileIngotPile extends TileEntity {
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		
-		NBTTagCompound inventoryTag = new NBTTagCompound();		
-		inventory.writeToNBT(inventoryTag);
-		tag.setTag(TAG_INVENTORY, inventoryTag);
+		NBTTagCompound inventoryTag = new NBTTagCompound();
+		if(inventory != null) {
+			inventory.writeToNBT(inventoryTag);
+			tag.setTag(TAG_INVENTORY, inventoryTag);
+		}
 	}
 
 	@Override

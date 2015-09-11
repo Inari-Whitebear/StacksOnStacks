@@ -21,11 +21,13 @@ public class StackUtils {
 	}
 
 	public static ItemStack getItemsFromStack(ItemStack stack, int num) {
-		if (stack == null)
-			return null;
-		ItemStack copy = stack.copy();
-		copy.stackSize = num;
-		return copy;
+		if (stack != null) {
+			ItemStack copy = stack.copy();
+			copy.stackSize = num;
+			return copy;
+		}
+		
+		return null;
 	}
 
 	public static void decrementStack(ItemStack stack, int amount) {
@@ -41,12 +43,12 @@ public class StackUtils {
 	}
 
 	public static void spawnItemInWorld(World world, int x, int y, int z, ItemStack stack) {
-		if (world.isRemote)
-			return;
-		EntityItem item = new EntityItem(world);
-		item.setEntityItemStack(StackUtils.getOneFromStack(stack));
-		item.setPosition(x, y, z);
-		world.spawnEntityInWorld(item);
+		if (!world.isRemote) {
+			EntityItem item = new EntityItem(world);
+			item.setEntityItemStack(stack);
+			item.setPosition(x, y, z);
+			world.spawnEntityInWorld(item);
+		}
 	}
 	
 	private static void removeStackIfEmpty(EntityPlayer player, ItemStack stack) {

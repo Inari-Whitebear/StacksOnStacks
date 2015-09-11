@@ -35,7 +35,7 @@ public class RenderTileIngotPile implements ISimpleBlockRenderingHandler {
 
 		//The block wants to render before the tile is loaded so this check is necessary
 		if(ingotStack != null) {
-			Ingot ingot = IngotRegistry.getIngot(tile.getInventory());
+			Ingot ingot = IngotRegistry.getIngot(ingotStack);
 			int length = tile.getInventoryCount();
 			ClientUtils.pushMatrix();
 			{

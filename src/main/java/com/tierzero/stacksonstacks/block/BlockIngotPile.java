@@ -164,6 +164,14 @@ public class BlockIngotPile extends BlockContainer {
 	}
 
 
+	
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
+		this.onBlockActivated(world, x, y, z, (EntityPlayer) player, 0, 0, 0, 0);
+	}
+	
+	
+	
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
 		return new TileIngotPile();

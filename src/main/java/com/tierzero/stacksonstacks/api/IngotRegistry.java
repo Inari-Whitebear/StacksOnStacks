@@ -27,7 +27,7 @@ public class IngotRegistry {
 	}
 
 	public static Ingot getIngot(ItemStack stack) {
-		return getIngot(stack.getItem(), stack.getItemDamage());
+		return getIngot(stack.getItem(), stack.getItemDamage());	
 	}
 
 	public static boolean isValidIngot(ItemStack stack) {
