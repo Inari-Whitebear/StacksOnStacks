@@ -8,6 +8,7 @@ import com.tierzero.stacksonstacks.util.StackUtils;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -63,6 +64,7 @@ public class TileIngotPile extends TileEntity {
 		return false;
 		
 	}
+
 	
 	private boolean shouldUseEntireStack(EntityPlayer player) {
 		return player.isSneaking();
@@ -80,6 +82,11 @@ public class TileIngotPile extends TileEntity {
 		if (!player.capabilities.isCreativeMode) {
 			StackUtils.decrementStack(player, stack, initialAmount);
 		}
+	}
+	
+	
+	public void debugCreatePile(ItemStack stack) {
+		inventory = stack;
 	}
 
 	private void addToPile(EntityPlayer player, ItemStack stack, boolean entireStack) {
@@ -149,10 +156,19 @@ public class TileIngotPile extends TileEntity {
 		NBTTagCompound inventoryTag = tag.getCompoundTag(TAG_INVENTORY);
 		inventory = ItemStack.loadItemStackFromNBT(inventoryTag);
 		
+		//If a ingot was removed from the game then this will be null
+		if(inventory.getItem() == null) {
+			inventory = new ItemStack(Items.iron_ingot, 0, 1);
+			
+			
+		}
+		
 		//If null then its probably saved as the pre 0.9.5 nbt format
 		if(inventory == null) {
 			inventory = StackUtils.getStackFromInfo(tag.getInteger("ingot"), tag.getByte("stackSize"), tag.getInteger("meta"));
 		}
+		
+
 	}
 	
 	@Override

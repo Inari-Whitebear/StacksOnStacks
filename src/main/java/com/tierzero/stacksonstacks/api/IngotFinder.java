@@ -9,12 +9,14 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
+import com.google.common.collect.Lists;
 import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.compat.GregTech5Compat;
 import com.tierzero.stacksonstacks.compat.GregTech6Compat;
 import com.tierzero.stacksonstacks.compat.RotaryCompat;
 import com.tierzero.stacksonstacks.util.ClientUtils;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
 import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.relauncher.Side;
@@ -23,30 +25,52 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class IngotFinder {
 	private static String[] invalidNames = new String[] { "ingotDouble", "ingotTriple", "ingotQuad", "ingotQuin" };
 
-	public static void registerIngots() {
-		
+	public static void registerIngots() {		
 		FMLControlledNamespacedRegistry<Item> itemRegistry = GameData.getItemRegistry();
 		Set<String> registeredItemNames = itemRegistry.getKeys();
-		for (String registeredName : registeredItemNames) {
-			if (!registeredName.isEmpty() && registeredName.contains("ingot")) {
+
+		List<String> validRegisteredNames = getValidNames(Lists.newArrayList(registeredItemNames));
+		List<String> validOredictNames = getValidNames(Lists.newArrayList(OreDictionary.getOreNames()));
+			
+		for(String validName : validOredictNames) {
+			for(ItemStack stack : OreDictionary.getOres(validName)) {
+				IngotRegistry.registerIngot(stack, validName);
+			}
+		}
+		
+		for(String validName : validRegisteredNames) {
+			ItemStack stack = new ItemStack(itemRegistry.getObject(validName));
+			IngotRegistry.registerIngot(stack, validName);
+		}
+	}
+	
+	private static List<String> getValidNames(List<String> names) {
+		List<String> validNames = new ArrayList<String>();
+		
+		for (String name : names) {
+			System.out.println(name);
+			if (!name.isEmpty() && name.contains("ingot")) {
 
 				boolean invalid = false;
 				for (String invalidName : invalidNames) {
-					if (registeredName.startsWith(invalidName)) {
+					if (name.startsWith(invalidName)) {
 						invalid = true;
 					}
 				}
-				if (!invalid) {
-					
-					ItemStack stack = new ItemStack(itemRegistry.getObject(registeredName));
-					IngotRegistry.registerIngot(stack, registeredName);
+
+				if(!invalid) {
+					validNames.add(name);
 				}
+				
 			}
 		}
+		
+		return validNames;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -84,6 +108,7 @@ public class IngotFinder {
 		} catch (Exception e) {
 		}
 
+		
 		if (GregTech6Compat.INSTANCE.isEnabled()) {
 			try {
 				Class<?> clazz = Class.forName("gregapi.item.prefixitem.PrefixItem");
@@ -124,6 +149,8 @@ public class IngotFinder {
 
 			}
 		}
+		
+		
 		float red = 0;
 		float green = 0;
 		float blue = 0;

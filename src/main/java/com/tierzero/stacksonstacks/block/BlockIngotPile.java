@@ -132,7 +132,11 @@ public class BlockIngotPile extends BlockContainer {
 	public void onBlockPreDestroy(World world, int x, int y, int z, int meta) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			dropBlockAsItem(world, x, y, z, ((TileIngotPile) tile).getInventory());
+			ItemStack stackToDrop = ((TileIngotPile) tile).getInventory();
+			
+			if(stackToDrop != null && stackToDrop.getItem() != null) {
+				dropBlockAsItem(world, x, y, z, ((TileIngotPile) tile).getInventory());
+			}
 		}
 	}
 
@@ -170,7 +174,12 @@ public class BlockIngotPile extends BlockContainer {
 		this.onBlockActivated(world, x, y, z, (EntityPlayer) player, 0, 0, 0, 0);
 	}
 	
-	
+	public void debugBlockPlaced(World world, int x, int y, int z, ItemStack stack) {
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if (tile != null) {
+			((TileIngotPile) tile).debugCreatePile(stack);
+		}
+	}
 	
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {

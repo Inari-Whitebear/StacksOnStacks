@@ -44,7 +44,7 @@ public class GregTech6Compat extends ModCompat {
 
 	@Override
 	public boolean isEnabled() {
-		return Loader.isModLoaded("gregapi") && compatEnabled;
+		return Loader.isModLoaded("gregapi");
 	}
 
 }

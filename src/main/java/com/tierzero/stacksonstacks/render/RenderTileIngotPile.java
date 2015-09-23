@@ -32,49 +32,50 @@ public class RenderTileIngotPile implements ISimpleBlockRenderingHandler {
 
 		ItemStack ingotStack = tile.getInventory();
 
-
-		//The block wants to render before the tile is loaded so this check is necessary
 		if(ingotStack != null) {
-			Ingot ingot = IngotRegistry.getIngot(tile.getInventory());
-			int length = tile.getInventoryCount();
-			ClientUtils.pushMatrix();
-			{
+			Ingot ingot = IngotRegistry.getIngot(ingotStack);
+			if(ingot != null) {
+				int length = tile.getInventoryCount();
+				ClientUtils.pushMatrix();
+				{
 
-				float w = 0f, h = 0f, l = 0f;
-				float a = 0f, s = 0f, d = 0f;
-				boolean r = true;
-				int e = 0;
-				for (int i = 0; i < length; i++) {
-					w = a / 4;
-					l = d / 2;
-					h = s / 8;
+					float w = 0f, h = 0f, l = 0f;
+					float a = 0f, s = 0f, d = 0f;
+					boolean r = true;
+					int e = 0;
+					for (int i = 0; i < length; i++) {
+						w = a / 4;
+						l = d / 2;
+						h = s / 8;
 
-					ingots.add(new IngotRender(x + (r ? w : l), y + h, z + (r ? l : w), ingot, r));
-					if (a < 3)
-						a++;
-					else {
-						w = 0;
-						a = 0;
-						if (d == 0)
-							d++;
+						ingots.add(new IngotRender(x + (r ? w : l), y + h, z + (r ? l : w), ingot, r));
+						if (a < 3)
+							a++;
 						else {
-							d = 0;
-							if (s < 8)
-								s++;
+							w = 0;
+							a = 0;
+							if (d == 0)
+								d++;
+							else {
+								d = 0;
+								if (s < 8)
+									s++;
+							}
 						}
+						if (e == 7) {
+							e = 0;
+							r = !r;
+						} else
+							e++;
 					}
-					if (e == 7) {
-						e = 0;
-						r = !r;
-					} else
-						e++;
-				}
 
-				for (IngotRender render : ingots) {
-					render.render(world, block, tile);
+					for (IngotRender render : ingots) {
+						render.render(world, block, tile);
+					}
 				}
+				ClientUtils.popMatrix();
 			}
-			ClientUtils.popMatrix();
+
 		}
 
 		return ingots.size() > 0;
@@ -122,9 +123,7 @@ public class RenderTileIngotPile implements ISimpleBlockRenderingHandler {
 				if (GregTech6Compat.INSTANCE.isEnabled() || icon == null) {
 					icon = block.getIcon(0, 0);
 					tessellator.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
-				} else {
-					tessellator.setColorOpaque(255, 255, 255);
-				}
+				} 
 
 				double Umin = icon.getMinU();
 				double Vmax = icon.getMaxV();

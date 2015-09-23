@@ -5,8 +5,10 @@ import java.io.IOException;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import com.tierzero.stacksonstacks.api.Ingot;
 import com.tierzero.stacksonstacks.api.IngotRegistry;
 
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
@@ -26,70 +28,101 @@ public class ClientUtils {
 	private static String getIconName(ItemStack stack) {
 
 		IIcon icon = stack.getItem().getIconFromDamage(stack.getItemDamage());
-		if (icon != null)
+		if (icon != null) {
 			return icon.getIconName();
+		}
 		return null;
 	}
+
+	private static String[] splitString(String regex, String stringToSplit) {
+		return stringToSplit.split(regex);
+	}
 	
-	private static String[] seperateName(String unlocalizedName) {
-		unlocalizedName = unlocalizedName.replaceAll("item.", "");
-		
-		String[] seperatedName;
-		if(unlocalizedName.contains(":")) {
-			seperatedName = unlocalizedName.split("[':']+");
-		} else {
-			seperatedName = unlocalizedName.split("['.']+");
+	private static String buildPath(String[] seperatedName) {
+		String iconName = "textures/items/";
+
+		for(int i = 1; i < seperatedName.length - 1; i++) {
+			iconName += seperatedName[i] + "/";
 		}
 		
-
+		iconName += seperatedName[seperatedName.length - 1] + ".png";
 		
-		System.out.print("\n");
-
-		return seperatedName;
+		return iconName;
 	}
-
-
+	
 	@SideOnly(Side.CLIENT)
 	public static IResource getIconResource(ItemStack stack) {
 		
-		IResource resource = null;
+		IResource resource = fromIconName(stack);
+		
+		if(resource == null) {
+			Ingot ingot = IngotRegistry.getIngot(stack);
+			String registeredName = ingot.getRegisteredName();
+			String unlocalizedName = ingot.getName();
 
-			
-			String[] seperatedUnlocalizedName = seperateName(IngotRegistry.getIngot(stack).getRegisteredName());
-
-			String iconName = "textures/items/";
-			String domain = seperatedUnlocalizedName[0].toLowerCase();
-			String itemName = seperatedUnlocalizedName[seperatedUnlocalizedName.length - 1];
-			
-			for(int i = 1; i < seperatedUnlocalizedName.length - 1; i++) {
-				iconName += seperatedUnlocalizedName[i] + "/";
-			}
-			
-			iconName += seperatedUnlocalizedName[seperatedUnlocalizedName.length - 1] + ".png";
-			
-			System.out.println(iconName);
-			try {
-				resource = getResource(domain, iconName);
-			} catch (IOException e) {
-			}
+			resource = fromNames(registeredName, unlocalizedName);
 			
 			if(resource == null) {
+				String capitalizedIngotName = ingot.getRegisteredName().replaceFirst("[i]", "I");
 				
-				iconName = iconName.replaceFirst(itemName, itemName.replace(itemName.charAt(0), Character.toUpperCase(itemName.charAt(0))));
-			
-				try {
-					resource = getResource(domain, iconName);
-				} catch (IOException e) {
-				}
-			}
-		
+				resource = fromNames(capitalizedIngotName, unlocalizedName);
 
+			}
+		}
 		
 		return resource;
 	}
+
+	private static IResource fromIconName(ItemStack stack) {
+		
+		String iconName = getIconName(stack);
+
+		if(iconName != null) {
+			String[] seperatedIconName = splitString("[:/]+", iconName);
+			String domain = seperatedIconName[0];
+			
+			//Vanilla check
+			if(domain.equals(seperatedIconName[seperatedIconName.length - 1])) {
+				domain = "minecraft";
+			}
+			
+			String path = buildPath(seperatedIconName);
+			
+			return getResource(domain, path);
+		}
+
+		return null;
+	}
 	
-	private static IResource getResource(String domain, String path) throws IOException {
-		return Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(domain, path));
+	private static IResource fromNames(String registeredName, String unlocalizedName) {
+		registeredName = registeredName.replaceAll("item.", "");
+		unlocalizedName = unlocalizedName.replaceAll("item.", "");
+		
+		String[] seperatedName;
+		if(registeredName.contains(":")) {
+			seperatedName = splitString("[':']+", registeredName);
+			
+		} else if(unlocalizedName.contains(":")) {
+			seperatedName = splitString("[':']+", unlocalizedName);
+		} else {
+			unlocalizedName += "." + registeredName;
+
+			seperatedName = splitString("['.']+", unlocalizedName);
+		}
+		
+		String domain = seperatedName[0];
+		String path = buildPath(seperatedName);
+		return getResource(domain, path);
+	}
+	
+	private static IResource getResource(String domain, String path) {
+		try {
+			FMLLog.info("[StacksOnStacks] Looking for resource: " + (new ResourceLocation(domain, path).toString()));
+			
+			return Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(domain, path));
+		} catch (IOException e) {
+			return null;
+		}
 	}
 	
 	

@@ -5,6 +5,7 @@ import com.tierzero.stacksonstacks.block.BlockIngotPile;
 import com.tierzero.stacksonstacks.compat.CompatHandler;
 import com.tierzero.stacksonstacks.util.Config;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
@@ -34,6 +35,8 @@ public class SoS {
 		ingotPile = new BlockIngotPile("ingotPile");
 		MinecraftForge.EVENT_BUS.register(new IngotPileHandler());
 		config.save();
+		
+		FMLCommonHandler.instance().bus().register(new DebugHandler());
 	}
 
 	@EventHandler
@@ -43,9 +46,10 @@ public class SoS {
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
-		IngotFinder.registerIngots();
 		CompatHandler.postInit();
+		IngotFinder.registerIngots();
 		proxy.postInit();
 	}
+
 
 }
