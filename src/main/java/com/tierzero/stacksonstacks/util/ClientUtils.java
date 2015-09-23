@@ -117,7 +117,7 @@ public class ClientUtils {
 	
 	private static IResource getResource(String domain, String path) {
 		try {
-			FMLLog.info("[StacksOnStacks] Looking for resource: " + (new ResourceLocation(domain, path).toString()));
+			//FMLLog.info("[StacksOnStacks] Looking for resource: " + (new ResourceLocation(domain, path).toString()));
 			
 			return Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(domain, path));
 		} catch (IOException e) {

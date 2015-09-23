@@ -53,7 +53,6 @@ public class IngotFinder {
 		List<String> validNames = new ArrayList<String>();
 		
 		for (String name : names) {
-			System.out.println(name);
 			if (!name.isEmpty() && name.contains("ingot")) {
 
 				boolean invalid = false;

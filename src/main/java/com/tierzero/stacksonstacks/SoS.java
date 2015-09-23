@@ -14,9 +14,9 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.common.MinecraftForge;
 
-@Mod(modid = SoS.MODID, name = SoS.MODID, version = SoS.VERSION, dependencies = "after:gregtech_addon;after:gregapi;after:Avaritia;after:Botania;")
+@Mod(modid = SoS.MODID, name = SoS.MODID, version = SoS.VERSION, dependencies = "after:gregtech_addon;after:gregapi;")
 public class SoS {
-	public static final String VERSION = "0.9.5.1";
+	public static final String VERSION = "0.9.6";
 	public static final String MODID = "StacksOnStacks";
 	public static final String TEXTURE_BASE = MODID + ":";
 	public static BlockIngotPile ingotPile;
@@ -36,7 +36,7 @@ public class SoS {
 		MinecraftForge.EVENT_BUS.register(new IngotPileHandler());
 		config.save();
 		
-		FMLCommonHandler.instance().bus().register(new DebugHandler());
+		//FMLCommonHandler.instance().bus().register(new DebugHandler());
 	}
 
 	@EventHandler
