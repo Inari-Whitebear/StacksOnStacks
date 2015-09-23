@@ -69,8 +69,14 @@ public class GeneralCompat extends ModCompat {
 			IngotRegistry.registerIngot(getItemStack(MOD_WITCHERY, "dustSilver", 0), MOD_WITCHERY + COLON + "dustSilver");
 
 		}
-		*/
+		
 	
+		if(Loader.isModLoaded(MOD_AVARITA)) {
+			IngotRegistry.getIngot(findItem(MOD_AVARITA,"Resource"), 1).setIcon(findBlock("Crystal_Matrix").getIcon(0, 0));
+			IngotRegistry.getIngot(findItem("Resource"), 4).setIcon(findBlock("Resource_Block").getIcon(0, 0));
+			IngotRegistry.getIngot(findItem("Resource"), 6).setIcon(findBlock("Resource_Block").getIcon(0, 1));
+		}
+		*/
 		
 	}
 

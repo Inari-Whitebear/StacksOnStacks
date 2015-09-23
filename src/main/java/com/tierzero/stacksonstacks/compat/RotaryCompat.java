@@ -38,12 +38,12 @@ public class RotaryCompat extends ModCompat {
 
 	@Override
 	public void postInit() {
-		//IngotRegistry.registerIngot(hsla);
-		//IngotRegistry.registerIngot(bedrockIngot);
-		//IngotRegistry.registerIngot(sinisterTungstenIngot);
-		//IngotRegistry.registerIngot(inductiveIngot);
-		//IngotRegistry.registerIngot(springAlloyIngot);
-		//IngotRegistry.registerIngot(aluminiumAlloyIngot);
+		IngotRegistry.registerIngot(hsla, "Rotarycraft:hsla");
+		IngotRegistry.registerIngot(bedrockIngot, "Rotarycraft:ingotBedrock");
+		IngotRegistry.registerIngot(sinisterTungstenIngot, "Rotarycraft:ingotSinisterTungsten");
+		IngotRegistry.registerIngot(inductiveIngot, "Rotarycraft:inductiveIngot");
+		IngotRegistry.registerIngot(springAlloyIngot, "Rotarycraft:springAlloyIngot");
+		IngotRegistry.registerIngot(aluminiumAlloyIngot, "Rotarycraft:aluminiumAlloyIngot");
 	}
 
 	@Override

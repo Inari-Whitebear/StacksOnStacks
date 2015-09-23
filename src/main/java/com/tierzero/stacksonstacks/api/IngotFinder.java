@@ -11,8 +11,6 @@ import javax.imageio.ImageIO;
 
 import com.google.common.collect.Lists;
 import com.tierzero.stacksonstacks.SoS;
-import com.tierzero.stacksonstacks.compat.GregTech5Compat;
-import com.tierzero.stacksonstacks.compat.GregTech6Compat;
 import com.tierzero.stacksonstacks.compat.RotaryCompat;
 import com.tierzero.stacksonstacks.util.ClientUtils;
 
@@ -107,7 +105,7 @@ public class IngotFinder {
 		}
 
 		
-		if (GregTech6Compat.INSTANCE.isEnabled()) {
+		if (Loader.isModLoaded("gregapi")) {
 			try {
 				Class<?> clazz = Class.forName("gregapi.item.prefixitem.PrefixItem");
 				Class<?> itemClazz = stack.getItem().getClass();
@@ -126,7 +124,7 @@ public class IngotFinder {
 			} catch (ClassNotFoundException e) {
 			}
 		}
-		if (GregTech5Compat.INSTANCE.isEnabled()) {
+		if (Loader.isModLoaded("gregtech")) {
 			try {
 				Class<?> cls = Class.forName("gregtech.api.items.GT_MetaGenerated_Item");
 				Class<?> itemCls = stack.getItem().getClass();

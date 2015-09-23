@@ -7,12 +7,10 @@ import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.api.Ingot;
 import com.tierzero.stacksonstacks.api.IngotRegistry;
 import com.tierzero.stacksonstacks.block.tile.TileIngotPile;
-import com.tierzero.stacksonstacks.compat.GregTech6Compat;
 import com.tierzero.stacksonstacks.util.ClientUtils;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
@@ -120,7 +118,7 @@ public class RenderTileIngotPile implements ISimpleBlockRenderingHandler {
 
 				Tessellator tessellator = Tessellator.instance;
 				tessellator.addTranslation(x, y, z);
-				if (GregTech6Compat.INSTANCE.isEnabled() || icon == null) {
+				if (icon == null) {
 					icon = block.getIcon(0, 0);
 					tessellator.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
 				} 

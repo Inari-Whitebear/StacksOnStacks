@@ -53,7 +53,7 @@ public class TileIngotPile extends TileEntity {
 				createPile(player, stack, shouldUseEntireStack(player));
 				update();
 				return true;
-			} else if (inventory.isItemEqual(stack)) {
+			} else if (inventory != null && inventory.getItem() != null && inventory.isItemEqual(stack)) {
 				addToPile(player, stack, shouldUseEntireStack(player));
 				update();
 				return true;
@@ -156,17 +156,19 @@ public class TileIngotPile extends TileEntity {
 		
 		NBTTagCompound inventoryTag = tag.getCompoundTag(TAG_INVENTORY);
 		inventory = ItemStack.loadItemStackFromNBT(inventoryTag);
-		
-		//If a ingot was removed from the game then this will be null
-		if(inventory.getItem() == null) {
-			inventory = new ItemStack(Items.iron_ingot, 0, 1);
-			
-			
-		}
+
 		
 		//If null then its probably saved as the pre 0.9.5 nbt format
 		if(inventory == null) {
 			inventory = StackUtils.getStackFromInfo(tag.getInteger("ingot"), tag.getByte("stackSize"), tag.getInteger("meta"));
+	
+			
+
+		}
+		//If a ingot was removed from the game then this will be null
+
+		if(inventory != null && inventory.getItem() == null) {
+			worldObj.setBlockToAir(xCoord, yCoord, zCoord);				
 		}
 		
 
