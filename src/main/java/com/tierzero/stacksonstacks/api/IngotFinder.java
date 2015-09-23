@@ -98,7 +98,6 @@ public class IngotFinder {
 
 				int stackColor = getStackColour(stack, pass);
 
-				/* Check to see if color is white, because white looks awful */
 				if (stackColor != 16777215) {
 					colors.add(new Color(stackColor));
 					colors.remove(textureColour);
@@ -113,10 +112,16 @@ public class IngotFinder {
 				Class<?> clazz = Class.forName("gregapi.item.prefixitem.PrefixItem");
 				Class<?> itemClazz = stack.getItem().getClass();
 				if (clazz.isAssignableFrom(itemClazz)) {
-					int stackColor = getStackColour(stack, 0);
-					if (stackColor != 16777215) {
-						colors.add(new Color(stackColor));
+					
+					for (int pass = 0; pass < stack.getItem().getRenderPasses(stack.getItemDamage()); pass++) {
+
+						int stackColor = getStackColour(stack, pass);
+
+						if (stackColor != 16777215) {
+							colors.add(new Color(stackColor));
+						}
 					}
+
 				}
 			} catch (ClassNotFoundException e) {
 			}
@@ -150,6 +155,7 @@ public class IngotFinder {
 		}
 		
 		
+		
 		float red = 0;
 		float green = 0;
 		float blue = 0;
@@ -159,8 +165,16 @@ public class IngotFinder {
 			blue += c.getBlue();
 		}
 		float count = colors.size();
+		
+		Color ingotColor = new Color((int) (red / count), (int) (green / count), (int) (blue / count));
 
-		return new Color((int) (red / count), (int) (green / count), (int) (blue / count));
+		
+		if(ingotColor.getRed() == 0 && ingotColor.getBlue() == 0 && ingotColor.getRed() == 0) {
+			//Change it to look like iron
+			ingotColor = new Color(156, 156, 156);
+		}
+
+		return ingotColor;
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -1,6 +1,7 @@
 package com.tierzero.stacksonstacks.block.tile;
 
 import com.tierzero.stacksonstacks.SoS;
+import com.tierzero.stacksonstacks.api.Ingot;
 import com.tierzero.stacksonstacks.api.IngotRegistry;
 import com.tierzero.stacksonstacks.block.BlockIngotPile;
 import com.tierzero.stacksonstacks.util.StackUtils;
@@ -79,6 +80,7 @@ public class TileIngotPile extends TileEntity {
 	private void createPile(EntityPlayer player, ItemStack stack, boolean entireStack) {
 		int initialAmount = entireStack ? stack.stackSize : 1;
 		inventory = StackUtils.getItemsFromStack(stack, initialAmount);
+		
 		if (!player.capabilities.isCreativeMode) {
 			StackUtils.decrementStack(player, stack, initialAmount);
 		}
@@ -91,13 +93,12 @@ public class TileIngotPile extends TileEntity {
 
 	private void addToPile(EntityPlayer player, ItemStack stack, boolean entireStack) {
 		if (inventory.isItemEqual(stack)) {
+						
 			int amountToAdd = 1;
 			if(entireStack) {
 				amountToAdd = stack.stackSize;
 			}
-			
-			System.out.println(amountToAdd);
-			
+						
 			int remainingSpace = MAX_STACK_SIZE - this.inventory.stackSize;
 			
 			if(remainingSpace >= amountToAdd) {				
