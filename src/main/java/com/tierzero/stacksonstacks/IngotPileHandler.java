@@ -38,7 +38,6 @@ public class IngotPileHandler {
 		}
 
 		if (heldItemStack != null && IngotRegistry.isValidIngot(heldItemStack) && canPlace) {
-			
 			int[] coords = getPlacementCoords(x, y, z, event.face);
 			x = coords[0];
 			y = coords[1];

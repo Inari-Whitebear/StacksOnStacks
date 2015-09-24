@@ -2,12 +2,12 @@ package com.tierzero.stacksonstacks.block;
 
 import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.block.tile.TileIngotPile;
+import com.tierzero.stacksonstacks.util.ConfigHandler;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,6 +24,7 @@ public class BlockIngotPile extends BlockContainer {
 	private int renderID;
 
 	public static final int INGOTS_NEEDED_TO_SUPPORT = 64;
+	public static String[] textureNames = { "VanillaGold", "VanillaIron", "ThermalFoundation", "Metallurgy4", "Metallurgy5", "Mekanism" };
 	
 	public BlockIngotPile(String name) {
 		super(Material.iron);
@@ -73,9 +74,9 @@ public class BlockIngotPile extends BlockContainer {
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister ir) {
-		this.icon = ir.registerIcon(SoS.TEXTURE_BASE + "ingotPile");
-		super.registerBlockIcons(ir);
+	public void registerBlockIcons(IIconRegister iconRegistry) {
+		this.icon = iconRegistry.registerIcon(SoS.TEXTURE_BASE + textureNames[ConfigHandler.textureToUse]);		
+		super.registerBlockIcons(iconRegistry);
 	}
 
 	@Override

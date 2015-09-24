@@ -126,11 +126,8 @@ public class ClientUtils {
 	}
 	
 	
-	public static void drawRectangularPrism(double width, double length, double height, double slantX, double slantZ,
-			double Umin, double Vmin, double Umax, double Vmax, int lightLevel) {
+	public static void drawRectangularPrism(double width, double length, double height, double slantX, double slantZ, double Umin, double Vmin, double Umax, double Vmax) {
 		Tessellator tes = tes();		
-
-		tes.setBrightness(lightLevel);
 		tes.addVertexWithUV(width, 0, 0, Umin, Vmax);
 		tes.addVertexWithUV(width, 0, length, Umin, Vmin);
 		tes.addVertexWithUV(0, 0, length, Umax, Vmin);
@@ -142,25 +139,31 @@ public class ClientUtils {
 		tes.addVertexWithUV(0 + slantX, height, 0 + slantZ, Umin, Vmin);
 		tes.addVertexWithUV(0 + slantX, height, length - slantZ, Umin, Vmax);
 		// Render side 2 (north)
+		
 		tes.addVertexWithUV(0, 0, 0, Umin, Vmin);
 		tes.addVertexWithUV(0 + slantX, height, 0 + slantZ, Umin, Vmax);
 		tes.addVertexWithUV(width - slantX, height, 0 + slantZ, Umax, Vmax);
 		tes.addVertexWithUV(width, 0, 0, Umax, Vmin);
 		// Render side 3 (south)
+		
 		tes.addVertexWithUV(width, 0, length, Umax, Vmin);
 		tes.addVertexWithUV(width - slantX, height, length - slantZ, Umax, Vmax);
 		tes.addVertexWithUV(0 + slantX, height, length - slantZ, Umin, Vmax);
 		tes.addVertexWithUV(0, 0, length, Umin, Vmin);
 		// Render side 4 (west)
+		
 		tes.addVertexWithUV(0, 0, 0, Umin, Vmax);
 		tes.addVertexWithUV(0, 0, length, Umax, Vmax);
 		tes.addVertexWithUV(0 + slantX, height, length - slantZ, Umax, Vmin);
 		tes.addVertexWithUV(0 + slantX, height, 0 + slantZ, Umin, Vmin);
 		// Render side 5 (east)
+		
 		tes.addVertexWithUV(width, 0, 0, Umax, Vmin);
 		tes.addVertexWithUV(width - slantX, height, 0 + slantZ, Umax, Vmax);
 		tes.addVertexWithUV(width - slantX, height, length - slantZ, Umin, Vmax);
 		tes.addVertexWithUV(width, 0, length, Umin, Vmin);
+		// Render side 6 (Down)
+
 	}
 
 	public static void enableTexture2D() {

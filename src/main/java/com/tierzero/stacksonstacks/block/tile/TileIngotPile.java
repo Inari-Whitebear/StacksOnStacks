@@ -162,10 +162,8 @@ public class TileIngotPile extends TileEntity {
 		//If null then its probably saved as the pre 0.9.5 nbt format
 		if(inventory == null) {
 			inventory = StackUtils.getStackFromInfo(tag.getInteger("ingot"), tag.getByte("stackSize"), tag.getInteger("meta"));
-	
-			
-
 		}
+		
 		//If a ingot was removed from the game then this will be null
 
 		if(inventory != null && inventory.getItem() == null) {
