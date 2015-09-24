@@ -123,10 +123,10 @@ public class TileIngotPile extends TileEntity {
 
 	private void removeFromPile(EntityPlayer player, boolean entireStack) {
 		Block blockAbove = this.getWorldObj().getBlock(xCoord, yCoord + 1, zCoord);
-		TileIngotPile tileAbove = (TileIngotPile) this.getWorldObj().getTileEntity(xCoord, yCoord + 1, zCoord);
+		TileEntity tileAbove = this.getWorldObj().getTileEntity(xCoord, yCoord + 1, zCoord);
 
 		
-		if (blockAbove instanceof BlockIngotPile && tileAbove != null && inventory.isItemEqual(tileAbove.getInventory())) {
+		if (blockAbove instanceof BlockIngotPile && tileAbove instanceof TileIngotPile && inventory.isItemEqual(((TileIngotPile) tileAbove).getInventory())) {
 			blockAbove.onBlockClicked(getWorldObj(), xCoord, yCoord + 1, zCoord, player);
 		} else {
 			int amountToRemove = 1;

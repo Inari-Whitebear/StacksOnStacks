@@ -16,7 +16,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 @Mod(modid = SoS.MODID, name = SoS.MODID, version = SoS.VERSION, dependencies = "after:gregtech_addon;after:gregapi;")
 public class SoS {
-	public static final String VERSION = "0.9.6";
+	public static final String VERSION = "1.0.0";
 	public static final String MODID = "StacksOnStacks";
 	public static final String TEXTURE_BASE = MODID + ":";
 	public static BlockIngotPile ingotPile;
@@ -28,15 +28,17 @@ public class SoS {
 	public void preInit(FMLPreInitializationEvent e) {
 		config = new Config(e.getSuggestedConfigurationFile());
 		config.load();
+		/*
 		config.goldAltTexture = config.getBoolean("goldAltTexture", "ALT_TEXTURES", false,
 				"make gold ingots use the gold block texture, may not work somethings for unknown reasons");
+		*/
 		CompatHandler.config();
 		proxy.registerTiles();
 		ingotPile = new BlockIngotPile("ingotPile");
 		MinecraftForge.EVENT_BUS.register(new IngotPileHandler());
 		config.save();
 		
-		FMLCommonHandler.instance().bus().register(new DebugHandler());
+		//FMLCommonHandler.instance().bus().register(new DebugHandler());
 	}
 
 	@EventHandler
