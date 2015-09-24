@@ -38,7 +38,7 @@ public class SoS {
 		MinecraftForge.EVENT_BUS.register(new IngotPileHandler());
 		config.save();
 		
-		//FMLCommonHandler.instance().bus().register(new DebugHandler());
+		FMLCommonHandler.instance().bus().register(new DebugHandler());
 	}
 
 	@EventHandler

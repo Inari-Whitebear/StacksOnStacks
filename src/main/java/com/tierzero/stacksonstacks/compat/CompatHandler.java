@@ -10,38 +10,42 @@ public class CompatHandler {
 	}
 
 	public static void config() {
-
 		for (ModCompat mod : modcompat) {
 			mod.config();
-
 		}
 	}
 
 	public static void preInit() {
-
 		for (ModCompat mod : modcompat) {
-			if (mod.isEnabled())
+			if (mod.isEnabled()) {
 				mod.preInit();
+			}
 		}
 
 	}
 
 	public static void init() {
-		for (ModCompat mod : modcompat)
-			if (mod.isEnabled())
+		for (ModCompat mod : modcompat) {
+			if (mod.isEnabled()) {
 				mod.init();
+			}
+		}
 	}
 
 	public static void postInit() {
-		for (ModCompat mod : modcompat)
-			if (mod.isEnabled())
+		for (ModCompat mod : modcompat) {
+			if (mod.isEnabled()) {
 				mod.postInit();
+			}
+		}
 	}
 
 	public static void clientSide() {
-		for (ModCompat mod : modcompat)
-			if (mod.isEnabled())
+		for (ModCompat mod : modcompat) {
+			if (mod.isEnabled()) {
 				mod.clientSide();
+			}
+		}
 	}
 
 	public static void add(ModCompat mod) {

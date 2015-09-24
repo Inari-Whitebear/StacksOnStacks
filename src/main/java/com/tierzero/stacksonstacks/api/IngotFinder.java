@@ -52,7 +52,7 @@ public class IngotFinder {
 		
 		for (String name : names) {
 			if (!name.isEmpty() && name.contains("ingot")) {
-
+				System.out.println(name);
 				boolean invalid = false;
 				for (String invalidName : invalidNames) {
 					if (name.startsWith(invalidName)) {

@@ -79,7 +79,7 @@ public class ClientUtils {
 
 		if(iconName != null) {
 			String[] seperatedIconName = splitString("[:/]+", iconName);
-			String domain = seperatedIconName[0];
+			String domain = seperatedIconName[0].toLowerCase();
 			
 			//Vanilla check
 			if(domain.equals(seperatedIconName[seperatedIconName.length - 1])) {
