@@ -28,7 +28,7 @@ public class ConfigHandler {
 			
 		}
 		
-		textureToUse = config.getInt("Ingot Texture", CATEGORY_VISUAL, 0, 0, BlockIngotPile.textureNames.length - 1, baseComment.toString());
+		textureToUse = config.getInt("Ingot Texture", CATEGORY_VISUAL, 3, 0, BlockIngotPile.textureNames.length - 1, baseComment.toString());
 	
 		config.save();
 	}

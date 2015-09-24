@@ -24,7 +24,7 @@ public class BlockIngotPile extends BlockContainer {
 	private int renderID;
 
 	public static final int INGOTS_NEEDED_TO_SUPPORT = 64;
-	public static String[] textureNames = { "VanillaGold", "VanillaIron", "ThermalFoundation", "Metallurgy4", "Metallurgy5", "Mekanism" };
+	public static String[] textureNames = { "VanillaGold", "VanillaIron", "ThermalFoundation", "Metallurgy4", "Mekanism" };
 	
 	public BlockIngotPile(String name) {
 		super(Material.iron);
