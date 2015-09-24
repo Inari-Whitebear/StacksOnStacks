@@ -7,6 +7,7 @@ import com.tierzero.stacksonstacks.block.BlockIngotPile;
 import com.tierzero.stacksonstacks.util.StackUtils;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -168,7 +169,7 @@ public class TileIngotPile extends TileEntity {
 		//If a ingot was removed from the game then this will be null
 
 		if(inventory != null && inventory.getItem() == null) {
-			worldObj.setBlockToAir(xCoord, yCoord, zCoord);				
+			Minecraft.getMinecraft().theWorld.setBlockToAir(xCoord, yCoord, zCoord);				
 		}
 		
 
