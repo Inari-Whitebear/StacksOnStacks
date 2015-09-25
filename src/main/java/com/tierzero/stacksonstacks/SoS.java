@@ -16,7 +16,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 @Mod(modid = SoS.MODID, name = SoS.MODID, version = SoS.VERSION, dependencies = "after:gregtech_addon;after:gregapi;")
 public class SoS {
-	public static final String VERSION = "1.0.2";
+	public static final String VERSION = "1.0.3";
 	public static final String MODID = "StacksOnStacks";
 	public static final String TEXTURE_BASE = MODID + ":";
 	
