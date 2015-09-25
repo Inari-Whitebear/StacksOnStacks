@@ -54,7 +54,6 @@ public class TileIngotPile extends TileEntity {
 	
 	public boolean onRightClicked(EntityPlayer player, ItemStack stack) {	
 		update();
-
 		Block blockAbove = worldObj.getBlock(xCoord, yCoord + 1, zCoord);
 		
 		if(worldObj.isAirBlock(xCoord, yCoord + 1, zCoord)) {
@@ -69,7 +68,7 @@ public class TileIngotPile extends TileEntity {
 		} else if(blockAbove instanceof BlockIngotPile){
 			return blockAbove.onBlockActivated(worldObj, xCoord, yCoord + 1, zCoord, player, 0, 0, 0, 0);
 		}
-		
+
 		
 		return false;		
 	}
@@ -93,7 +92,7 @@ public class TileIngotPile extends TileEntity {
 		pile.readFromNBT(tag);
 		
 		if(pile.getIngotStack() != null && pile.getIngotStack().getItem() == null) {
-			Minecraft.getMinecraft().theWorld.setBlockToAir(xCoord, yCoord, zCoord);				
+			this.worldObj.setBlockToAir(xCoord, yCoord, zCoord);				
 		}
 		
 
