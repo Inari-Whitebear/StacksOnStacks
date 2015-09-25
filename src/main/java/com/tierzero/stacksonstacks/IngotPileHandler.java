@@ -1,22 +1,24 @@
 package com.tierzero.stacksonstacks;
 
 import com.tierzero.stacksonstacks.api.IngotRegistry;
-import com.tierzero.stacksonstacks.block.BlockIngotPile;
 import com.tierzero.stacksonstacks.block.tile.TileIngotPile;
+import com.tierzero.stacksonstacks.entity.EntityMinecartIngotPile;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
+import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
 public class IngotPileHandler {
 
 	@SubscribeEvent
-	public void handleIngotPilePlacement(PlayerInteractEvent event) {
+	public void handleBlockPlacement(PlayerInteractEvent event) {
 		if (event.action != Action.RIGHT_CLICK_BLOCK) {
 			return;
 		}
@@ -52,6 +54,16 @@ public class IngotPileHandler {
 		if(heldItemStack != null && event.entityPlayer.isSneaking()) {
 			
 			event.world.getBlock(x, y, z).onBlockActivated(event.world, x, y, z, event.entityPlayer, 0, 0, 0, 0);
+		}
+	}
+	
+	@SubscribeEvent
+	public void handleMinecartPlacement(EntityInteractEvent event) {
+		if(event.target instanceof EntityMinecart) {
+			//Replace minecart with ingot pile cart
+		} else if(event.target instanceof EntityMinecartIngotPile) {
+			//Check to see if pile is empty
+			//If so then replace with regular minecart
 		}
 	}
 
