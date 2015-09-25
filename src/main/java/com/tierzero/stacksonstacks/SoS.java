@@ -34,7 +34,7 @@ public class SoS {
 		ingotPile = new BlockIngotPile("ingotPile");
 		MinecraftForge.EVENT_BUS.register(new IngotPileHandler());
 		
-		FMLCommonHandler.instance().bus().register(new DebugHandler());
+		//FMLCommonHandler.instance().bus().register(new DebugHandler());
 	}
 
 	@EventHandler

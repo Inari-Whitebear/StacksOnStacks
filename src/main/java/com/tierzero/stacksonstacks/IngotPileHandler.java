@@ -1,15 +1,13 @@
 package com.tierzero.stacksonstacks;
 
-import com.tierzero.stacksonstacks.api.IngotRegistry;
-import com.tierzero.stacksonstacks.block.tile.TileIngotPile;
 import com.tierzero.stacksonstacks.entity.EntityMinecartIngotPile;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityMinecart;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -19,42 +17,48 @@ public class IngotPileHandler {
 
 	@SubscribeEvent
 	public void handleBlockPlacement(PlayerInteractEvent event) {
-		if (event.action != Action.RIGHT_CLICK_BLOCK) {
-			return;
-		}
-		
-		ItemStack heldItemStack = event.entityPlayer.getCurrentEquippedItem();
-		int x = event.x; 
-		int y = event.y; 
-		int z = event.z;
-		Block block = event.world.getBlock(x, y, z);
+		if (event.action == Action.RIGHT_CLICK_BLOCK) {
+			World world = event.world;
 
-		boolean canPlace = block.getMaterial().isSolid();
-		
-		TileEntity tile = event.world.getTileEntity(x, y, z);
-		if (tile instanceof IInventory && !event.entityPlayer.isSneaking())
-			return;
-		if (tile instanceof TileIngotPile) {
-			TileIngotPile ingotPileTile = (TileIngotPile) tile;
-			canPlace = ingotPileTile.getAmountStored() == 64 && event.face == 1;
-		}
+			ItemStack heldItemStack = event.entityPlayer.getCurrentEquippedItem();
+			int clickedX = event.x;
+			int clickedY = event.y;
+			int clickedZ = event.z;
+			
+				
+			int[] coords = getPlacementCoords(event.x, event.y, event.z, event.face);
 
-		if (heldItemStack != null && IngotRegistry.isValidIngot(heldItemStack) && canPlace) {
-			int[] coords = getPlacementCoords(x, y, z, event.face);
-			x = coords[0];
-			y = coords[1];
-			z = coords[2];
-			if (event.world.getBlock(x, y - 1, z).getMaterial().isSolid()) {
-				event.world.setBlock(x, y, z, SoS.ingotPile);
-				event.world.getBlock(x, y, z).onBlockPlacedBy(event.world, x, y, z, event.entityPlayer, heldItemStack);
+			
+			int placementX = coords[0]; 
+			int placementY = coords[1]; 
+			int placementZ = coords[2];
+			Block blockAtPosition = event.world.getBlock(x, y, z);
+			TileEntity tileAtPosition = event.world.getTileEntity(x, y, z);
+			
+			if(!event.entityPlayer.isSneaking()) {
+				System.out.println("gweg");
+					
+				if(blockAtPosition.isAir(world, x, y, z)) {
+					placePile(event, x, y, z);
+				}
 			}
-			
-		}
+				
 
-		if(heldItemStack != null && event.entityPlayer.isSneaking()) {
+
 			
-			event.world.getBlock(x, y, z).onBlockActivated(event.world, x, y, z, event.entityPlayer, 0, 0, 0, 0);
+		
+			
+			
 		}
+		
+
+
+		
+	}
+	
+	private void placePile(PlayerInteractEvent event, int x, int y, int z) {
+		event.world.setBlock(x, y, z, SoS.ingotPile);
+		event.world.getBlock(x, y, z).onBlockPlacedBy(event.world, x, y, z, event.entityPlayer, event.entityPlayer.getCurrentEquippedItem());
 	}
 	
 	@SubscribeEvent
