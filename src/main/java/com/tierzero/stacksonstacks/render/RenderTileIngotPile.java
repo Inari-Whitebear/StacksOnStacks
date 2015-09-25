@@ -28,17 +28,16 @@ public class RenderTileIngotPile implements ISimpleBlockRenderingHandler {
 		ArrayList<IngotRender> ingots = new ArrayList<IngotRender>();
 		TileIngotPile tile = (TileIngotPile) world.getTileEntity(x, y, z);
 
-		ItemStack ingotStack = tile.getInventory();
+		ItemStack ingotStack = tile.getIngotStack();
 
 		if(ingotStack != null) {
 			Ingot ingot = IngotRegistry.getIngot(ingotStack);
 			if(ingot != null) {
-				int length = tile.getInventoryCount();
 				float w = 0f, h = 0f, l = 0f;
 				float a = 0f, s = 0f, d = 0f;
 				boolean r = true;
 				int e = 0;
-				for (int i = 0; i < length; i++) {
+				for (int i = 0; i < ingotStack.stackSize; i++) {
 					w = a / 4;
 					l = d / 2;
 					h = s / 8;

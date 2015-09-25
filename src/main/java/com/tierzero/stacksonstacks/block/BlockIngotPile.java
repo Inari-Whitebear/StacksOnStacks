@@ -44,7 +44,7 @@ public class BlockIngotPile extends BlockContainer {
 				TileIngotPile ingotPile = (TileIngotPile) world.getTileEntity(x, y - 1, z);
 				
 				if(ingotPile != null) {
-					if(ingotPile.getInventoryCount() < INGOTS_NEEDED_TO_SUPPORT) {
+					if(ingotPile.getAmountStored() < INGOTS_NEEDED_TO_SUPPORT) {
 						world.setBlockToAir(x, y, z);
 					}
 				}
@@ -61,7 +61,7 @@ public class BlockIngotPile extends BlockContainer {
 	public int getComparatorInputOverride(World world, int x, int y, int z, int side) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			return ((TileIngotPile) tile).getInventoryCount() / 4;
+			return ((TileIngotPile) tile).getAmountStored() / 4;
 		} else {
 			return 0;
 		}
@@ -93,7 +93,7 @@ public class BlockIngotPile extends BlockContainer {
 	public boolean canBlockStay(World world, int x, int y, int z) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			return ((TileIngotPile) tile).getInventoryCount() > 0;
+			return ((TileIngotPile) tile).getAmountStored() > 0;
 		}
 		
 		return false;
@@ -105,9 +105,9 @@ public class BlockIngotPile extends BlockContainer {
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
 		TileIngotPile tile = (TileIngotPile) world.getTileEntity(x, y, z);
 		if (tile != null) {
-			ItemStack ingotStack = tile.getInventory();
+			ItemStack ingotStack = tile.getIngotStack();
 			if(ingotStack != null) {
-				int numberOfIngots = tile.getInventory().stackSize;
+				int numberOfIngots = tile.getIngotStack().stackSize;
 				int height = 1 + numberOfIngots / 8;
 				
 				if(numberOfIngots % 8 == 0) {
@@ -123,7 +123,7 @@ public class BlockIngotPile extends BlockContainer {
 	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			return ((TileIngotPile) tile).getInventory();
+			return ((TileIngotPile) tile).getIngotStack();
 		}
 		
 		return null;
@@ -133,10 +133,10 @@ public class BlockIngotPile extends BlockContainer {
 	public void onBlockPreDestroy(World world, int x, int y, int z, int meta) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			ItemStack stackToDrop = ((TileIngotPile) tile).getInventory();
+			ItemStack stackToDrop = ((TileIngotPile) tile).getIngotStack();
 			
 			if(stackToDrop != null && stackToDrop.getItem() != null) {
-				dropBlockAsItem(world, x, y, z, ((TileIngotPile) tile).getInventory());
+				dropBlockAsItem(world, x, y, z, ((TileIngotPile) tile).getIngotStack());
 			}
 		}
 	}
@@ -150,8 +150,7 @@ public class BlockIngotPile extends BlockContainer {
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_,	float p_149727_7_, float p_149727_8_, float p_149727_9_) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			((TileIngotPile) tile).onActivated(player, player.getCurrentEquippedItem());
-			return true;
+			return ((TileIngotPile) tile).onRightClicked(player, player.getCurrentEquippedItem());
 		}
 		
 		return false;
@@ -162,7 +161,7 @@ public class BlockIngotPile extends BlockContainer {
 
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			((TileIngotPile) tile).onClicked(player);
+			((TileIngotPile) tile).onLeftClicked(player);
 		
 			world.notifyBlocksOfNeighborChange(x, y, z, this);
 		}

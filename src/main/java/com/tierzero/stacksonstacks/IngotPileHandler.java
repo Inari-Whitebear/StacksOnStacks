@@ -34,7 +34,7 @@ public class IngotPileHandler {
 			return;
 		if (tile instanceof TileIngotPile) {
 			TileIngotPile ingotPileTile = (TileIngotPile) tile;
-			canPlace = ingotPileTile.getInventoryCount() == 64 && event.face == 1;
+			canPlace = ingotPileTile.getAmountStored() == 64 && event.face == 1;
 		}
 
 		if (heldItemStack != null && IngotRegistry.isValidIngot(heldItemStack) && canPlace) {
