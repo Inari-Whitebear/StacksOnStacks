@@ -48,9 +48,7 @@ public class TileIngotPile extends TileEntity {
 			} else {
 			}
 		}
-		
-		RenderTntMinecart tge;
-		
+				
 		update();
 
 	}
@@ -65,12 +63,15 @@ public class TileIngotPile extends TileEntity {
 				worldObj.getBlock(xCoord, yCoord + 1, zCoord).onBlockPlacedBy(worldObj, xCoord, yCoord, zCoord, player, stack);
 			} else {
 				pile.onRightClicked(player, stack);
+
 			}
-			
 			return true;
 		} else if(blockAbove instanceof BlockIngotPile){
 			return blockAbove.onBlockActivated(worldObj, xCoord, yCoord + 1, zCoord, player, 0, 0, 0, 0);
+		} else {
+			pile.onRightClicked(player, stack);
 		}
+		
 
 		
 		return false;		
