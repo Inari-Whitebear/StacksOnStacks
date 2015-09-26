@@ -76,7 +76,7 @@ public class IngotPileHandler {
 
 					}
 				} else if(tileAtPlacementPosition instanceof TileIngotPile){
-					//blockAtPlacementPosition.onBlockActivated(event.world, placementX, placementY, placementZ, event.entityPlayer, 0, 0, 0, 0);
+					blockAtPlacementPosition.onBlockActivated(event.world, placementX, placementY, placementZ, event.entityPlayer, 0, 0, 0, 0);
 				}
 			}			
 		}
