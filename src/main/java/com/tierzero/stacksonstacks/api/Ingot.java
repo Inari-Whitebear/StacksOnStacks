@@ -7,10 +7,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
 public class Ingot {
+	private static IIcon icon;
+	
 	private Item item;
 	private int meta;
 	private Color colour;
-	private IIcon icon;
 	private String registeredName;
 	
 	public Ingot(ItemStack stack, String registeredName) {
@@ -23,12 +24,12 @@ public class Ingot {
 		this.registeredName = registeredName;
 	}
 
-	public IIcon getIcon() {
+	public static IIcon getIcon() {
 		return icon;
 	}
 
-	public void setIcon(IIcon icon) {
-		this.icon = icon;
+	public static void setIcon(IIcon iconToUse) {
+		icon = iconToUse;
 	}
 
 	public Color getColor() {

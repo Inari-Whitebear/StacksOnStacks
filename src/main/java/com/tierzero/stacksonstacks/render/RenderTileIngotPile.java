@@ -16,115 +16,29 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 public class RenderTileIngotPile implements ISimpleBlockRenderingHandler {
 
+	private static RenderIngotPile ingotPileRender = new RenderIngotPile();
+	
 	@Override
-	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
-	}
+	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {}
 
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
-		ArrayList<IngotRender> ingots = new ArrayList<IngotRender>();
 		TileIngotPile tile = (TileIngotPile) world.getTileEntity(x, y, z);
 
-		ItemStack ingotStack = tile.getIngotStack();
-
-		if(ingotStack != null) {
-			Ingot ingot = IngotRegistry.getIngot(ingotStack);
-			if(ingot != null) {
-				float w = 0f, h = 0f, l = 0f;
-				float a = 0f, s = 0f, d = 0f;
-				boolean r = true;
-				int e = 0;
-				for (int i = 0; i < ingotStack.stackSize; i++) {
-					w = a / 4;
-					l = d / 2;
-					h = s / 8;
-
-					ingots.add(new IngotRender(x + (r ? w : l), y + h, z + (r ? l : w), ingot, r));
-					if (a < 3)
-						a++;
-					else {
-						w = 0;
-						a = 0;
-						if (d == 0)
-							d++;
-						else {
-							d = 0;
-							if (s < 8)
-								s++;
-						}
-					}
-					if (e == 7) {
-						e = 0;
-						r = !r;
-					} else
-						e++;
-				}
-
-				for (IngotRender render : ingots) {
-					render.render(world, block, tile);
-				}
-			}
-
-		}
-
-		return ingots.size() > 0;
-
+		return ingotPileRender.render(tile.getIngotStack(), x, y, z);
 	}
 
 	@Override
 	public boolean shouldRender3DInInventory(int modelId) {
-
 		return false;
 	}
 
 	@Override
 	public int getRenderId() {
-
 		return SoS.ingotPile.getRenderType();
 	}
-
-	public class IngotRender {
-		double height = .125;
-		double width = .25;
-		double length = .5;
-		double slantW = 0.05;
-		double slantL = 0.025;
-		public Ingot ingot;
-		boolean r;
-		float x, y, z;
-
-		public IngotRender(float x, float y, float z, Ingot ingot, boolean r) {
-			this.x = x;
-			this.y = y;
-			this.z = z;
-			this.ingot = ingot;
-			this.r = r;
-		}
-
-		public void render(IBlockAccess world, Block block, TileIngotPile tile) {
-			Color color = ingot.getColor();
-			IIcon icon = ingot.getIcon();
-
-			Tessellator tessellator = Tessellator.instance;
-			tessellator.addTranslation(x, y, z);
-			if (icon == null) {
-				icon = block.getIcon(0, 0);
-				tessellator.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
-			} 
-
-			double Umin = icon.getMinU();
-			double Vmax = icon.getMaxV();
-			double Vmin = icon.getMinV();
-			double Umax = icon.getMaxU();
-
-
-			ClientUtils.drawRectangularPrism(r ? width : length, r ? length : width, height, slantW, slantL, Umin, Vmin, Umax, Vmax);
-			tessellator.addTranslation(-x, -y, -z);
-		}
-
-	}
-
 }

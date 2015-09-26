@@ -7,10 +7,12 @@ import com.tierzero.stacksonstacks.entity.EntityMinecartIngotPile;
 import com.tierzero.stacksonstacks.util.StackUtils;
 
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
-import net.minecraft.entity.item.EntityMinecart;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityMinecartEmpty;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemMinecart;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBeacon;
@@ -81,12 +83,25 @@ public class IngotPileHandler {
 
 	@SubscribeEvent
 	public void handleMinecartPlacement(EntityInteractEvent event) {
-		if(event.target instanceof EntityMinecart) {
-			//Replace minecart with ingot pile cart
-		} else if(event.target instanceof EntityMinecartIngotPile) {
-			//Check to see if pile is empty
-			//If so then replace with regular minecart
+		Entity targetCart = event.target;
+		EntityPlayer player = event.entityPlayer;
+		ItemStack stackInHand = player.getCurrentEquippedItem();
+		
+		if(!player.worldObj.isRemote) {
+			if(event.target instanceof EntityMinecartEmpty && IngotRegistry.isValidIngot(stackInHand)) {
+				EntityMinecartIngotPile ingotPileCart = new EntityMinecartIngotPile(player.worldObj, targetCart.posX, targetCart.posY, targetCart.posZ);
+				ingotPileCart.motionX = targetCart.motionX;
+				ingotPileCart.motionY = targetCart.motionY;
+				ingotPileCart.motionZ = targetCart.motionZ;
+
+				player.worldObj.spawnEntityInWorld(ingotPileCart);
+				targetCart.setDead();
+			} else if(event.target instanceof EntityMinecartIngotPile) {
+				//Check to see if pile is empty
+				//If so then replace with regular minecart
+			}
 		}
+
 	}
 
 	public static int[] getPlacementCoords(int x, int y, int z, int side) {

@@ -6,6 +6,7 @@ import com.tierzero.stacksonstacks.block.BlockIngotPile;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderTntMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -47,6 +48,8 @@ public class TileIngotPile extends TileEntity {
 			} else {
 			}
 		}
+		
+		RenderTntMinecart tge;
 		
 		update();
 

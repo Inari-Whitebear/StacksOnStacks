@@ -5,9 +5,9 @@ import com.tierzero.stacksonstacks.block.BlockIngotPile;
 import com.tierzero.stacksonstacks.compat.CompatHandler;
 import com.tierzero.stacksonstacks.util.ConfigHandler;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -22,6 +22,9 @@ public class SoS {
 	
 	public static BlockIngotPile ingotPile;
 	
+	@Instance
+	public static SoS instance;
+	
 	@SidedProxy(serverSide = "com.tierzero.stacksonstacks.CommonProxy", clientSide = "com.tierzero.stacksonstacks.ClientProxy", modId = MODID)
 	public static CommonProxy proxy;
 
@@ -29,7 +32,7 @@ public class SoS {
 	public void preInit(FMLPreInitializationEvent event) {
 		ConfigHandler.init(event.getSuggestedConfigurationFile());
 
-		
+		proxy.registerEntities();
 		proxy.registerTiles();
 		ingotPile = new BlockIngotPile("ingotPile");
 		MinecraftForge.EVENT_BUS.register(new IngotPileHandler());

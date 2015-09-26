@@ -1,12 +1,13 @@
 package com.tierzero.stacksonstacks;
 
-import java.io.File;
-
 import com.tierzero.stacksonstacks.block.tile.TileIngotPile;
-import com.tierzero.stacksonstacks.compat.CompatHandler;
-import com.tierzero.stacksonstacks.util.ConfigHandler;
+import com.tierzero.stacksonstacks.entity.EntityMinecartIngotPile;
+import com.tierzero.stacksonstacks.render.RenderEntityMinecartIngotPile;
 
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.client.model.ModelCow;
 
 public class CommonProxy {
 	
@@ -15,7 +16,12 @@ public class CommonProxy {
 		GameRegistry.registerTileEntity(TileIngotPile.class, "tileIngotPile");
 	}
 	
+	public void registerEntities() {
+		EntityRegistry.registerModEntity(EntityMinecartIngotPile.class, "IngotPileCart", EntityRegistry.findGlobalUniqueEntityId(), SoS.instance, 256, 3, true);
+	}
+	
 	public void registerRenders() {
+		
 	}
 
 	public void postInit() {

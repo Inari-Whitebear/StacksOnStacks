@@ -1,6 +1,7 @@
 package com.tierzero.stacksonstacks.block;
 
 import com.tierzero.stacksonstacks.SoS;
+import com.tierzero.stacksonstacks.api.Ingot;
 import com.tierzero.stacksonstacks.block.tile.TileIngotPile;
 import com.tierzero.stacksonstacks.util.ConfigHandler;
 
@@ -75,7 +76,8 @@ public class BlockIngotPile extends BlockContainer {
 
 	@Override
 	public void registerBlockIcons(IIconRegister iconRegistry) {
-		this.icon = iconRegistry.registerIcon(SoS.TEXTURE_BASE + textureNames[ConfigHandler.textureToUse]);		
+		this.icon = iconRegistry.registerIcon(SoS.TEXTURE_BASE + textureNames[ConfigHandler.textureToUse]);	
+		Ingot.setIcon(icon);
 		super.registerBlockIcons(iconRegistry);
 	}
 
