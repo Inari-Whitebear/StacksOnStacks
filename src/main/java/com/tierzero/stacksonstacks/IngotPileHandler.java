@@ -2,15 +2,18 @@ package com.tierzero.stacksonstacks;
 
 import com.tierzero.stacksonstacks.api.IngotRegistry;
 import com.tierzero.stacksonstacks.block.tile.TileIngotPile;
+import com.tierzero.stacksonstacks.compat.GeneralCompat;
 import com.tierzero.stacksonstacks.entity.EntityMinecartIngotPile;
+import com.tierzero.stacksonstacks.util.StackUtils;
 
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityMinecart;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
+import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -39,6 +42,10 @@ public class IngotPileHandler {
 							((TileIngotPile) tileAtClickedPosition).onRightClicked(event.entityPlayer, heldItemStack);
 							return;
 						}
+						
+						if(tileAtClickedPosition instanceof TileEntityBeacon && Loader.isModLoaded(GeneralCompat.MOD_BOTANIA)) {
+							return;
+						}
 					}
 				}
 							
@@ -56,18 +63,22 @@ public class IngotPileHandler {
 					if(blockBelowPlacementPosition.getMaterial().isSolid()) {
 						event.world.setBlock(placementX, placementY, placementZ, SoS.ingotPile);
 						event.world.getBlock(placementX, placementY, placementZ).onBlockPlacedBy(event.world, placementX, placementY, placementZ, event.entityPlayer, heldItemStack);
+						
+						
+						//Fix the comparator output after placing down a full stack
+						if(playerSneaking) {
+							ItemStack comparatorFixer = StackUtils.getItemsFromStack(heldItemStack, 0);
+							event.world.getBlock(placementX, placementY, placementZ).onBlockPlacedBy(event.world, placementX, placementY, placementZ, event.entityPlayer, comparatorFixer);
+						}
+
 					}
 				} else if(tileAtPlacementPosition instanceof TileIngotPile){
-					((TileIngotPile) tileAtPlacementPosition).onRightClicked(event.entityPlayer, heldItemStack);
+					//blockAtPlacementPosition.onBlockActivated(event.world, placementX, placementY, placementZ, event.entityPlayer, 0, 0, 0, 0);
 				}
 			}			
 		}
 	}
-	
-	private void placePile(PlayerInteractEvent event, int x, int y, int z) {
 
-	}
-	
 	@SubscribeEvent
 	public void handleMinecartPlacement(EntityInteractEvent event) {
 		if(event.target instanceof EntityMinecart) {

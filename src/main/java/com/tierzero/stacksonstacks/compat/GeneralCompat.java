@@ -9,12 +9,12 @@ import net.minecraftforge.event.world.ChunkDataEvent.Load;
 
 public class GeneralCompat extends ModCompat {
 	
-	private static final String MOD_BOTANIA = "Botania";
-	private static final String MOD_PROJECT_RED_CORE = "ProjRed|Core";
-	private static final String MOD_PROJECT_RED = "projectred";
-	private static final String	MOD_TWILIGHT_FOREST = "TwilightForest";
-	private static final String MOD_AURA_CASCADE = "aura";
-	private static final String MOD_WITCHERY = "witchery";
+	public static final String MOD_BOTANIA = "Botania";
+	public static final String MOD_PROJECT_RED_CORE = "ProjRed|Core";
+	public static final String MOD_PROJECT_RED = "projectred";
+	public static final String	MOD_TWILIGHT_FOREST = "TwilightForest";
+	public static final String MOD_AURA_CASCADE = "aura";
+	public static final String MOD_WITCHERY = "witchery";
 
 	private static final String COLON = ":";
 

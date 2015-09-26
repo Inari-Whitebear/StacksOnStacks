@@ -151,6 +151,7 @@ public class BlockIngotPile extends BlockContainer {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
 			return ((TileIngotPile) tile).onRightClicked(player, player.getCurrentEquippedItem());
+
 		}
 		
 		return false;
@@ -171,7 +172,11 @@ public class BlockIngotPile extends BlockContainer {
 	
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-		this.onBlockActivated(world, x, y, z, (EntityPlayer) player, 0, 0, 0, 0);
+
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if (tile != null) {
+			((TileIngotPile) tile).onRightClicked((EntityPlayer) player,stack);
+		}
 	}
 	
 	public void debugBlockPlaced(World world, int x, int y, int z, ItemStack stack) {
