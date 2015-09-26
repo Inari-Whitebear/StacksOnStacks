@@ -5,7 +5,6 @@ import com.tierzero.stacksonstacks.api.IngotPile;
 import com.tierzero.stacksonstacks.block.BlockIngotPile;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderTntMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

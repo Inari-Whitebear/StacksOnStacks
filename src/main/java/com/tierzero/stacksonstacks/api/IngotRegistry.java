@@ -3,8 +3,6 @@ package com.tierzero.stacksonstacks.api;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tierzero.stacksonstacks.SoS;
-
 import cpw.mods.fml.common.FMLLog;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
