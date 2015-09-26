@@ -12,6 +12,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityMinecartEmpty;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemMinecart;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -62,7 +63,7 @@ public class IngotPileHandler {
 				
 				if(blockAtPlacementPosition.isAir(event.world,placementX, placementY, placementZ)) {
 					Block blockBelowPlacementPosition = event.world.getBlock(placementX, placementY - 1, placementZ);
-					if(blockBelowPlacementPosition.getMaterial().isSolid()) {
+					if(blockBelowPlacementPosition.getMaterial().isSolid() && blockBelowPlacementPosition != Blocks.crafting_table) {
 						event.world.setBlock(placementX, placementY, placementZ, SoS.ingotPile);
 						event.world.getBlock(placementX, placementY, placementZ).onBlockPlacedBy(event.world, placementX, placementY, placementZ, event.entityPlayer, heldItemStack);
 						
