@@ -57,7 +57,6 @@ public class TileIngotPile extends TileEntity {
 		Block blockAbove = worldObj.getBlock(xCoord, yCoord + 1, zCoord);
 		
 		if(worldObj.isAirBlock(xCoord, yCoord + 1, zCoord)) {
-			//System.out.println(stack.stackSize);
 			if(pile.getAmountStored() >= pile.getMaxStored() && stack != null && stack.stackSize > 0) {
 				worldObj.setBlock(xCoord, yCoord + 1, zCoord, SoS.ingotPile);
 				worldObj.getBlock(xCoord, yCoord + 1, zCoord).onBlockPlacedBy(worldObj, xCoord, yCoord, zCoord, player, stack);
