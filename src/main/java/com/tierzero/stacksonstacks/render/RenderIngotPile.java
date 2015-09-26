@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 
 public class RenderIngotPile {
 	
-	public boolean render(ItemStack ingotStack, float x, float y, float z) {
+	public boolean render(ItemStack ingotStack) {
 		ArrayList<IngotRender> ingots = new ArrayList<IngotRender>();
 		
 		if(ingotStack != null) {
@@ -36,7 +36,7 @@ public class RenderIngotPile {
 					l = d / 2;
 					h = s / 8;
 
-					ingots.add(new IngotRender(x + (rotate ? w : l), y + h, z + (rotate ? l : w), ingot, rotate));
+					ingots.add(new IngotRender((rotate ? w : l), h, (rotate ? l : w), ingot, rotate));
 					if (a < 3)
 						a++;
 					else {

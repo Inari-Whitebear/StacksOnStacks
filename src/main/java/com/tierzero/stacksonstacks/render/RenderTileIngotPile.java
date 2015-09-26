@@ -29,7 +29,15 @@ public class RenderTileIngotPile implements ISimpleBlockRenderingHandler {
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
 		TileIngotPile tile = (TileIngotPile) world.getTileEntity(x, y, z);
 
-		return ingotPileRender.render(tile.getIngotStack(), x, y, z);
+		ClientUtils.pushMatrix();
+		Tessellator.instance.addTranslation(x, y, z);
+
+		ingotPileRender.render(tile.getIngotStack());
+		Tessellator.instance.addTranslation(-x, -y, -z);
+
+		ClientUtils.popMatrix();
+
+		return true;
 	}
 
 	@Override

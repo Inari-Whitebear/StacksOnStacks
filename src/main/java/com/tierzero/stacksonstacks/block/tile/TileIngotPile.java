@@ -63,7 +63,6 @@ public class TileIngotPile extends TileEntity {
 				worldObj.getBlock(xCoord, yCoord + 1, zCoord).onBlockPlacedBy(worldObj, xCoord, yCoord, zCoord, player, stack);
 			} else {
 				pile.onRightClicked(player, stack);
-
 			}
 			return true;
 		} else if(blockAbove instanceof BlockIngotPile){
