@@ -3,19 +3,18 @@ package com.tierzero.stacksonstacks.compat;
 import com.tierzero.stacksonstacks.api.IngotRegistry;
 
 import cpw.mods.fml.common.Loader;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.event.world.ChunkDataEvent.Load;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class GeneralCompat extends ModCompat {
 	
 	public static final String MOD_BOTANIA = "Botania";
 	public static final String MOD_PROJECT_RED_CORE = "ProjRed|Core";
 	public static final String MOD_PROJECT_RED = "projectred";
-	public static final String	MOD_TWILIGHT_FOREST = "TwilightForest";
+	public static final String MOD_TWILIGHT_FOREST = "TwilightForest";
 	public static final String MOD_AURA_CASCADE = "aura";
 	public static final String MOD_WITCHERY = "witchery";
-
+	public static final String MOD_EXU = "ExtraUtilities";
+	public static final String MOD_MAGICALCROPS = "magicalcrops";
 	private static final String COLON = ":";
 
 	public GeneralCompat() {
@@ -50,13 +49,23 @@ public class GeneralCompat extends ModCompat {
 		
 		if(Loader.isModLoaded(MOD_AURA_CASCADE)) {
 			final int MAX_DEGREE = 11;
-
 			for(int degree = 0; degree < MAX_DEGREE; degree++) {
 				IngotRegistry.registerIngot(getItemStack(MOD_AURA_CASCADE, "ingotAngelSteel", degree), MOD_AURA_CASCADE + COLON + "angelsteel");
 			}
 		}
-		
+		if(Loader.isModLoaded(MOD_WITCHERY)) {
+			IngotRegistry.registerIngot(getItemStack(MOD_WITCHERY, "ingredient", 150),MOD_WITCHERY + COLON + "ingredient.kobolditeingot");
+		}
+		if(Loader.isModLoaded(MOD_TWILIGHT_FOREST)) {
+			OreDictionary.registerOre("ingotFiery", findItem(MOD_TWILIGHT_FOREST,"item.fieryIngot"));
+			OreDictionary.registerOre("ingotIronWood", findItem(MOD_TWILIGHT_FOREST,"item.ironwoodIngot"));
+		}
+		if(Loader.isModLoaded(MOD_MAGICALCROPS)) {
+
+			IngotRegistry.registerIngot(getItemStack(MOD_MAGICALCROPS,"magicalcrops_ArmourMaterials" , 1), MOD_MAGICALCROPS + COLON + "infused_ingot");
+		}
 		/*
+ 
 		 * Need to figure these out
 		if(Loader.isModLoaded(MOD_TWILIGHT_FOREST)) {
 			IngotRegistry.registerIngot(getItemStack(MOD_TWILIGHT_FOREST, "item.steeleaf", 0), MOD_TWILIGHT_FOREST + COLON + "steeleafIngot");
