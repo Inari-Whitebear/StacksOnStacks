@@ -63,7 +63,7 @@ public class IngotPileHandler {
 				
 				if(blockAtPlacementPosition.isAir(event.world,placementX, placementY, placementZ)) {
 					Block blockBelowPlacementPosition = event.world.getBlock(placementX, placementY - 1, placementZ);
-					if(blockBelowPlacementPosition.getMaterial().isSolid() && blockBelowPlacementPosition != Blocks.crafting_table) {
+					if(blockBelowPlacementPosition.getMaterial().isSolid() && (blockBelowPlacementPosition != Blocks.crafting_table || blockBelowPlacementPosition != Blocks.bed)) {
 						event.world.setBlock(placementX, placementY, placementZ, SoS.ingotPile);
 						event.world.getBlock(placementX, placementY, placementZ).onBlockPlacedBy(event.world, placementX, placementY, placementZ, event.entityPlayer, heldItemStack);
 						
