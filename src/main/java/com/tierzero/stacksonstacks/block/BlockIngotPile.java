@@ -1,5 +1,7 @@
 package com.tierzero.stacksonstacks.block;
 
+import java.util.List;
+
 import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.api.Ingot;
 import com.tierzero.stacksonstacks.block.tile.TileIngotPile;
@@ -11,10 +13,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
@@ -115,7 +119,7 @@ public class BlockIngotPile extends BlockContainer {
 				if(numberOfIngots % 8 == 0) {
 					height -= 1;
 				}
-			
+				
 				this.setBlockBounds(0, 0, 0, 1,  height / 8.0f, 1);
 			}
 		}
@@ -130,7 +134,17 @@ public class BlockIngotPile extends BlockContainer {
 		
 		return null;
 	}
-
+	@Override
+	public void addCollisionBoxesToList(World world, int x, int y, int z,
+		 AxisAlignedBB mask, List list, Entity entity) {
+		 super.addCollisionBoxesToList(world, x, y, z, mask, list, entity);
+	}
+	@Override
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y,
+			int z) {	
+		this.setBlockBoundsBasedOnState(world, x, y, z);
+		return super.getCollisionBoundingBoxFromPool(world, x, y, z);
+	}
 	@Override
 	public void onBlockPreDestroy(World world, int x, int y, int z, int meta) {
 		TileEntity tile = world.getTileEntity(x, y, z);
