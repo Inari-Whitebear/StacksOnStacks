@@ -89,7 +89,6 @@ public class RenderIngotPile {
 		}
 		
 		public void render() {
-			System.out.println(x + " " + y + " " + z);
 			Color color = ingot.getColor();
 			IIcon icon = ingot.getIcon();
 			
