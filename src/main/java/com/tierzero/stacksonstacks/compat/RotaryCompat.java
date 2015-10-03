@@ -47,20 +47,20 @@ public class RotaryCompat extends ModCompat {
 		// "Rotarycraft:aluminiumAlloyIngot");
 	}
 
-	@Override
-	public void clientSide() {
-		// PileItemRegistry.getIngot(hsla).setColor(new Color(202, 203, 242));
-		// PileItemRegistry.getIngot(bedrockIngot).setIcon(
-		// new ItemStack(GameRegistry.findBlock("RotaryCraft",
-		// "rotarycraft_block_deco"), 1, 4).getIconIndex());
-		// PileItemRegistry.getIngot(sinisterTungstenIngot).setColor(new
-		// Color(140, 140, 140));
-		// PileItemRegistry.getIngot(inductiveIngot).setColor(new Color(255,
-		// 118, 60));
-		// PileItemRegistry.getIngot(springAlloyIngot).setColor(new Color(121,
-		// 75, 88));
-		// PileItemRegistry.getIngot(aluminiumAlloyIngot).setColor(new
-		// Color(117, 117, 117));
-	}
+	// @Override
+	// public void clientSide() {
+	// // PileItemRegistry.getIngot(hsla).setColor(new Color(202, 203, 242));
+	// // PileItemRegistry.getIngot(bedrockIngot).setIcon(
+	// // new ItemStack(GameRegistry.findBlock("RotaryCraft",
+	// // "rotarycraft_block_deco"), 1, 4).getIconIndex());
+	// // PileItemRegistry.getIngot(sinisterTungstenIngot).setColor(new
+	// // Color(140, 140, 140));
+	// // PileItemRegistry.getIngot(inductiveIngot).setColor(new Color(255,
+	// // 118, 60));
+	// // PileItemRegistry.getIngot(springAlloyIngot).setColor(new Color(121,
+	// // 75, 88));
+	// // PileItemRegistry.getIngot(aluminiumAlloyIngot).setColor(new
+	// // Color(117, 117, 117));
+	// }
 
 }

@@ -60,4 +60,7 @@ public class PileItemRegistry {
 		registerPileItem(stack, name, 2);
 	}
 
+	public static void setIngotTexture(ItemStack stack, String textureName) {
+
+	}
 }

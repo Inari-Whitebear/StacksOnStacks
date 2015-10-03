@@ -2,7 +2,6 @@ package com.tierzero.stacksonstacks;
 
 import com.tierzero.stacksonstacks.api.PileColorizer;
 import com.tierzero.stacksonstacks.block.tile.TilePile;
-import com.tierzero.stacksonstacks.compat.CompatHandler;
 import com.tierzero.stacksonstacks.entity.EntityMinecartIngotPile;
 import com.tierzero.stacksonstacks.render.PileTESR;
 import com.tierzero.stacksonstacks.render.RenderEntityMinecartIngotPile;
@@ -23,6 +22,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void postInit() {
 		PileColorizer.registerPileColors();
-		CompatHandler.clientSide();
+		// CompatHandler.clientSide();
 	}
 }

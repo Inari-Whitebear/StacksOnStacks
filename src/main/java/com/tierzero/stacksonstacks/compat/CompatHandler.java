@@ -40,14 +40,6 @@ public class CompatHandler {
 		}
 	}
 
-	public static void clientSide() {
-		for (ModCompat mod : modcompat) {
-			if (mod.isEnabled()) {
-				mod.clientSide();
-			}
-		}
-	}
-
 	public static void add(ModCompat mod) {
 		modcompat.add(mod);
 	}

@@ -3,6 +3,7 @@ package com.tierzero.stacksonstacks.compat;
 import com.tierzero.stacksonstacks.api.PileItemRegistry;
 
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -76,12 +77,12 @@ public class GeneralCompat extends ModCompat {
 			OreDictionary.registerOre("ingotFiery", findItem(MOD_TWILIGHT_FOREST, "item.fieryIngot"));
 			OreDictionary.registerOre("ingotIronWood", findItem(MOD_TWILIGHT_FOREST, "item.ironwoodIngot"));
 		}
-		// if (Loader.isModLoaded(MOD_MAGICALCROPS)) {
-		//
-		// PileItemRegistry.registerIngot(getItemStack(MOD_MAGICALCROPS,
-		// "magicalcrops_ArmourMaterials", 1),
-		// MOD_MAGICALCROPS + ":infused_ingot");
-		// }
+		if (Loader.isModLoaded(MOD_MAGICALCROPS)) {
+			if (modVersion(MOD_MAGICALCROPS).contains("4.0.0")) {
+			} else
+				PileItemRegistry.registerIngot(getItemStack(MOD_MAGICALCROPS, "magicalcrops_ArmourMaterials", 1),
+						MOD_MAGICALCROPS + ":infused_ingot");
+		}
 		if (Loader.isModLoaded(MOD_THAUMCRAFT)) {
 			PileItemRegistry.registerDust(getItemStack(MOD_THAUMCRAFT, "ItemResource", 14), "Thaumcraft");
 			PileItemRegistry.registerGem(getItemStack(MOD_THAUMCRAFT, "ItemResource", 17), "Thaumcraft");
@@ -117,10 +118,17 @@ public class GeneralCompat extends ModCompat {
 
 	}
 
-	@Override
-	public void clientSide() {
-		// TODO Auto-generated method stub
+	public static String modVersion(String modId) {
+		return getModContainer(modId).getVersion();
+	}
 
+	public static ModContainer getModContainer(String modId) {
+		for (ModContainer mod : Loader.instance().getActiveModList()) {
+			if (mod.getModId().equalsIgnoreCase(modId)) {
+				return mod;
+			}
+		}
+		return null;
 	}
 
 }

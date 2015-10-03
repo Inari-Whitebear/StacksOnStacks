@@ -1,11 +1,5 @@
 package com.tierzero.stacksonstacks.compat;
 
-import org.apache.commons.lang3.StringUtils;
-
-import com.tierzero.stacksonstacks.SoS;
-
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -20,11 +14,7 @@ public abstract class ModCompat {
 	}
 
 	public void config() {
-		//if (Loader.isModLoaded(name)) {
-		//	FMLLog.info("StacksOnStacks:Loading Compat for " + name);
-			//compatEnabled = SoS.config.getBoolean("enableCompat" + StringUtils.capitalize(name), SoS.config.CATEGORY_COMPAT, true, "Enable Compatiablity For " + StringUtils.capitalize(name));
-		//} else
-		//	FMLLog.info("StacksOnStacks:" + name + " is not loaded");
+
 	}
 
 	public abstract void preInit();
@@ -33,8 +23,6 @@ public abstract class ModCompat {
 
 	public abstract void postInit();
 
-	public abstract void clientSide();
-
 	public boolean isEnabled() {
 		return true;
 	}
@@ -42,7 +30,7 @@ public abstract class ModCompat {
 	public ItemStack getItemStack(String modId, String itemName, int meta) {
 		return new ItemStack(findItem(modId, itemName), 1, meta);
 	}
-	
+
 	public Item findItem(String modId, String item) {
 		return GameRegistry.findItem(modId, item);
 	}
