@@ -1,9 +1,5 @@
 package com.tierzero.stacksonstacks.compat;
 
-import java.awt.Color;
-
-import com.tierzero.stacksonstacks.api.IngotRegistry;
-
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.ItemStack;
 
@@ -38,23 +34,33 @@ public class RotaryCompat extends ModCompat {
 
 	@Override
 	public void postInit() {
-		IngotRegistry.registerIngot(hsla, "Rotarycraft:hsla");
-		IngotRegistry.registerIngot(bedrockIngot, "Rotarycraft:ingotBedrock");
-		IngotRegistry.registerIngot(sinisterTungstenIngot, "Rotarycraft:ingotSinisterTungsten");
-		IngotRegistry.registerIngot(inductiveIngot, "Rotarycraft:inductiveIngot");
-		IngotRegistry.registerIngot(springAlloyIngot, "Rotarycraft:springAlloyIngot");
-		IngotRegistry.registerIngot(aluminiumAlloyIngot, "Rotarycraft:aluminiumAlloyIngot");
+		// PileItemRegistry.registerIngot(hsla, "Rotarycraft:hsla");
+		// PileItemRegistry.registerIngot(bedrockIngot,
+		// "Rotarycraft:ingotBedrock");
+		// PileItemRegistry.registerIngot(sinisterTungstenIngot,
+		// "Rotarycraft:ingotSinisterTungsten");
+		// PileItemRegistry.registerIngot(inductiveIngot,
+		// "Rotarycraft:inductiveIngot");
+		// PileItemRegistry.registerIngot(springAlloyIngot,
+		// "Rotarycraft:springAlloyIngot");
+		// PileItemRegistry.registerIngot(aluminiumAlloyIngot,
+		// "Rotarycraft:aluminiumAlloyIngot");
 	}
 
 	@Override
 	public void clientSide() {
-		IngotRegistry.getIngot(hsla).setColor(new Color(202, 203, 242));
-		IngotRegistry.getIngot(bedrockIngot).setIcon(
-				new ItemStack(GameRegistry.findBlock("RotaryCraft", "rotarycraft_block_deco"), 1, 4).getIconIndex());
-		IngotRegistry.getIngot(sinisterTungstenIngot).setColor(new Color(140, 140, 140));
-		IngotRegistry.getIngot(inductiveIngot).setColor(new Color(255, 118, 60));
-		IngotRegistry.getIngot(springAlloyIngot).setColor(new Color(121, 75, 88));
-		IngotRegistry.getIngot(aluminiumAlloyIngot).setColor(new Color(117, 117, 117));
+		// PileItemRegistry.getIngot(hsla).setColor(new Color(202, 203, 242));
+		// PileItemRegistry.getIngot(bedrockIngot).setIcon(
+		// new ItemStack(GameRegistry.findBlock("RotaryCraft",
+		// "rotarycraft_block_deco"), 1, 4).getIconIndex());
+		// PileItemRegistry.getIngot(sinisterTungstenIngot).setColor(new
+		// Color(140, 140, 140));
+		// PileItemRegistry.getIngot(inductiveIngot).setColor(new Color(255,
+		// 118, 60));
+		// PileItemRegistry.getIngot(springAlloyIngot).setColor(new Color(121,
+		// 75, 88));
+		// PileItemRegistry.getIngot(aluminiumAlloyIngot).setColor(new
+		// Color(117, 117, 117));
 	}
 
 }

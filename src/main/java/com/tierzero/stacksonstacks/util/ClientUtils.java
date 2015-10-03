@@ -5,10 +5,9 @@ import java.io.IOException;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import com.tierzero.stacksonstacks.api.Ingot;
-import com.tierzero.stacksonstacks.api.IngotRegistry;
+import com.tierzero.stacksonstacks.api.PileItem;
+import com.tierzero.stacksonstacks.api.PileItemRegistry;
 
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
@@ -37,97 +36,197 @@ public class ClientUtils {
 	private static String[] splitString(String regex, String stringToSplit) {
 		return stringToSplit.split(regex);
 	}
-	
+
 	private static String buildPath(String[] seperatedName) {
 		String iconName = "textures/items/";
 
-		for(int i = 1; i < seperatedName.length - 1; i++) {
+		for (int i = 1; i < seperatedName.length - 1; i++) {
 			iconName += seperatedName[i] + "/";
 		}
-		
+
 		iconName += seperatedName[seperatedName.length - 1] + ".png";
-		
+
 		return iconName;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public static IResource getIconResource(ItemStack stack) {
-		
+
 		IResource resource = fromIconName(stack);
-		
-		if(resource == null) {
-			Ingot ingot = IngotRegistry.getIngot(stack);
-			String registeredName = ingot.getRegisteredName();
-			String unlocalizedName = ingot.getName();
+
+		if (resource == null) {
+			PileItem pileItem = PileItemRegistry.getPileItem(stack);
+			String registeredName = pileItem.getRegisteredName();
+			String unlocalizedName = pileItem.getName();
 
 			resource = fromNames(registeredName, unlocalizedName);
-			
-			if(resource == null) {
-				String capitalizedIngotName = ingot.getRegisteredName().replaceFirst("[i]", "I");
-				
+
+			if (resource == null) {
+				String capitalizedIngotName = pileItem.getRegisteredName().replaceFirst("[i]", "I");
+
 				resource = fromNames(capitalizedIngotName, unlocalizedName);
 
 			}
 		}
-		
+
 		return resource;
 	}
 
 	private static IResource fromIconName(ItemStack stack) {
-		
+
 		String iconName = getIconName(stack);
 
-		if(iconName != null) {
+		if (iconName != null) {
 			String[] seperatedIconName = splitString("[:/]+", iconName);
 			String domain = seperatedIconName[0].toLowerCase();
-			
-			//Vanilla check
-			if(domain.equals(seperatedIconName[seperatedIconName.length - 1])) {
+
+			// Vanilla check
+			if (domain.equals(seperatedIconName[seperatedIconName.length - 1])) {
 				domain = "minecraft";
 			}
-			
+
 			String path = buildPath(seperatedIconName);
-			
+
 			return getResource(domain, path);
 		}
 
 		return null;
 	}
-	
+
 	private static IResource fromNames(String registeredName, String unlocalizedName) {
 		registeredName = registeredName.replaceAll("item.", "");
 		unlocalizedName = unlocalizedName.replaceAll("item.", "");
-		
+
 		String[] seperatedName;
-		if(registeredName.contains(":")) {
+		if (registeredName.contains(":")) {
 			seperatedName = splitString("[':']+", registeredName);
-			
-		} else if(unlocalizedName.contains(":")) {
+
+		} else if (unlocalizedName.contains(":")) {
 			seperatedName = splitString("[':']+", unlocalizedName);
 		} else {
 			unlocalizedName += "." + registeredName;
 
 			seperatedName = splitString("['.']+", unlocalizedName);
 		}
-		
+
 		String domain = seperatedName[0];
 		String path = buildPath(seperatedName);
 		return getResource(domain, path);
 	}
-	
+
 	private static IResource getResource(String domain, String path) {
 		try {
-			//FMLLog.info("[StacksOnStacks] Looking for resource: " + (new ResourceLocation(domain, path).toString()));
-			
+			// FMLLog.info("[StacksOnStacks] Looking for resource: " + (new
+			// ResourceLocation(domain, path).toString()));
+
 			return Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(domain, path));
 		} catch (IOException e) {
 			return null;
 		}
 	}
-	
-	
-	public static void drawRectangularPrism(double width, double length, double height, double slantX, double slantZ, double Umin, double Vmin, double Umax, double Vmax) {
-		Tessellator tes = tes();		
+
+	public static void drawItem(float Umin, float Vmin, float Umax, float Vmax, float width) {
+
+		Tessellator tes = tes();
+
+		tes.setNormal(0.0F, 0.0F, -1.0F);
+
+		ClientUtils.pushMatrix();
+		{
+
+			ClientUtils.translate(0, 0, .001 / 2f);
+			tes.startDrawingQuads();
+			tes.addVertexWithUV(0.0D, 1.0D, (double) (0.0F - width), (double) Umax, (double) Vmin);
+			tes.addVertexWithUV(1.0D, 1.0D, (double) (0.0F - width), (double) Umin, (double) Vmin);
+			tes.addVertexWithUV(1.0D, 0.0D, (double) (0.0F - width), (double) Umin, (double) Vmax);
+			tes.addVertexWithUV(0.0D, 0.0D, (double) (0.0F - width), (double) Umax, (double) Vmax);
+			tes.draw();
+
+		}
+		ClientUtils.popMatrix();
+
+		// float f5 = 0.5F * (Umax - Umin) / (float) a;
+		// float f6 = 0.5F * (Vmax - Vmin) / (float) b;
+		//
+		// tes.setNormal(-1.0F, 0.0F, 0.0F);
+		// int k;
+		// float f7;
+		// float f8;
+		//
+		// for (k = 0; k < a; ++k) {
+		// f7 = (float) k / (float) a;
+		// f8 = Umax + (Umin - Umax) * f7 - f5;
+		// tes.startDrawingQuads();
+		// tes.addVertexWithUV((double) f7, 0.0D, (double) (0.0F - width),
+		// (double) f8, (double) Vmax);
+		// tes.addVertexWithUV((double) f7, 0.0D, 0.0D, (double) f8, (double)
+		// Vmax);
+		// tes.addVertexWithUV((double) f7, 1.0D, 0.0D, (double) f8, (double)
+		// Vmin);
+		// tes.addVertexWithUV((double) f7, 1.0D, (double) (0.0F - width),
+		// (double) f8, (double) Vmin);
+		// tes.draw();
+		// }
+		//
+		// tes.setNormal(1.0F, 0.0F, 0.0F);
+		// float f9;
+		//
+		// for (k = 0; k < a; ++k) {
+		// f7 = (float) k / (float) a;
+		// f8 = Umax + (Umin - Umax) * f7 - f5;
+		// f9 = f7 + 1.0F / (float) a;
+		// tes.startDrawingQuads();
+		// tes.addVertexWithUV((double) f9, 1.0D, (double) (0.0F - width),
+		// (double) f8, (double) Vmin);
+		// tes.addVertexWithUV((double) f9, 1.0D, 0.0D, (double) f8, (double)
+		// Vmin);
+		// tes.addVertexWithUV((double) f9, 0.0D, 0.0D, (double) f8, (double)
+		// Vmax);
+		// tes.addVertexWithUV((double) f9, 0.0D, (double) (0.0F - width),
+		// (double) f8, (double) Vmax);
+		// tes.draw();
+		// }
+		//
+		// tes.setNormal(0.0F, 1.0F, 0.0F);
+		//
+		// for (k = 0; k < b; ++k) {
+		// f7 = (float) k / (float) b;
+		// f8 = Vmax + (Vmin - Vmax) * f7 - f6;
+		// f9 = f7 + 1.0F / (float) b;
+		// tes.startDrawingQuads();
+		// tes.addVertexWithUV(0.0D, (double) f9, 0.0D, (double) Umax, (double)
+		// f8);
+		// tes.addVertexWithUV(1.0D, (double) f9, 0.0D, (double) Umin, (double)
+		// f8);
+		// tes.addVertexWithUV(1.0D, (double) f9, (double) (0.0F - width),
+		// (double) Umin, (double) f8);
+		// tes.addVertexWithUV(0.0D, (double) f9, (double) (0.0F - width),
+		// (double) Umax, (double) f8);
+		// tes.draw();
+		// }
+		//
+		// tes.setNormal(0.0F, -1.0F, 0.0F);
+		//
+		// for (k = 0; k < b; ++k) {
+		// f7 = (float) k / (float) b;
+		// f8 = Vmax + (Vmin - Vmax) * f7 - f6;
+		// tes.startDrawingQuads();
+		// tes.addVertexWithUV(1.0D, (double) f7, 0.0D, (double) Umin, (double)
+		// f8);
+		// tes.addVertexWithUV(0.0D, (double) f7, 0.0D, (double) Umax, (double)
+		// f8);
+		// tes.addVertexWithUV(0.0D, (double) f7, (double) (0.0F - width),
+		// (double) Umax, (double) f8);
+		// tes.addVertexWithUV(1.0D, (double) f7, (double) (0.0F - width),
+		// (double) Umin, (double) f8);
+		// tes.draw();
+		// }
+
+	}
+
+	public static void drawRectangularPrism(double width, double length, double height, double slantX, double slantZ,
+			double Umin, double Vmin, double Umax, double Vmax) {
+		Tessellator tes = tes();
 		tes.addVertexWithUV(width, 0, 0, Umin, Vmax);
 		tes.addVertexWithUV(width, 0, length, Umin, Vmin);
 		tes.addVertexWithUV(0, 0, length, Umax, Vmin);
@@ -139,25 +238,25 @@ public class ClientUtils {
 		tes.addVertexWithUV(0 + slantX, height, 0 + slantZ, Umin, Vmin);
 		tes.addVertexWithUV(0 + slantX, height, length - slantZ, Umin, Vmax);
 		// Render side 2 (north)
-		
+
 		tes.addVertexWithUV(0, 0, 0, Umin, Vmin);
 		tes.addVertexWithUV(0 + slantX, height, 0 + slantZ, Umin, Vmax);
 		tes.addVertexWithUV(width - slantX, height, 0 + slantZ, Umax, Vmax);
 		tes.addVertexWithUV(width, 0, 0, Umax, Vmin);
 		// Render side 3 (south)
-		
+
 		tes.addVertexWithUV(width, 0, length, Umax, Vmin);
 		tes.addVertexWithUV(width - slantX, height, length - slantZ, Umax, Vmax);
 		tes.addVertexWithUV(0 + slantX, height, length - slantZ, Umin, Vmax);
 		tes.addVertexWithUV(0, 0, length, Umin, Vmin);
 		// Render side 4 (west)
-		
+
 		tes.addVertexWithUV(0, 0, 0, Umin, Vmax);
 		tes.addVertexWithUV(0, 0, length, Umax, Vmax);
 		tes.addVertexWithUV(0 + slantX, height, length - slantZ, Umax, Vmin);
 		tes.addVertexWithUV(0 + slantX, height, 0 + slantZ, Umin, Vmin);
 		// Render side 5 (east)
-		
+
 		tes.addVertexWithUV(width, 0, 0, Umax, Vmin);
 		tes.addVertexWithUV(width - slantX, height, 0 + slantZ, Umax, Vmax);
 		tes.addVertexWithUV(width - slantX, height, length - slantZ, Umin, Vmax);

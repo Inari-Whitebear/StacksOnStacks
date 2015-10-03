@@ -1,11 +1,12 @@
 package com.tierzero.stacksonstacks.block.tile;
 
 import com.tierzero.stacksonstacks.SoS;
-import com.tierzero.stacksonstacks.api.IngotPile;
-import com.tierzero.stacksonstacks.block.BlockIngotPile;
+import com.tierzero.stacksonstacks.api.Pile;
+import com.tierzero.stacksonstacks.api.Pile.Type;
+import com.tierzero.stacksonstacks.api.PileItemRegistry;
+import com.tierzero.stacksonstacks.block.BlockPile;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.entity.RenderTntMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,67 +15,73 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileIngotPile extends TileEntity {
+public class TilePile extends TileEntity {
+
 	private static final String TAG_INVENTORY = "inventory";
-	private static final int MAX_STACK_SIZE = 64;
-	
-	private IngotPile pile;
+
+	private Pile pile;
+
 	public boolean placeMod = false;
-	
-	public TileIngotPile() {
-		this.pile = new IngotPile(this.xCoord, this.yCoord, this.zCoord);
+
+	public TilePile() {
+		this.pile = new Pile(this.xCoord, this.yCoord, this.zCoord);
 	}
 
-	public ItemStack getIngotStack() {
-		return pile.getIngotStack();
+	public Type getType() {
+		return pile.getType();
 	}
-	
+
+	public ItemStack getPileStack() {
+		return pile.getPileStack();
+	}
+
 	public int getAmountStored() {
 		return pile.getAmountStored();
 	}
 
 	public void onLeftClicked(EntityPlayer player) {
-		
+
 		Block blockAbove = worldObj.getBlock(xCoord, yCoord + 1, zCoord);
-		
-		if(blockAbove instanceof BlockIngotPile) {
+
+		if (blockAbove instanceof BlockPile) {
 			blockAbove.onBlockClicked(worldObj, xCoord, yCoord + 1, zCoord, player);
 		} else {
 			pile.onLeftClicked(this.worldObj, player);
-			
-			if(pile.getAmountStored() <= 0) {
+
+			if (pile.getAmountStored() <= 0) {
 				this.worldObj.setBlockToAir(xCoord, yCoord, zCoord);
 			} else {
 			}
 		}
-				
+
 		update();
 
 	}
-	
-	public boolean onRightClicked(EntityPlayer player, ItemStack stack) {	
+
+	public boolean onRightClicked(EntityPlayer player, ItemStack stack) {
 		update();
 		Block blockAbove = worldObj.getBlock(xCoord, yCoord + 1, zCoord);
-		
-		if(worldObj.isAirBlock(xCoord, yCoord + 1, zCoord)) {
-			if(pile.getAmountStored() >= pile.getMaxStored() && stack != null && stack.stackSize > 0) {
-				worldObj.setBlock(xCoord, yCoord + 1, zCoord, SoS.ingotPile);
-				worldObj.getBlock(xCoord, yCoord + 1, zCoord).onBlockPlacedBy(worldObj, xCoord, yCoord, zCoord, player, stack);
+		// not the best place to put this
+		int t = getType().ordinal();
+
+		if (worldObj.isAirBlock(xCoord, yCoord + 1, zCoord)) {
+			if (pile.getAmountStored() >= pile.getMaxStored() && stack != null && stack.stackSize > 0
+					&& PileItemRegistry.getPileType(stack) != 2) {
+				worldObj.setBlock(xCoord, yCoord + 1, zCoord, SoS.blockPile);
+				worldObj.getBlock(xCoord, yCoord + 1, zCoord).onBlockPlacedBy(worldObj, xCoord, yCoord, zCoord, player,
+						stack);
 			} else {
 				pile.onRightClicked(player, stack);
 			}
 			return true;
-		} else if(blockAbove instanceof BlockIngotPile){
+		} else if (blockAbove instanceof BlockPile) {
 			return blockAbove.onBlockActivated(worldObj, xCoord, yCoord + 1, zCoord, player, 0, 0, 0, 0);
 		} else {
 			pile.onRightClicked(player, stack);
 		}
-		
-
-		
-		return false;		
+		return false;
 	}
-	
+
 	private boolean shouldUseEntireStack(EntityPlayer player) {
 		return player.isSneaking();
 	}
@@ -90,20 +97,19 @@ public class TileIngotPile extends TileEntity {
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		
+
 		pile.readFromNBT(tag);
-		
-		if(pile.getIngotStack() != null && pile.getIngotStack().getItem() == null) {
-			this.worldObj.setBlockToAir(xCoord, yCoord, zCoord);				
+
+		if (pile.getPileStack() != null && pile.getPileStack().getItem() == null) {
+			this.worldObj.setBlockToAir(xCoord, yCoord, zCoord);
 		}
-		
 
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		
+
 		pile.writeToNBT(tag);
 	}
 
@@ -120,6 +126,7 @@ public class TileIngotPile extends TileEntity {
 	}
 
 	public void debugCreatePile(ItemStack stack) {
+
 		pile.debugCreatePile(stack);
 	}
 

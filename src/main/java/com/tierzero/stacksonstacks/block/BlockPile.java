@@ -3,8 +3,9 @@ package com.tierzero.stacksonstacks.block;
 import java.util.List;
 
 import com.tierzero.stacksonstacks.SoS;
-import com.tierzero.stacksonstacks.api.Ingot;
-import com.tierzero.stacksonstacks.block.tile.TileIngotPile;
+import com.tierzero.stacksonstacks.api.Pile.Type;
+import com.tierzero.stacksonstacks.api.PileItem;
+import com.tierzero.stacksonstacks.block.tile.TilePile;
 import com.tierzero.stacksonstacks.util.ConfigHandler;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -16,6 +17,8 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -24,14 +27,15 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockIngotPile extends BlockContainer {
-	public IIcon icon;
+public class BlockPile extends BlockContainer {
+	public IIcon icon[] = new IIcon[2];
 	private int renderID;
 
-	public static final int INGOTS_NEEDED_TO_SUPPORT = 64;
-	public static String[] textureNames = { "VanillaGold", "VanillaIron", "ThermalFoundation", "Metallurgy4", "Mekanism" };
-	
-	public BlockIngotPile(String name) {
+	public static final int PILEITEM_NEEDED_TO_SUPPORT = 64;
+	public static String[][] textureNames = {
+			{ "VanillaGold", "VanillaIron", "ThermalFoundation", "Metallurgy4", "Mekanism" }, { "VanillaSand" } };
+
+	public BlockPile(String name) {
 		super(Material.iron);
 		this.setBlockName(name);
 		GameRegistry.registerBlock(this, name);
@@ -39,17 +43,17 @@ public class BlockIngotPile extends BlockContainer {
 		this.setHardness(25f);
 
 	}
-    
+
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-		if(!world.isRemote) {
-			if(world.isAirBlock(x, y - 1, z)) {					
+		if (!world.isRemote) {
+			if (world.isAirBlock(x, y - 1, z)) {
 				world.setBlockToAir(x, y, z);
-			} else if(world.getBlock(x, y - 1, z) instanceof BlockIngotPile) {
-				TileIngotPile ingotPile = (TileIngotPile) world.getTileEntity(x, y - 1, z);
-				
-				if(ingotPile != null) {
-					if(ingotPile.getAmountStored() < INGOTS_NEEDED_TO_SUPPORT) {
+			} else if (world.getBlock(x, y - 1, z) instanceof BlockPile) {
+				TilePile pile = (TilePile) world.getTileEntity(x, y - 1, z);
+
+				if (pile != null) {
+					if (pile.getAmountStored() < PILEITEM_NEEDED_TO_SUPPORT) {
 						world.setBlockToAir(x, y, z);
 					}
 				}
@@ -66,22 +70,25 @@ public class BlockIngotPile extends BlockContainer {
 	public int getComparatorInputOverride(World world, int x, int y, int z, int side) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			return ((TileIngotPile) tile).getAmountStored() / 4;
+			return ((TilePile) tile).getAmountStored() / 4;
 		} else {
 			return 0;
 		}
 	}
 
-
 	@Override
 	public IIcon getIcon(int side, int meta) {
-		return icon;
+		// use meta as pile type
+		return icon[meta];
 	}
 
 	@Override
 	public void registerBlockIcons(IIconRegister iconRegistry) {
-		this.icon = iconRegistry.registerIcon(SoS.TEXTURE_BASE + textureNames[ConfigHandler.textureToUse]);	
-		Ingot.setIcon(icon);
+		// could do this better, don't feel like it
+		this.icon[0] = iconRegistry.registerIcon(SoS.TEXTURE_BASE + textureNames[0][ConfigHandler.ingotTextureToUse]);
+		this.icon[1] = iconRegistry.registerIcon(SoS.TEXTURE_BASE + textureNames[1][ConfigHandler.dustTextureToUse]);
+		PileItem.setIcon(icon[0], 0);
+		PileItem.setIcon(icon[1], 1);
 		super.registerBlockIcons(iconRegistry);
 	}
 
@@ -91,36 +98,37 @@ public class BlockIngotPile extends BlockContainer {
 		if (tile != null) {
 			return tile.receiveClientEvent(eventNum, eventArg);
 		}
-		
-		return false;		
+
+		return false;
 	}
 
 	@Override
 	public boolean canBlockStay(World world, int x, int y, int z) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			return ((TileIngotPile) tile).getAmountStored() > 0;
+			return ((TilePile) tile).getAmountStored() > 0;
 		}
-		
+
 		return false;
-		
-		
+
 	}
 
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-		TileIngotPile tile = (TileIngotPile) world.getTileEntity(x, y, z);
+		TilePile tile = (TilePile) world.getTileEntity(x, y, z);
 		if (tile != null) {
-			ItemStack ingotStack = tile.getIngotStack();
-			if(ingotStack != null) {
-				int numberOfIngots = tile.getIngotStack().stackSize;
-				int height = 1 + numberOfIngots / 8;
-				
-				if(numberOfIngots % 8 == 0) {
+			ItemStack pileStack = tile.getPileStack();
+			if (tile.getType() == Type.GEM)
+				this.setBlockBounds(0, 0, 0, 1, 1, 1);
+			else if (pileStack != null) {
+				int numberOfPileItem = tile.getPileStack().stackSize;
+				int height = 1 + numberOfPileItem / 8;
+
+				if (numberOfPileItem % 8 == 0) {
 					height -= 1;
 				}
-				
-				this.setBlockBounds(0, 0, 0, 1,  height / 8.0f, 1);
+
+				this.setBlockBounds(0, 0, 0, 1, height / 8.0f, 1);
 			}
 		}
 	}
@@ -129,30 +137,32 @@ public class BlockIngotPile extends BlockContainer {
 	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			return ((TileIngotPile) tile).getIngotStack();
+			return ((TilePile) tile).getPileStack();
 		}
-		
+
 		return null;
 	}
+
 	@Override
-	public void addCollisionBoxesToList(World world, int x, int y, int z,
-		 AxisAlignedBB mask, List list, Entity entity) {
-		 super.addCollisionBoxesToList(world, x, y, z, mask, list, entity);
+	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB mask, List list,
+			Entity entity) {
+		super.addCollisionBoxesToList(world, x, y, z, mask, list, entity);
 	}
+
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y,
-			int z) {	
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
 		this.setBlockBoundsBasedOnState(world, x, y, z);
 		return super.getCollisionBoundingBoxFromPool(world, x, y, z);
 	}
+
 	@Override
 	public void onBlockPreDestroy(World world, int x, int y, int z, int meta) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			ItemStack stackToDrop = ((TileIngotPile) tile).getIngotStack();
-			
-			if(stackToDrop != null && stackToDrop.getItem() != null) {
-				dropBlockAsItem(world, x, y, z, ((TileIngotPile) tile).getIngotStack());
+			ItemStack stackToDrop = ((TilePile) tile).getPileStack();
+
+			if (stackToDrop != null && stackToDrop.getItem() != null) {
+				dropBlockAsItem(world, x, y, z, ((TilePile) tile).getPileStack());
 			}
 		}
 	}
@@ -163,13 +173,14 @@ public class BlockIngotPile extends BlockContainer {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_,	float p_149727_7_, float p_149727_8_, float p_149727_9_) {
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_,
+			float p_149727_7_, float p_149727_8_, float p_149727_9_) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			return ((TileIngotPile) tile).onRightClicked(player, player.getCurrentEquippedItem());
+			return ((TilePile) tile).onRightClicked(player, player.getCurrentEquippedItem());
 
 		}
-		
+
 		return false;
 	}
 
@@ -178,33 +189,43 @@ public class BlockIngotPile extends BlockContainer {
 
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			((TileIngotPile) tile).onLeftClicked(player);
-		
+			((TilePile) tile).onLeftClicked(player);
+
 			world.notifyBlocksOfNeighborChange(x, y, z, this);
 		}
 	}
 
-
-	
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
 
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			((TileIngotPile) tile).onRightClicked((EntityPlayer) player,stack);
+			((TilePile) tile).onRightClicked((EntityPlayer) player, stack);
 		}
 	}
-	
+
+	@Override
+	public int getLightValue(IBlockAccess world, int x, int y, int z) {
+
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if (tile != null && ((TilePile) tile).getPileStack() != null) {
+			Item item = ((TilePile) tile).getPileStack().getItem();
+			if (item != null && item == Items.glowstone_dust)
+				return 15;
+		}
+		return 0;
+	}
+
 	public void debugBlockPlaced(World world, int x, int y, int z, ItemStack stack) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			((TileIngotPile) tile).debugCreatePile(stack);
+			((TilePile) tile).debugCreatePile(stack);
 		}
 	}
-	
+
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		return new TileIngotPile();
+		return new TilePile();
 	}
 
 	@Override

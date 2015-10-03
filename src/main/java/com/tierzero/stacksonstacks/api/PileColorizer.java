@@ -10,23 +10,22 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import com.tierzero.stacksonstacks.SoS;
-import com.tierzero.stacksonstacks.compat.RotaryCompat;
 import com.tierzero.stacksonstacks.util.ClientUtils;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
-public class IngotColorizer {
+public class PileColorizer {
 
 	@SideOnly(Side.CLIENT)
-	public static void registerIngotColors() {
-		for (Ingot ingot : IngotRegistry.getRegisteredIngots()) {
-			ingot.setColor(getColor(ingot.getIngotStack()));
+	public static void registerPileColors() {
+		for (List<PileItem> list : PileItemRegistry.registeredPileItems) {
+			for (PileItem pileitem : list) {
+
+				pileitem.setColor(getColor(pileitem.getPileStack()));
+			}
 		}
 	}
 
@@ -42,8 +41,7 @@ public class IngotColorizer {
 			colors.add(getColorFromTexture(stack));
 		} catch (Exception e) {
 		}
-			
-		
+
 		for (int pass = 0; pass < stack.getItem().getRenderPasses(stack.getItemDamage()); pass++) {
 
 			int stackColor = getStackColour(stack, pass);
@@ -51,12 +49,12 @@ public class IngotColorizer {
 			if (stackColor != 16777215) {
 				colors.add(new Color(stackColor));
 			}
-		}	
-		
+		}
+
 		if (Loader.isModLoaded("gregtech")) {
 			try {
 				Color gregColor = getGregtechColor(stack);
-				if(gregColor != null) {
+				if (gregColor != null) {
 					colors.clear();
 					colors.add(gregColor);
 				}
@@ -73,24 +71,24 @@ public class IngotColorizer {
 			blue += c.getBlue();
 		}
 		float count = colors.size();
-		
-		Color ingotColor = new Color((int) (red / count), (int) (green / count), (int) (blue / count));
 
-		
-		if(ingotColor.getRed() == 0 && ingotColor.getBlue() == 0 && ingotColor.getRed() == 0) {
-			//Change it to look like iron
-			ingotColor = new Color(156, 156, 156);
+		Color pileitemColor = new Color((int) (red / count), (int) (green / count), (int) (blue / count));
+
+		if (pileitemColor.getRed() == 0 && pileitemColor.getBlue() == 0 && pileitemColor.getRed() == 0) {
+			// Change it to look like iron
+			pileitemColor = new Color(156, 156, 156);
 		}
 
-		return ingotColor;
+		return pileitemColor;
 	}
-	
+
 	private static Color getColorFromTexture(ItemStack stack) throws IOException {
 		BufferedImage texture = ImageIO.read(ClientUtils.getIconResource(stack).getInputStream());
 		return getAverageColor(texture);
 	}
-	
-	private static Color getGregtechColor(ItemStack stack) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+
+	private static Color getGregtechColor(ItemStack stack) throws ClassNotFoundException, NoSuchMethodException,
+			SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		Class<?> cls = Class.forName("gregtech.api.items.GT_MetaGenerated_Item");
 		Class<?> itemCls = stack.getItem().getClass();
 		if (cls.isAssignableFrom(itemCls)) {
@@ -98,7 +96,7 @@ public class IngotColorizer {
 			short[] rgba = (short[]) m.invoke(stack.getItem(), stack);
 			return new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
 
-		}		
+		}
 		return null;
 	}
 

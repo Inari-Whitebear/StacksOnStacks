@@ -1,6 +1,6 @@
 package com.tierzero.stacksonstacks;
 
-import com.tierzero.stacksonstacks.block.tile.TileIngotPile;
+import com.tierzero.stacksonstacks.block.tile.TilePile;
 import com.tierzero.stacksonstacks.entity.EntityMinecartIngotPile;
 import com.tierzero.stacksonstacks.render.RenderEntityMinecartIngotPile;
 
@@ -13,7 +13,7 @@ public class CommonProxy {
 	
 
 	public void registerTiles() {
-		GameRegistry.registerTileEntity(TileIngotPile.class, "tileIngotPile");
+		GameRegistry.registerTileEntity(TilePile.class, "tileIngotPile");
 	}
 	
 	public void registerEntities() {
