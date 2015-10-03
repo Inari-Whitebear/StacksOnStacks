@@ -136,11 +136,8 @@ public class Pile {
 		NBTTagCompound inventoryTag = tag.getCompoundTag(TAG_PILE_STACK);
 		type = tag.getInteger(TAG_TYPE);
 		pileStack = ItemStack.loadItemStackFromNBT(inventoryTag);
-		try {
+		if (tag.getTag(TAG_PILE_STACKSIZE) != null)
 			pileStack.stackSize = tag.getInteger(TAG_PILE_STACKSIZE);
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-		}
 		// If null then its probably saved as the pre 0.9.5 nbt format
 		if (pileStack == null) {
 			// Will remove eventually, to stop breaking of existing ingot piles
@@ -155,6 +152,8 @@ public class Pile {
 		tag.setInteger(TAG_TYPE, this.type);
 		if (pileStack != null) {
 			pileStack.writeToNBT(inventoryTag);
+			if (inventoryTag.getByte("Count") != 0 && type == 0)
+				pileStack.stackSize = inventoryTag.getByte("Count");
 			tag.setInteger(TAG_PILE_STACKSIZE, pileStack.stackSize);
 			tag.setTag(TAG_PILE_STACK, inventoryTag);
 		}
