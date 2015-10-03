@@ -3,7 +3,6 @@ package com.tierzero.stacksonstacks.block;
 import java.util.List;
 
 import com.tierzero.stacksonstacks.SoS;
-import com.tierzero.stacksonstacks.api.Pile.Type;
 import com.tierzero.stacksonstacks.api.PileItem;
 import com.tierzero.stacksonstacks.block.tile.TilePile;
 import com.tierzero.stacksonstacks.util.ConfigHandler;
@@ -118,17 +117,34 @@ public class BlockPile extends BlockContainer {
 		TilePile tile = (TilePile) world.getTileEntity(x, y, z);
 		if (tile != null) {
 			ItemStack pileStack = tile.getPileStack();
-			if (tile.getType() == Type.GEM)
-				this.setBlockBounds(0, 0, 0, 1, 1, 1);
-			else if (pileStack != null) {
+			int type = tile.getType().ordinal();
+			if (pileStack != null) {
+
 				int numberOfPileItem = tile.getPileStack().stackSize;
-				int height = 1 + numberOfPileItem / 8;
+				float height = 0;
+				float width = 1f, length = 1f;
+				if (type == 0) {
+					height = 1 + numberOfPileItem / 8;
 
-				if (numberOfPileItem % 8 == 0) {
-					height -= 1;
-				}
+					if (numberOfPileItem % 8 == 0) {
+						height -= 1;
+					}
+					height /= 8;
+				} else if (type == 1) {
+					width = .5f;
+					length = .5f;
+					if (numberOfPileItem < 64)
+						height += numberOfPileItem / 64f;
+					else
+						height = 1;
+					if (numberOfPileItem > 64)
+						width = 1;
+					if (numberOfPileItem > 128)
+						length = 1;
 
-				this.setBlockBounds(0, 0, 0, 1, height / 8.0f, 1);
+				} else
+					height = 1;
+				this.setBlockBounds(0, 0, 0, width, height, length);
 			}
 		}
 	}

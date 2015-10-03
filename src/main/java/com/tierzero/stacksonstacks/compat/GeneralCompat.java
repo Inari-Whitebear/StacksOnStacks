@@ -17,6 +17,7 @@ public class GeneralCompat extends ModCompat {
 	public static final String MOD_WITCHERY = "witchery";
 	public static final String MOD_EXU = "ExtraUtilities";
 	public static final String MOD_MAGICALCROPS = "magicalcrops";
+	public static final String MOD_THAUMCRAFT = "Thaumcraft";
 	private static final String COLON = ":";
 
 	public GeneralCompat() {
@@ -36,47 +37,55 @@ public class GeneralCompat extends ModCompat {
 	@Override
 	public void postInit() {
 		PileItemRegistry.registerDust(new ItemStack(Items.gunpowder), "minecraft:gunpowder");
+		PileItemRegistry.registerGem(new ItemStack(Items.coal, 0), "minecraft:coal");
+		PileItemRegistry.registerGem(new ItemStack(Items.coal, 1, 1), "minecraft:charcoal");
+		PileItemRegistry.registerGem(new ItemStack(Items.nether_star), "minecraft:nether_star");
 		if (Loader.isModLoaded(MOD_PROJECT_RED_CORE)) {
 			PileItemRegistry.registerIngot(getItemStack(MOD_PROJECT_RED_CORE, "projectred.core.part", 10),
-					MOD_PROJECT_RED + COLON + "base/red_ingot");
+					MOD_PROJECT_RED + ":base/red_ingot");
 			PileItemRegistry.registerIngot(getItemStack(MOD_PROJECT_RED_CORE, "projectred.core.part", 40),
-					MOD_PROJECT_RED + COLON + "base/red_iron_comp");
+					MOD_PROJECT_RED + ":base/red_iron_comp");
 			PileItemRegistry.registerIngot(getItemStack(MOD_PROJECT_RED_CORE, "projectred.core.part", 52),
-					MOD_PROJECT_RED + COLON + "base/copper_ingot");
+					MOD_PROJECT_RED + ":base/copper_ingot");
 			PileItemRegistry.registerIngot(getItemStack(MOD_PROJECT_RED_CORE, "projectred.core.part", 53),
-					MOD_PROJECT_RED + COLON + "base/tin_ingot");
+					MOD_PROJECT_RED + ":base/tin_ingot");
 			PileItemRegistry.registerIngot(getItemStack(MOD_PROJECT_RED_CORE, "projectred.core.part", 54),
-					MOD_PROJECT_RED + COLON + "base/silver_ingot");
+					MOD_PROJECT_RED + ":base/silver_ingot");
 			PileItemRegistry.registerIngot(getItemStack(MOD_PROJECT_RED_CORE, "projectred.core.part", 55),
-					MOD_PROJECT_RED + COLON + "base/electrotine_ingot");
+					MOD_PROJECT_RED + ":base/electrotine_ingot");
 			PileItemRegistry.registerIngot(getItemStack(MOD_PROJECT_RED_CORE, "projectred.core.part", 57),
-					MOD_PROJECT_RED + COLON + "base/electrotine_iron_comp");
+					MOD_PROJECT_RED + ":base/electrotine_iron_comp");
 		}
 
 		if (Loader.isModLoaded(MOD_BOTANIA)) {
-			PileItemRegistry.registerIngot(getItemStack(MOD_BOTANIA, "manaResource", 14),
-					MOD_BOTANIA + COLON + "gaiaIngot");
+			PileItemRegistry.registerIngot(getItemStack(MOD_BOTANIA, "manaResource", 14), MOD_BOTANIA + ":gaiaIngot");
 		}
 
 		if (Loader.isModLoaded(MOD_AURA_CASCADE)) {
 			final int MAX_DEGREE = 11;
 			for (int degree = 0; degree < MAX_DEGREE; degree++) {
 				PileItemRegistry.registerIngot(getItemStack(MOD_AURA_CASCADE, "ingotAngelSteel", degree),
-						MOD_AURA_CASCADE + COLON + "angelsteel");
+						MOD_AURA_CASCADE + ":angelsteel");
 			}
 		}
 		if (Loader.isModLoaded(MOD_WITCHERY)) {
 			PileItemRegistry.registerIngot(getItemStack(MOD_WITCHERY, "ingredient", 150),
-					MOD_WITCHERY + COLON + "ingredient.kobolditeingot");
+					MOD_WITCHERY + ":ingredient.kobolditeingot");
 		}
 		if (Loader.isModLoaded(MOD_TWILIGHT_FOREST)) {
 			OreDictionary.registerOre("ingotFiery", findItem(MOD_TWILIGHT_FOREST, "item.fieryIngot"));
 			OreDictionary.registerOre("ingotIronWood", findItem(MOD_TWILIGHT_FOREST, "item.ironwoodIngot"));
 		}
-		if (Loader.isModLoaded(MOD_MAGICALCROPS)) {
-
-			PileItemRegistry.registerIngot(getItemStack(MOD_MAGICALCROPS, "magicalcrops_ArmourMaterials", 1),
-					MOD_MAGICALCROPS + COLON + "infused_ingot");
+		// if (Loader.isModLoaded(MOD_MAGICALCROPS)) {
+		//
+		// PileItemRegistry.registerIngot(getItemStack(MOD_MAGICALCROPS,
+		// "magicalcrops_ArmourMaterials", 1),
+		// MOD_MAGICALCROPS + ":infused_ingot");
+		// }
+		if (Loader.isModLoaded(MOD_THAUMCRAFT)) {
+			PileItemRegistry.registerDust(getItemStack(MOD_THAUMCRAFT, "ItemResource", 14), "Thaumcraft");
+			PileItemRegistry.registerGem(getItemStack(MOD_THAUMCRAFT, "ItemResource", 17), "Thaumcraft");
+			PileItemRegistry.registerGem(getItemStack(MOD_THAUMCRAFT, "ItemResource", 18), "Thaumcraft");
 		}
 		/*
 		 * 

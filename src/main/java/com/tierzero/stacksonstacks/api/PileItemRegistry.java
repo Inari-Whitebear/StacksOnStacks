@@ -2,7 +2,6 @@ package com.tierzero.stacksonstacks.api;
 
 import java.util.ArrayList;
 
-import cpw.mods.fml.common.FMLLog;
 import net.minecraft.item.ItemStack;
 
 public class PileItemRegistry {
@@ -14,8 +13,9 @@ public class PileItemRegistry {
 
 	public static void registerPileItem(ItemStack stack, String name, int type) {
 		if (getPileItem(stack) == null) {
-			FMLLog.info("[StacksOnStacks] Registered Ingot: " + name + " or " + stack.getUnlocalizedName()
-					+ " with type " + type);
+			// FMLLog.info("[StacksOnStacks] Registered Ingot: " + name + " or "
+			// + stack.getUnlocalizedName()
+			// + " with type " + type);
 			registeredPileItems.get(type).add(new PileItem(stack, type, name));
 		}
 

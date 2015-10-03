@@ -3,7 +3,6 @@ package com.tierzero.stacksonstacks.block.tile;
 import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.api.Pile;
 import com.tierzero.stacksonstacks.api.Pile.Type;
-import com.tierzero.stacksonstacks.api.PileItemRegistry;
 import com.tierzero.stacksonstacks.block.BlockPile;
 
 import net.minecraft.block.Block;
@@ -65,8 +64,7 @@ public class TilePile extends TileEntity {
 		int t = getType().ordinal();
 
 		if (worldObj.isAirBlock(xCoord, yCoord + 1, zCoord)) {
-			if (pile.getAmountStored() >= pile.getMaxStored() && stack != null && stack.stackSize > 0
-					&& PileItemRegistry.getPileType(stack) != 2) {
+			if (pile.getAmountStored() >= pile.getMaxStored() && stack != null && stack.stackSize > 0 && t != 2) {
 				worldObj.setBlock(xCoord, yCoord + 1, zCoord, SoS.blockPile);
 				worldObj.getBlock(xCoord, yCoord + 1, zCoord).onBlockPlacedBy(worldObj, xCoord, yCoord, zCoord, player,
 						stack);
