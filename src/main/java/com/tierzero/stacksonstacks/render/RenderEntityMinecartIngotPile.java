@@ -5,14 +5,11 @@ import com.tierzero.stacksonstacks.util.ClientUtils;
 
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderMinecart;
-import net.minecraft.client.renderer.entity.RenderMinecart;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.item.ItemStack;
 
 public class RenderEntityMinecartIngotPile extends RenderMinecart {
-
-	private static RenderPile ingotPileRender = new RenderPile();
 
 	@Override
 	public void doRender(Entity p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_,
@@ -33,8 +30,6 @@ public class RenderEntityMinecartIngotPile extends RenderMinecart {
 			ClientUtils.translate(x, y, z);
 
 			tes.startDrawingQuads();
-
-			ingotPileRender.render(ingotStack, (int) x, (int) y, (int) z);
 
 			tes.draw();
 

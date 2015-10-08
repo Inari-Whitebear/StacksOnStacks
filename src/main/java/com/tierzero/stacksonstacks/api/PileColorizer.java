@@ -23,8 +23,8 @@ public class PileColorizer {
 	public static void registerPileColors() {
 		for (List<PileItem> list : PileItemRegistry.registeredPileItems) {
 			for (PileItem pileitem : list) {
-
 				pileitem.setColor(getColor(pileitem.getPileStack()));
+				System.out.println(pileitem.getColor());
 			}
 		}
 	}
