@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.Lists;
+import com.tierzero.stacksonstacks.util.ConfigHandler;
 
 import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
 import cpw.mods.fml.common.registry.GameData;
@@ -13,10 +14,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class PileItemFinder {
-	private static String[] invalidIngotNames = new String[] { "ingotPile", "ingotDouble", "ingotTriple", "ingotQuad",
-			"ingotQuin" };
-	private static String[] invalidGemNames = new String[] { "color_lightgem" };
-	private static String[] invalidDustNames = new String[] { "small", "tiny", "Tiny", "Small" };
+	private static String[] invalidIngotNames = ConfigHandler.invalidIngots;
+	private static String[] invalidGemNames = ConfigHandler.invalidGems;
+	private static String[] invalidDustNames = ConfigHandler.invalidDusts;
 	private static String[][] invalidNames = new String[][] { invalidIngotNames, invalidGemNames, invalidDustNames };
 	private static String[] validKeyWord = new String[] { "ingot", "gem", "dust" };
 
@@ -24,7 +24,6 @@ public class PileItemFinder {
 		for (int type = 0; type < validKeyWord.length; type++) {
 			registerPileItem(type);
 		}
-
 	}
 
 	public static void registerPileItem(int type) {
@@ -39,10 +38,11 @@ public class PileItemFinder {
 				PileItemRegistry.registerPileItem(stack, validName, type);
 			}
 		}
-
-		for (String validName : validRegisteredNames) {
-			ItemStack stack = new ItemStack(itemRegistry.getObject(validName));
-			PileItemRegistry.registerPileItem(stack, validName, type);
+		if (type != 1) {
+			for (String validName : validRegisteredNames) {
+				ItemStack stack = new ItemStack(itemRegistry.getObject(validName));
+				PileItemRegistry.registerPileItem(stack, validName, type);
+			}
 		}
 	}
 

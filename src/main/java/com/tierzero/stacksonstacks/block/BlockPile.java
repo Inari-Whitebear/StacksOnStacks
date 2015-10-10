@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.api.PileItem;
+import com.tierzero.stacksonstacks.api.PileItemRegistry;
 import com.tierzero.stacksonstacks.block.tile.TilePile;
 import com.tierzero.stacksonstacks.util.ConfigHandler;
 
@@ -192,7 +193,7 @@ public class BlockPile extends BlockContainer {
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_,
 			float p_149727_7_, float p_149727_8_, float p_149727_9_) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile != null) {
+		if (tile != null && PileItemRegistry.isValidPileItem(player.getCurrentEquippedItem())) {
 			return ((TilePile) tile).onRightClicked(player, player.getCurrentEquippedItem());
 
 		}

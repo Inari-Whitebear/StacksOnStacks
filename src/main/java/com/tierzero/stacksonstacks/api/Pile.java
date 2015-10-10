@@ -156,6 +156,7 @@ public class Pile {
 				pileStack.stackSize = inventoryTag.getByte("Count");
 			tag.setInteger(TAG_PILE_STACKSIZE, pileStack.stackSize);
 			tag.setTag(TAG_PILE_STACK, inventoryTag);
+
 		}
 	}
 

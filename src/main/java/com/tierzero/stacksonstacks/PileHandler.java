@@ -3,7 +3,6 @@ package com.tierzero.stacksonstacks;
 import com.tierzero.stacksonstacks.api.PileItemRegistry;
 import com.tierzero.stacksonstacks.block.tile.TilePile;
 import com.tierzero.stacksonstacks.compat.GeneralCompat;
-import com.tierzero.stacksonstacks.entity.EntityMinecartIngotPile;
 import com.tierzero.stacksonstacks.util.StackUtils;
 
 import cpw.mods.fml.client.GuiIngameModOptions;
@@ -13,9 +12,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityMinecartEmpty;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -23,7 +19,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
@@ -33,6 +28,7 @@ public class PileHandler {
 	public void handleBlockPlacement(PlayerInteractEvent event) {
 		if (event.action == Action.RIGHT_CLICK_BLOCK) {
 			ItemStack heldItemStack = event.entityPlayer.getCurrentEquippedItem();
+
 			if (heldItemStack != null && PileItemRegistry.isValidPileItem(heldItemStack)) {
 
 				int clickedX = event.x;
@@ -97,30 +93,26 @@ public class PileHandler {
 	}
 
 	/*
-	@SubscribeEvent
-	public void handleMinecartPlacement(EntityInteractEvent event) {
-		
-		Entity targetCart = event.target;
-		EntityPlayer player = event.entityPlayer;
-		ItemStack stackInHand = player.getCurrentEquippedItem();
-
-		if (!player.worldObj.isRemote) {
-			if (event.target instanceof EntityMinecartEmpty && PileItemRegistry.isValidPileItem(stackInHand)) {
-				EntityMinecartIngotPile ingotPileCart = new EntityMinecartIngotPile(player.worldObj, targetCart.posX,
-						targetCart.posY, targetCart.posZ);
-				ingotPileCart.motionX = targetCart.motionX;
-				ingotPileCart.motionY = targetCart.motionY;
-				ingotPileCart.motionZ = targetCart.motionZ;
-
-				player.worldObj.spawnEntityInWorld(ingotPileCart);
-				targetCart.setDead();
-			} else if (event.target instanceof EntityMinecartIngotPile) {
-				// Check to see if pile is empty
-				// If so then replace with regular minecart
-			}
-		}
-
-	}
+	 * @SubscribeEvent public void handleMinecartPlacement(EntityInteractEvent
+	 * event) {
+	 * 
+	 * Entity targetCart = event.target; EntityPlayer player =
+	 * event.entityPlayer; ItemStack stackInHand =
+	 * player.getCurrentEquippedItem();
+	 * 
+	 * if (!player.worldObj.isRemote) { if (event.target instanceof
+	 * EntityMinecartEmpty && PileItemRegistry.isValidPileItem(stackInHand)) {
+	 * EntityMinecartIngotPile ingotPileCart = new
+	 * EntityMinecartIngotPile(player.worldObj, targetCart.posX,
+	 * targetCart.posY, targetCart.posZ); ingotPileCart.motionX =
+	 * targetCart.motionX; ingotPileCart.motionY = targetCart.motionY;
+	 * ingotPileCart.motionZ = targetCart.motionZ;
+	 * 
+	 * player.worldObj.spawnEntityInWorld(ingotPileCart); targetCart.setDead();
+	 * } else if (event.target instanceof EntityMinecartIngotPile) { // Check to
+	 * see if pile is empty // If so then replace with regular minecart } }
+	 * 
+	 * }
 	 */
 	public static int[] getPlacementCoords(int x, int y, int z, int side) {
 		int x1 = x, y1 = y, z1 = z;

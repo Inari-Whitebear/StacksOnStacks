@@ -3,6 +3,7 @@ package com.tierzero.stacksonstacks.block.tile;
 import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.api.Pile;
 import com.tierzero.stacksonstacks.api.Pile.Type;
+import com.tierzero.stacksonstacks.api.PileItemRegistry;
 import com.tierzero.stacksonstacks.block.BlockPile;
 
 import net.minecraft.block.Block;
@@ -19,11 +20,11 @@ public class TilePile extends TileEntity {
 	private static final String TAG_INVENTORY = "inventory";
 
 	private Pile pile;
-
 	public boolean placeMod = false;
 
 	public TilePile() {
 		this.pile = new Pile(this.xCoord, this.yCoord, this.zCoord);
+
 	}
 
 	public Type getType() {
@@ -49,10 +50,8 @@ public class TilePile extends TileEntity {
 
 			if (pile.getAmountStored() <= 0) {
 				this.worldObj.setBlockToAir(xCoord, yCoord, zCoord);
-			} else {
 			}
 		}
-
 		update();
 
 	}
@@ -62,9 +61,10 @@ public class TilePile extends TileEntity {
 		Block blockAbove = worldObj.getBlock(xCoord, yCoord + 1, zCoord);
 		// not the best place to put this
 		int t = getType().ordinal();
-
 		if (worldObj.isAirBlock(xCoord, yCoord + 1, zCoord)) {
-			if (pile.getAmountStored() >= pile.getMaxStored() && stack != null && stack.stackSize > 0 && t != 2) {
+			if (pile.getAmountStored() >= pile.getMaxStored() && stack != null
+					&& PileItemRegistry.isValidPileItem(stack) && stack.stackSize > 0 && t != 2) {
+
 				worldObj.setBlock(xCoord, yCoord + 1, zCoord, SoS.blockPile);
 				worldObj.getBlock(xCoord, yCoord + 1, zCoord).onBlockPlacedBy(worldObj, xCoord, yCoord, zCoord, player,
 						stack);
@@ -98,8 +98,10 @@ public class TilePile extends TileEntity {
 
 		pile.readFromNBT(tag);
 
-		if (pile.getPileStack() != null && pile.getPileStack().getItem() == null) {
+		if (pile.getPileStack() != null && pile.getPileStack().getItem() == null
+				|| PileItemRegistry.getPileItem(getPileStack()) == null) {
 			this.worldObj.setBlockToAir(xCoord, yCoord, zCoord);
+
 		}
 
 	}

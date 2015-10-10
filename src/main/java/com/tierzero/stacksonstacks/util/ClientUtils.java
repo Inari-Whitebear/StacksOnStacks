@@ -19,9 +19,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 public class ClientUtils {
-	public static Tessellator tes() {
-		return Tessellator.instance;
-	}
+	private static Tessellator tes = Tessellator.instance;
 
 	@SideOnly(Side.CLIENT)
 	private static String getIconName(ItemStack stack) {
@@ -122,36 +120,33 @@ public class ClientUtils {
 		}
 	}
 
-	public static void drawItem(float Umin, float Vmin, float Umax, float Vmax, float width) {
+	public static void drawQuad(double Umin, double Vmin, double Umax, double Vmax, double scale) {
 
-		Tessellator tes = tes();
+		tes.startDrawingQuads();
+		tes.addVertexWithUV(0.0D, 0.0D, 1.0D * scale, (double) Umax, (double) Vmin);
+		tes.addVertexWithUV(1.0D * scale, 0.0D, 1.0D * scale, (double) Umin, (double) Vmin);
+		tes.addVertexWithUV(1.0D * scale, 0.0D, 0.0D, (double) Umin, (double) Vmax);
+		tes.addVertexWithUV(0.0D, 0.0D, 0.0D, (double) Umax, (double) Vmax);
+		tes.draw();
 
-		tes.setNormal(0.0F, 0.0F, -1.0F);
+	}
 
-		ClientUtils.pushMatrix();
-		{
-
-			ClientUtils.translate(0, 0, .001 / 2f);
-			tes.startDrawingQuads();
-			tes.addVertexWithUV(0.0D, 1.0D, (double) (0.0F - width), (double) Umax, (double) Vmin);
-			tes.addVertexWithUV(1.0D, 1.0D, (double) (0.0F - width), (double) Umin, (double) Vmin);
-			tes.addVertexWithUV(1.0D, 0.0D, (double) (0.0F - width), (double) Umin, (double) Vmax);
-			tes.addVertexWithUV(0.0D, 0.0D, (double) (0.0F - width), (double) Umax, (double) Vmax);
-			tes.draw();
-
-		}
-		ClientUtils.popMatrix();
-
+	public static void drawItem(IIcon icon, double scale) {
+		float Umin = icon.getMinU();
+		float Vmax = icon.getMaxV();
+		float Vmin = icon.getMinV();
+		float Umax = icon.getMaxU();
+		drawQuad(Umin, Vmin, Umax, Vmax, scale);
 	}
 
 	public static void drawRectangularPrism(double width, double length, double height, double slantX, double slantZ,
 			double Umin, double Vmin, double Umax, double Vmax, Color color) {
-		Tessellator tes = tes();
 
 		pushMatrix();
 		{
 
 			tes.startDrawingQuads();
+			tes.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
 			tes.addVertexWithUV(width, 0, 0, Umin, Vmax);
 			tes.addVertexWithUV(width, 0, length, Umin, Vmin);
 			tes.addVertexWithUV(0, 0, length, Umax, Vmin);
@@ -331,10 +326,12 @@ public class ClientUtils {
 	}
 
 	public static void colour(float r, float g, float b, float a) {
+		System.out.println(r + "," + g + "," + b);
 		GL11.glColor4f(r, g, b, a);
 	}
 
 	public static void colour(float r, float g, float b) {
+		// System.out.println(r + "," + g + "," + b);
 		colour(r, g, b, 1.0F);
 	}
 
@@ -361,4 +358,15 @@ public class ClientUtils {
 		GL11.glNormal3f(x, y, z);
 	}
 
+	public static long getCoordinateRandom(int x, int y, int z) {
+		// MC 1.8 code...
+		long l = (x * 3129871) ^ z * 116129781L ^ y;
+		l = l * l * 42317861L + l * 11L;
+		return l;
+	}
+
+	public static long getCoordinateRandom(double x, double y, double z) {
+
+		return getCoordinateRandom((int) x, (int) y, (int) z);
+	}
 }

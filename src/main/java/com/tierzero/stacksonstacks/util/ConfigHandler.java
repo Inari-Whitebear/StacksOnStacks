@@ -17,10 +17,15 @@ public class ConfigHandler {
 	public static final String CATEGORY_VISUAL = "Visual Changes";
 
 	private static final String CATEGORY_GENERAL = "General";
+	private static final String CATEGORY_BLACKLIST = "Blacklist";
 	public static int ingotTextureToUse = 0;
 	public static int dustTextureToUse = 0;
 
 	public static boolean debug;
+	public static boolean checkItemRegistry;
+	public static String[] invalidIngots;
+	public static String[] invalidGems;
+	public static String[] invalidDusts;
 
 	public static void init(File configFile) {
 		config = new Configuration(configFile);
@@ -50,6 +55,15 @@ public class ConfigHandler {
 				baseComment0.toString());
 		dustTextureToUse = config.getInt("Dust Texture", CATEGORY_VISUAL, 3, 0, BlockPile.textureNames[1].length - 1,
 				baseComment1.toString());
+
+		invalidIngots = config.getStringList("invalidIngots", CATEGORY_BLACKLIST,
+				new String[] { "ingotPile", "ingotDouble", "ingotTriple", "ingotQuad", "ingotQuin" },
+				"List for disabling ingots, put a string that is inside the name of the item");
+		invalidGems = config.getStringList("invalidGems", CATEGORY_BLACKLIST, new String[] { "color_lightgem" },
+				"List for disabling gems, put a string that is inside the name of the item");
+		invalidDusts = config.getStringList("invalidDusts", CATEGORY_BLACKLIST,
+				new String[] { "small", "tiny", "Tiny", "Small", "indust", "gendustry", "Indust", "mold" },
+				"List for disabling dusts, put a string that is inside the name of the item");
 		config.save();
 	}
 

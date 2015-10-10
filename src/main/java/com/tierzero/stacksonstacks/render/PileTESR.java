@@ -2,6 +2,9 @@ package com.tierzero.stacksonstacks.render;
 
 import java.awt.Color;
 
+import org.lwjgl.opengl.GL11;
+
+import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.api.PileItem;
 import com.tierzero.stacksonstacks.api.PileItemRegistry;
 import com.tierzero.stacksonstacks.block.tile.TilePile;
@@ -17,22 +20,25 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 
 public class PileTESR extends TileEntitySpecialRenderer {
+	Tessellator tes = Tessellator.instance;
+
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float f) {
 		ClientUtils.pushMatrix();
 		{
-			Tessellator tes = Tessellator.instance;
 
 			TilePile pile = (TilePile) tile;
 			PileRender render = null;
-			tes.addTranslation((float) x, (float) y, (float) z);
+
 			ItemStack item = pile.getPileStack();
+			if (item == null)
+				return;
 			switch (pile.getType()) {
 			case DUST:
-				// render = new DustRender();
+				render = new DustRender(item);
 				break;
 			case GEM:
-				// render = new GemRender();
+				render = new GemRender(item);
 				break;
 			case INGOT:
 				render = new IngotRender(item);
@@ -40,11 +46,11 @@ public class PileTESR extends TileEntitySpecialRenderer {
 			default:
 				return;
 			}
-			if (render != null)
-				render.render();
-			else
-				return;
+			tes.addTranslation((float) x, (float) y, (float) z);
+			bindBlockMap(true);
+			render.render();
 			tes.addTranslation((float) -x, (float) -y, (float) -z);
+
 		}
 		ClientUtils.popMatrix();
 	}
@@ -75,7 +81,7 @@ public class PileTESR extends TileEntitySpecialRenderer {
 
 		@Override
 		public void render() {
-			bindBlockMap(true);
+
 			if (pileitem == null)
 				return;
 
@@ -96,7 +102,6 @@ public class PileTESR extends TileEntitySpecialRenderer {
 
 				}
 				new Ingot(pileitem, r, r ? z : x, y, r ? x : z).render();
-
 				z += .25f;
 			}
 
@@ -112,7 +117,7 @@ public class PileTESR extends TileEntitySpecialRenderer {
 			public PileItem ingot;
 			boolean rotate;
 			public float x, y, z;
-			final Color color;
+			public Color color;
 
 			public Ingot(PileItem ingot, boolean rotate, float x, float y, float z) {
 				this.x = x;
@@ -121,6 +126,7 @@ public class PileTESR extends TileEntitySpecialRenderer {
 				this.ingot = ingot;
 				this.rotate = rotate;
 				color = ingot.getColor();
+
 			}
 
 			public void render() {
@@ -130,16 +136,12 @@ public class PileTESR extends TileEntitySpecialRenderer {
 					ClientUtils.translate(x, y, z);
 					ClientUtils.enableBlend();
 					ClientUtils.disableLighting();
-					// Mike, why the fuck isn't thing working
-					ClientUtils.colour(color.getRed(), color.getGreen(), color.getBlue());
-					System.out.println(color);
-					IIcon icon = ingot.getIcon(0);
 
+					IIcon icon = ingot.getIcon(0);
 					double Umin = icon.getMinU();
 					double Vmax = icon.getMaxV();
 					double Vmin = icon.getMinV();
 					double Umax = icon.getMaxU();
-
 					ClientUtils.drawRectangularPrism(rotate ? WIDTH : LENGTH, rotate ? LENGTH : WIDTH, HEIGHT,
 							SLANT_WIDTH, SLANT_LENGTH, Umin, Vmin, Umax, Vmax, color);
 					ClientUtils.disableBlend();
@@ -153,28 +155,118 @@ public class PileTESR extends TileEntitySpecialRenderer {
 
 	public class DustRender extends PileRender {
 
-		public DustRender(ItemStack item, int count) {
-			super(item, count);
+		public DustRender(ItemStack item) {
+			super(item, item.stackSize);
 		}
 
 		@Override
 		public void render() {
+			PileItem pileitem = PileItemRegistry.getPileItem(item);
+			Color color = pileitem.getColor();
+			ClientUtils.pushMatrix();
+			{
+				ClientUtils.disableCull();
+				ClientUtils.disableLighting();
+				IIcon icon = SoS.blockPile.getIcon(0, 1);
+				float Umin = icon.getMinU();
+				float Vmax = icon.getMaxV();
+				float Vmin = icon.getMinV();
+				float Umax = icon.getMaxU();
+				tes.startDrawing(GL11.GL_TRIANGLES);
+				tes.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
+				tes.addVertexWithUV(.5D, count / 64D + 0.1D, 0.5D, (double) Umax, (double) Vmin);
+				tes.addVertexWithUV(0D, 0D, 1D, (double) Umin, (double) Vmin);
+				tes.addVertexWithUV(0D, 0D, 0D, (double) Umin, (double) Vmax);
 
+				tes.addVertexWithUV(.5D, count / 64D + 0.1D, 0.5D, (double) Umax, (double) Vmin);
+				tes.addVertexWithUV(1D, 0D, 0D, (double) Umin, (double) Vmin);
+				tes.addVertexWithUV(0D, 0D, 0D, (double) Umin, (double) Vmax);
+
+				tes.addVertexWithUV(.5D, count / 64D + 0.1D, 0.5D, (double) Umax, (double) Vmin);
+				tes.addVertexWithUV(1D, 0D, 0D, (double) Umin, (double) Vmin);
+				tes.addVertexWithUV(1D, 0D, 1D, (double) Umin, (double) Vmax);
+
+				tes.addVertexWithUV(.5D, count / 64D + 0.1D, 0.5D, (double) Umax, (double) Vmin);
+				tes.addVertexWithUV(0D, 0D, 1D, (double) Umin, (double) Vmin);
+				tes.addVertexWithUV(1D, 0D, 1D, (double) Umin, (double) Vmax);
+				tes.draw();
+			}
+			ClientUtils.popMatrix();
 		}
 
 	}
 
 	public class GemRender extends PileRender {
 
-		public GemRender(ItemStack item, int count) {
-			super(item, count);
+		public GemRender(ItemStack item) {
+			super(item, item.stackSize);
+
 		}
 
 		@Override
 		public void render() {
+			bindBlockMap(false);
 
+			ClientUtils.pushMatrix();
+			{
+				ClientUtils.disableCull();
+				ClientUtils.disableLighting();
+				double x = 0, y = 0, z = 0;
+				IIcon icon = item.getIconIndex();
+				for (int i = 0; i < count; i++) {
+					if (i != 0) {
+						double c = i / 64d;
+						if (c % 1 == 0) {
+							y = 0;
+							if (c == 1) {
+								x = .5d;
+							} else if (c == 2) {
+								x = .5d;
+								z = .5d;
+							} else if (c == 3) {
+								x = 0;
+								z = .5d;
+							} else {
+								x = 0;
+								y = 0;
+							}
+						}
+					}
+					y += 0.015625d;
+					new Gem(x, y, z, icon).render();
+
+				}
+
+				ClientUtils.enableLighting();
+				ClientUtils.enableCull();
+			}
+			ClientUtils.popMatrix();
 		}
 
+		public class Gem {
+
+			double x, y, z;
+			double[] offsets;
+			IIcon icon;
+
+			public Gem(double x, double y, double z, IIcon icon) {
+				this.x = x;
+				this.y = y;
+				this.z = z;
+				this.icon = icon;
+
+			}
+
+			public void render() {
+				ClientUtils.pushMatrix();
+				{
+
+					ClientUtils.translate(x, y, z);
+					ClientUtils.drawItem(icon, .5d);
+					ClientUtils.popMatrix();
+				}
+			}
+		}
 	}
 	/*
 	 * public static void renderDustPile(ItemStack stack) { Tessellator tes =
@@ -195,25 +287,7 @@ public class PileTESR extends TileEntitySpecialRenderer {
 	 * 0D, 0D, 0D .5D, .5D, .5D .5D, 0.5D, .5D 0D, 0D, 1D
 	 * 
 	 * 
-	 * for(
 	 * 
-	 * int i = 0;i<4;i++)
-	 * 
-	 * { ClientUtils.pushMatrix();
-	 * 
-	 * ClientUtils.rotate(90 * i, 0, 1, 0); int x = 0, z = 0; switch (i) {
-	 * 
-	 * case 1: x--; break; case 2: x--; z--; break; case 3: z--; break; }
-	 * ClientUtils.translate(x, 0, z); tes.startDrawing(GL11.GL_TRIANGLES);
-	 * tes.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
-	 * tes.addVertexWithUV(.5D, stack.stackSize / 64D + 0.1D, 0.5D, (double)
-	 * Umax, (double) Vmin); tes.addVertexWithUV(0D, 0D, 1D, (double) Umin,
-	 * (double) Vmin); tes.addVertexWithUV(0D, 0D, 0D, (double) Umin, (double)
-	 * Vmax);
-	 * 
-	 * tes.draw(); ClientUtils.popMatrix();
-	 * 
-	 * }
 	 * 
 	 * ClientUtils.enableLighting();
 	 * 
@@ -237,7 +311,7 @@ public class PileTESR extends TileEntitySpecialRenderer {
 	 * IIcon icon = gem.getIconIndex(); float Umin = icon.getMinU(); float Vmax
 	 * = icon.getMaxV(); float Vmin = icon.getMinV(); float Umax =
 	 * icon.getMaxU(); ClientUtils.drawItem(Umax, Vmin, Umin, Vmax, t);
-	 * engine.bindTexture(TextureMap.locationBlocksTexture);
+	 * engine.bindTexture(Textur.locationBlocksTexture);
 	 * ClientUtils.enableLighting(); ClientUtils.enableCull(); }
 	 * ClientUtils.popMatrix(); }
 	 * 
