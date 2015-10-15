@@ -2,7 +2,6 @@ package com.tierzero.stacksonstacks.block.tile;
 
 import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.api.Pile;
-import com.tierzero.stacksonstacks.api.Pile.Type;
 import com.tierzero.stacksonstacks.api.PileItemRegistry;
 import com.tierzero.stacksonstacks.block.BlockPile;
 
@@ -27,7 +26,7 @@ public class TilePile extends TileEntity {
 
 	}
 
-	public Type getType() {
+	public int getType() {
 		return pile.getType();
 	}
 
@@ -60,7 +59,8 @@ public class TilePile extends TileEntity {
 		update();
 		Block blockAbove = worldObj.getBlock(xCoord, yCoord + 1, zCoord);
 		// not the best place to put this
-		int t = getType().ordinal();
+		int t = getType();
+
 		if (worldObj.isAirBlock(xCoord, yCoord + 1, zCoord)) {
 			if (pile.getAmountStored() >= pile.getMaxStored() && stack != null
 					&& PileItemRegistry.isValidPileItem(stack) && stack.stackSize > 0 && t != 2) {

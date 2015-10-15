@@ -8,13 +8,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public class Pile {
-	public static enum Type {
-		INGOT, GEM, DUST, UNKNOWN
-	}
 
-	private static int max_stack_size = 64;
-
-	private static Type[] VALID_TYPES = Type.values();
+	private int MAX_STACK_SIZE = 64;
 	private static final String TAG_PILE_STACK = "inventory";
 	private static final String TAG_PILE_STACKSIZE = "stacksize";
 	private static final String TAG_TYPE = "pile_type";
@@ -30,10 +25,8 @@ public class Pile {
 		this.z = z;
 	}
 
-	public Type getType() {
-		if (type < 0)
-			return VALID_TYPES[VALID_TYPES.length - 1];
-		return VALID_TYPES[type];
+	public int getType() {
+		return type;
 	}
 
 	public ItemStack getPileStack() {
@@ -59,8 +52,7 @@ public class Pile {
 	public boolean onRightClicked(EntityPlayer player, ItemStack stack) {
 		if (stack != null) {
 
-			if (pileStack == null && (getType() != null && PileItemRegistry.isValidPileItem(stack))) {
-
+			if (pileStack == null && (getType() != -1 && PileItemRegistry.isValidPileItem(stack))) {
 				createPile(player, stack, shouldUseEntireStack(player));
 				return true;
 			} else if (pileStack != null && pileStack.getItem() != null && pileStack.isItemEqual(stack)) {
@@ -117,18 +109,18 @@ public class Pile {
 	public void debugCreatePile(ItemStack stack) {
 		findType(stack);
 		pileStack = stack;
-		pileStack.stackSize = getMaxStored();
+		pileStack.stackSize = getMaxStored() / 2;
 	}
 
 	public void findType(ItemStack stack) {
+
 		type = PileItemRegistry.getPileType(stack);
 
-		if (type == 0)
-			max_stack_size = 64;
-		else if (type == 1)
-			max_stack_size = 256;
+		if (type == 1)
+			MAX_STACK_SIZE = 256;
 		else
-			max_stack_size = 64;
+			MAX_STACK_SIZE = 64;
+
 	}
 
 	public void readFromNBT(NBTTagCompound tag) {
@@ -173,13 +165,7 @@ public class Pile {
 	}
 
 	public int getMaxStored() {
-		if (type == 0)
-			max_stack_size = 64;
-		else if (type == 1)
-			max_stack_size = 256;
-		else
-			max_stack_size = 64;
-		return max_stack_size;
+		return MAX_STACK_SIZE;
 	}
 
 }

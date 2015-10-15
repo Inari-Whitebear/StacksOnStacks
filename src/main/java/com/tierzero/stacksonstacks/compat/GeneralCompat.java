@@ -37,7 +37,8 @@ public class GeneralCompat extends ModCompat {
 
 	@Override
 	public void postInit() {
-		PileItemRegistry.registerDust(new ItemStack(Items.gunpowder), "minecraft:gunpowder");
+		// PileItemRegistry.registerDust(new ItemStack(Items.gunpowder),
+		// "minecraft:gunpowder");
 		PileItemRegistry.registerGem(new ItemStack(Items.coal, 0), "minecraft:coal");
 		PileItemRegistry.registerGem(new ItemStack(Items.coal, 1, 1), "minecraft:charcoal");
 		PileItemRegistry.registerGem(new ItemStack(Items.nether_star), "minecraft:nether_star");

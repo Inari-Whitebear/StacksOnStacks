@@ -5,7 +5,6 @@ import com.tierzero.stacksonstacks.block.tile.TilePile;
 import com.tierzero.stacksonstacks.compat.GeneralCompat;
 import com.tierzero.stacksonstacks.util.StackUtils;
 
-import cpw.mods.fml.client.GuiIngameModOptions;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -28,9 +27,9 @@ public class PileHandler {
 	public void handleBlockPlacement(PlayerInteractEvent event) {
 		if (event.action == Action.RIGHT_CLICK_BLOCK) {
 			ItemStack heldItemStack = event.entityPlayer.getCurrentEquippedItem();
-
-			if (heldItemStack != null && PileItemRegistry.isValidPileItem(heldItemStack)) {
-
+			if (heldItemStack != null) {
+				if (!PileItemRegistry.isValidPileItem(heldItemStack))
+					return;
 				int clickedX = event.x;
 				int clickedY = event.y;
 				int clickedZ = event.z;
@@ -144,9 +143,6 @@ public class PileHandler {
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = true)
 	public void onEvent(GuiOpenEvent event) {
-		if (event.gui instanceof GuiIngameModOptions) {
-			event.gui = new GuiConfigSOS(null);
-		}
 	}
 
 }

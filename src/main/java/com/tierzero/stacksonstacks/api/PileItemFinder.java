@@ -17,8 +17,12 @@ public class PileItemFinder {
 	private static String[] invalidIngotNames = ConfigHandler.invalidIngots;
 	private static String[] invalidGemNames = ConfigHandler.invalidGems;
 	private static String[] invalidDustNames = ConfigHandler.invalidDusts;
+	private static String[] validIngotNames = ConfigHandler.validIngots;
+	private static String[] validGemNames = ConfigHandler.validGems;
+	private static String[] validDustNames = ConfigHandler.validDusts;
+
 	private static String[][] invalidNames = new String[][] { invalidIngotNames, invalidGemNames, invalidDustNames };
-	private static String[] validKeyWord = new String[] { "ingot", "gem", "dust" };
+	private static String[][] validKeyWord = new String[][] { validIngotNames, validGemNames, validDustNames };
 
 	public static void registerAllItems() {
 		for (int type = 0; type < validKeyWord.length; type++) {
@@ -38,29 +42,36 @@ public class PileItemFinder {
 				PileItemRegistry.registerPileItem(stack, validName, type);
 			}
 		}
-		if (type != 1) {
-			for (String validName : validRegisteredNames) {
-				ItemStack stack = new ItemStack(itemRegistry.getObject(validName));
-				PileItemRegistry.registerPileItem(stack, validName, type);
-			}
+		for (String validName : validRegisteredNames) {
+			ItemStack stack = new ItemStack(itemRegistry.getObject(validName));
+			PileItemRegistry.registerPileItem(stack, validName, type);
 		}
 	}
 
 	private static List<String> getValidNames(List<String> names, int type) {
 		List<String> validNames = new ArrayList<String>();
-
+		String searcher;
 		for (String name : names) {
-			if (!name.isEmpty() && name.contains(validKeyWord[type])) {
-				boolean invalid = false;
 
-				for (String invalidName : invalidNames[type]) {
-					if (name.contains(invalidName)) {
-						invalid = true;
+			if (name.indexOf(':') != -1) {
+				searcher = name.substring(name.indexOf(':'));
+				System.out.println(searcher);
+			} else {
+				searcher = name;
+			}
+			for (String valid : validKeyWord[type]) {
+				if (!searcher.isEmpty() && searcher.contains(valid)) {
+					boolean invalid = false;
+
+					for (String invalidName : invalidNames[type]) {
+						if (searcher.contains(invalidName)) {
+							invalid = true;
+						}
 					}
-				}
 
-				if (!invalid) {
-					validNames.add(name);
+					if (!invalid) {
+						validNames.add(name);
+					}
 				}
 			}
 		}

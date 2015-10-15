@@ -142,54 +142,49 @@ public class ClientUtils {
 	public static void drawRectangularPrism(double width, double length, double height, double slantX, double slantZ,
 			double Umin, double Vmin, double Umax, double Vmax, Color color) {
 
-		pushMatrix();
-		{
+		tes.startDrawingQuads();
+		tes.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
+		tes.addVertexWithUV(width, 0, 0, Umin, Vmax);
+		tes.addVertexWithUV(width, 0, length, Umin, Vmin);
+		tes.addVertexWithUV(0, 0, length, Umax, Vmin);
+		tes.addVertexWithUV(0, 0, 0, Umax, Vmax);
 
-			tes.startDrawingQuads();
-			tes.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
-			tes.addVertexWithUV(width, 0, 0, Umin, Vmax);
-			tes.addVertexWithUV(width, 0, length, Umin, Vmin);
-			tes.addVertexWithUV(0, 0, length, Umax, Vmin);
-			tes.addVertexWithUV(0, 0, 0, Umax, Vmax);
+		// Render side 1(up)
 
-			// Render side 1(up)
+		tes.addVertexWithUV(width - slantX, height, length - slantZ, Umax, Vmax);
+		tes.addVertexWithUV(width - slantX, height, 0 + slantZ, Umax, Vmin);
+		tes.addVertexWithUV(0 + slantX, height, 0 + slantZ, Umin, Vmin);
+		tes.addVertexWithUV(0 + slantX, height, length - slantZ, Umin, Vmax);
 
-			tes.addVertexWithUV(width - slantX, height, length - slantZ, Umax, Vmax);
-			tes.addVertexWithUV(width - slantX, height, 0 + slantZ, Umax, Vmin);
-			tes.addVertexWithUV(0 + slantX, height, 0 + slantZ, Umin, Vmin);
-			tes.addVertexWithUV(0 + slantX, height, length - slantZ, Umin, Vmax);
+		// Render side 2 (north)
 
-			// Render side 2 (north)
+		tes.addVertexWithUV(0, 0, 0, Umin, Vmin);
+		tes.addVertexWithUV(0 + slantX, height, 0 + slantZ, Umin, Vmax);
+		tes.addVertexWithUV(width - slantX, height, 0 + slantZ, Umax, Vmax);
+		tes.addVertexWithUV(width, 0, 0, Umax, Vmin);
 
-			tes.addVertexWithUV(0, 0, 0, Umin, Vmin);
-			tes.addVertexWithUV(0 + slantX, height, 0 + slantZ, Umin, Vmax);
-			tes.addVertexWithUV(width - slantX, height, 0 + slantZ, Umax, Vmax);
-			tes.addVertexWithUV(width, 0, 0, Umax, Vmin);
+		// Render side 3 (south)
 
-			// Render side 3 (south)
+		tes.addVertexWithUV(width, 0, length, Umax, Vmin);
+		tes.addVertexWithUV(width - slantX, height, length - slantZ, Umax, Vmax);
+		tes.addVertexWithUV(0 + slantX, height, length - slantZ, Umin, Vmax);
+		tes.addVertexWithUV(0, 0, length, Umin, Vmin);
 
-			tes.addVertexWithUV(width, 0, length, Umax, Vmin);
-			tes.addVertexWithUV(width - slantX, height, length - slantZ, Umax, Vmax);
-			tes.addVertexWithUV(0 + slantX, height, length - slantZ, Umin, Vmax);
-			tes.addVertexWithUV(0, 0, length, Umin, Vmin);
+		// Render side 4 (west)
 
-			// Render side 4 (west)
+		tes.addVertexWithUV(0, 0, 0, Umin, Vmax);
+		tes.addVertexWithUV(0, 0, length, Umax, Vmax);
+		tes.addVertexWithUV(0 + slantX, height, length - slantZ, Umax, Vmin);
+		tes.addVertexWithUV(0 + slantX, height, 0 + slantZ, Umin, Vmin);
 
-			tes.addVertexWithUV(0, 0, 0, Umin, Vmax);
-			tes.addVertexWithUV(0, 0, length, Umax, Vmax);
-			tes.addVertexWithUV(0 + slantX, height, length - slantZ, Umax, Vmin);
-			tes.addVertexWithUV(0 + slantX, height, 0 + slantZ, Umin, Vmin);
+		// Render side 5 (east)
 
-			// Render side 5 (east)
-
-			tes.addVertexWithUV(width, 0, 0, Umax, Vmin);
-			tes.addVertexWithUV(width - slantX, height, 0 + slantZ, Umax, Vmax);
-			tes.addVertexWithUV(width - slantX, height, length - slantZ, Umin, Vmax);
-			tes.addVertexWithUV(width, 0, length, Umin, Vmin);
-			tes.draw();
-			// Render side 6 (Down)
-		}
-		popMatrix();
+		tes.addVertexWithUV(width, 0, 0, Umax, Vmin);
+		tes.addVertexWithUV(width - slantX, height, 0 + slantZ, Umax, Vmax);
+		tes.addVertexWithUV(width - slantX, height, length - slantZ, Umin, Vmax);
+		tes.addVertexWithUV(width, 0, length, Umin, Vmin);
+		tes.draw();
+		// Render side 6 (Down)
 
 	}
 

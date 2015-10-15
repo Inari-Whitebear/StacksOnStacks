@@ -32,7 +32,7 @@ public class SoS {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		ConfigHandler.init(event.getSuggestedConfigurationFile());
+		ConfigHandler.loadConfig(event.getSuggestedConfigurationFile());
 
 		proxy.registerEntities();
 		proxy.registerTiles();

@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.api.PileItem;
-import com.tierzero.stacksonstacks.api.PileItemRegistry;
 import com.tierzero.stacksonstacks.block.tile.TilePile;
 import com.tierzero.stacksonstacks.util.ConfigHandler;
 
@@ -28,7 +27,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockPile extends BlockContainer {
-	public IIcon icon[] = new IIcon[2];
+	public IIcon icon[][];
 	private int renderID;
 
 	public static final int PILEITEM_NEEDED_TO_SUPPORT = 64;
@@ -41,7 +40,7 @@ public class BlockPile extends BlockContainer {
 		GameRegistry.registerBlock(this, name);
 		this.renderID = RenderingRegistry.getNextAvailableRenderId();
 		this.setHardness(25f);
-
+		icon = new IIcon[2][textureNames[0].length];
 	}
 
 	@Override
@@ -79,16 +78,22 @@ public class BlockPile extends BlockContainer {
 	@Override
 	public IIcon getIcon(int side, int meta) {
 		// use meta as pile type
-		return icon[meta];
+		int index = meta == 0 ? ConfigHandler.ingotTextureToUse : ConfigHandler.dustTextureToUse;
+		PileItem.setIcon(icon[meta][index], meta);
+		return icon[meta][index];
 	}
 
 	@Override
 	public void registerBlockIcons(IIconRegister iconRegistry) {
 		// could do this better, don't feel like it
-		this.icon[0] = iconRegistry.registerIcon(SoS.TEXTURE_BASE + textureNames[0][ConfigHandler.ingotTextureToUse]);
-		this.icon[1] = iconRegistry.registerIcon(SoS.TEXTURE_BASE + textureNames[1][ConfigHandler.dustTextureToUse]);
-		PileItem.setIcon(icon[0], 0);
-		PileItem.setIcon(icon[1], 1);
+		for (int i = 0; i < textureNames[0].length; i++) {
+			this.icon[0][i] = iconRegistry.registerIcon(SoS.TEXTURE_BASE + textureNames[0][i]);
+		}
+		for (int i = 0; i < textureNames[1].length; i++) {
+			this.icon[1][i] = iconRegistry.registerIcon(SoS.TEXTURE_BASE + textureNames[1][i]);
+		}
+		PileItem.setIcon(icon[0][ConfigHandler.ingotTextureToUse], 0);
+		PileItem.setIcon(icon[1][ConfigHandler.dustTextureToUse], 1);
 		super.registerBlockIcons(iconRegistry);
 	}
 
@@ -118,7 +123,7 @@ public class BlockPile extends BlockContainer {
 		TilePile tile = (TilePile) world.getTileEntity(x, y, z);
 		if (tile != null) {
 			ItemStack pileStack = tile.getPileStack();
-			int type = tile.getType().ordinal();
+			int type = tile.getType();
 			if (pileStack != null) {
 
 				int numberOfPileItem = tile.getPileStack().stackSize;
@@ -193,7 +198,7 @@ public class BlockPile extends BlockContainer {
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_,
 			float p_149727_7_, float p_149727_8_, float p_149727_9_) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile != null && PileItemRegistry.isValidPileItem(player.getCurrentEquippedItem())) {
+		if (tile != null) {
 			return ((TilePile) tile).onRightClicked(player, player.getCurrentEquippedItem());
 
 		}
