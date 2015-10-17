@@ -1,12 +1,13 @@
 package com.tierzero.stacksonstacks.api;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.item.ItemStack;
 
 public class PileItemRegistry {
 
-	public static ArrayList<PileItemList> registeredPileItems = new ArrayList<PileItemList>();
+	public static List<PileItemList> registeredPileItems = new ArrayList<PileItemList>();
 	private static PileItemList registeredIngots = new PileItemList();
 	private static PileItemList registeredGems = new PileItemList();
 	private static PileItemList registeredDusts = new PileItemList();
@@ -39,15 +40,6 @@ public class PileItemRegistry {
 		return getPileItem(stack) != null;
 	}
 
-	public static class PileItemList extends ArrayList<PileItem> {
-		public int index;
-
-		public PileItemList() {
-			registeredPileItems.add(this);
-			index = registeredPileItems.size() - 1;
-		}
-	}
-
 	public static void registerIngot(ItemStack stack, String name) {
 		registerPileItem(stack, name, 0);
 	}
@@ -59,8 +51,14 @@ public class PileItemRegistry {
 	public static void registerDust(ItemStack stack, String name) {
 		registerPileItem(stack, name, 2);
 	}
+	
+	public static class PileItemList extends ArrayList<PileItem> {
+		public int index;
 
-	public static void setIngotTexture(ItemStack stack, String textureName) {
-
+		public PileItemList() {
+			registeredPileItems.add(this);
+			index = registeredPileItems.size() - 1;
+		}
 	}
+
 }

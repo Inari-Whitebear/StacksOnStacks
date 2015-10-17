@@ -3,9 +3,11 @@ package com.tierzero.stacksonstacks.block;
 import java.util.List;
 
 import com.tierzero.stacksonstacks.SoS;
+import com.tierzero.stacksonstacks.api.Pile;
 import com.tierzero.stacksonstacks.api.PileItem;
 import com.tierzero.stacksonstacks.block.tile.TilePile;
 import com.tierzero.stacksonstacks.util.ConfigHandler;
+import com.tierzero.stacksonstacks.util.StackUtils;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -30,9 +32,10 @@ public class BlockPile extends BlockContainer {
 	public IIcon icon[][];
 	private int renderID;
 
-	public static final int PILEITEM_NEEDED_TO_SUPPORT = 64;
 	public static String[][] textureNames = {
-			{ "VanillaGold", "VanillaIron", "ThermalFoundation", "Metallurgy4", "Mekanism" }, { "VanillaSand" } };
+			{ "VanillaGold", "VanillaIron", "ThermalFoundation", "Metallurgy4", "Mekanism" }, 
+			{ "VanillaSand" } 		
+	};
 
 	public BlockPile(String name) {
 		super(Material.iron);
@@ -49,10 +52,10 @@ public class BlockPile extends BlockContainer {
 			if (world.isAirBlock(x, y - 1, z)) {
 				world.setBlockToAir(x, y, z);
 			} else if (world.getBlock(x, y - 1, z) instanceof BlockPile) {
-				TilePile pile = (TilePile) world.getTileEntity(x, y - 1, z);
+				TilePile tilePile = (TilePile) world.getTileEntity(x, y - 1, z);
 
-				if (pile != null) {
-					if (pile.getAmountStored() < PILEITEM_NEEDED_TO_SUPPORT) {
+				if (tilePile != null) {
+					if (tilePile.getPile().getAmountStored() < tilePile.getPile().getMaxStored()) {
 						world.setBlockToAir(x, y, z);
 					}
 				}
@@ -69,7 +72,7 @@ public class BlockPile extends BlockContainer {
 	public int getComparatorInputOverride(World world, int x, int y, int z, int side) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			return ((TilePile) tile).getAmountStored() / 4;
+			return ((TilePile) tile).getPile().getAmountStored() / 4;
 		} else {
 			return 0;
 		}
@@ -111,7 +114,7 @@ public class BlockPile extends BlockContainer {
 	public boolean canBlockStay(World world, int x, int y, int z) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			return ((TilePile) tile).getAmountStored() > 0;
+			return ((TilePile) tile).getPile().getAmountStored() > 0;
 		}
 
 		return false;
@@ -122,30 +125,32 @@ public class BlockPile extends BlockContainer {
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
 		TilePile tile = (TilePile) world.getTileEntity(x, y, z);
 		if (tile != null) {
-			ItemStack pileStack = tile.getPileStack();
-			int type = tile.getType();
+			Pile pile = tile.getPile();
+			
+			ItemStack pileStack = pile.getPileStack();
+			int type = pile.getType();
 			if (pileStack != null) {
 
-				int numberOfPileItem = tile.getPileStack().stackSize;
+				int amountStored = pile.getAmountStored();
 				float height = 0;
 				float width = 1f, length = 1f;
 				if (type == 0) {
-					height = 1 + numberOfPileItem / 8;
+					height = 1 + amountStored / (pile.getMaxStored() / 8);
 
-					if (numberOfPileItem % 8 == 0) {
+					if (amountStored % (pile.getMaxStored() / 8) == 0) {
 						height -= 1;
 					}
 					height /= 8;
 				} else if (type == 1) {
 					width = .5f;
 					length = .5f;
-					if (numberOfPileItem < 64)
-						height += numberOfPileItem / 64f;
+					if (amountStored < 64)
+						height += amountStored / 64f;
 					else
 						height = 1;
-					if (numberOfPileItem > 64)
+					if (amountStored > 64)
 						width = 1;
-					if (numberOfPileItem > 128)
+					if (amountStored > 128)
 						length = 1;
 
 				} else
@@ -159,7 +164,16 @@ public class BlockPile extends BlockContainer {
 	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			return ((TilePile) tile).getPileStack();
+			ItemStack pileStack = ((TilePile) tile).getPile().getPileStack();
+			
+			int stackSize = pileStack.stackSize;
+			
+			if(stackSize > 64) {
+				stackSize = 64;
+			}
+			
+			
+			return StackUtils.getItemsFromStack(pileStack, stackSize);
 		}
 
 		return null;
@@ -181,10 +195,10 @@ public class BlockPile extends BlockContainer {
 	public void onBlockPreDestroy(World world, int x, int y, int z, int meta) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			ItemStack stackToDrop = ((TilePile) tile).getPileStack();
+			ItemStack stackToDrop = ((TilePile) tile).getPile().getPileStack();
 
 			if (stackToDrop != null && stackToDrop.getItem() != null) {
-				dropBlockAsItem(world, x, y, z, ((TilePile) tile).getPileStack());
+				dropBlockAsItem(world, x, y, z, ((TilePile) tile).getPile().getPileStack());
 			}
 		}
 	}
@@ -230,8 +244,8 @@ public class BlockPile extends BlockContainer {
 	public int getLightValue(IBlockAccess world, int x, int y, int z) {
 
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile != null && ((TilePile) tile).getPileStack() != null) {
-			Item item = ((TilePile) tile).getPileStack().getItem();
+		if (tile != null && ((TilePile) tile).getPile().getPileStack() != null) {
+			Item item = ((TilePile) tile).getPile().getPileStack().getItem();
 			if (item != null && item == Items.glowstone_dust)
 				return 15;
 		}

@@ -19,23 +19,10 @@ public class TilePile extends TileEntity {
 	private static final String TAG_INVENTORY = "inventory";
 
 	private Pile pile;
-	public boolean placeMod = false;
 
 	public TilePile() {
 		this.pile = new Pile(this.xCoord, this.yCoord, this.zCoord);
 
-	}
-
-	public int getType() {
-		return pile.getType();
-	}
-
-	public ItemStack getPileStack() {
-		return pile.getPileStack();
-	}
-
-	public int getAmountStored() {
-		return pile.getAmountStored();
 	}
 
 	public void onLeftClicked(EntityPlayer player) {
@@ -58,13 +45,9 @@ public class TilePile extends TileEntity {
 	public boolean onRightClicked(EntityPlayer player, ItemStack stack) {
 		update();
 		Block blockAbove = worldObj.getBlock(xCoord, yCoord + 1, zCoord);
-		// not the best place to put this
-		int t = getType();
-
+		
 		if (worldObj.isAirBlock(xCoord, yCoord + 1, zCoord)) {
-			if (pile.getAmountStored() >= pile.getMaxStored() && stack != null
-					&& PileItemRegistry.isValidPileItem(stack) && stack.stackSize > 0 && t != 2) {
-
+			if (pile.getAmountStored() >= pile.getMaxStored() && stack != null && PileItemRegistry.isValidPileItem(stack) && stack.stackSize > 0 && pile.getType() != 2) {
 				worldObj.setBlock(xCoord, yCoord + 1, zCoord, SoS.blockPile);
 				worldObj.getBlock(xCoord, yCoord + 1, zCoord).onBlockPlacedBy(worldObj, xCoord, yCoord, zCoord, player,
 						stack);
@@ -87,9 +70,7 @@ public class TilePile extends TileEntity {
 	public void update() {
 		markDirty();
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		pile.setX(this.xCoord);
-		pile.setY(this.yCoord);
-		pile.setZ(this.zCoord);
+		pile.setPosition(this.xCoord, this.yCoord, this.zCoord);
 	}
 
 	@Override
@@ -98,10 +79,8 @@ public class TilePile extends TileEntity {
 
 		pile.readFromNBT(tag);
 
-		if (pile.getPileStack() != null && pile.getPileStack().getItem() == null
-				|| PileItemRegistry.getPileItem(getPileStack()) == null) {
+		if (pile.getPileStack() != null && pile.getPileStack().getItem() == null || PileItemRegistry.getPileItem(pile.getPileStack()) == null) {
 			this.worldObj.setBlockToAir(xCoord, yCoord, zCoord);
-
 		}
 
 	}
@@ -130,4 +109,7 @@ public class TilePile extends TileEntity {
 		pile.debugCreatePile(stack);
 	}
 
+	public Pile getPile() {
+		return this.pile;
+	}
 }

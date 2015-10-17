@@ -53,8 +53,9 @@ public class SoS {
 		CompatHandler.postInit();
 		PileItemFinder.registerAllItems();
 		proxy.postInit();
-		if (Loader.isModLoaded("NotEnoughItems"))
+		if (Loader.isModLoaded("NotEnoughItems")) {
 			codechicken.nei.api.API.hideItem(new ItemStack(blockPile));
+		}
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.tierzero.stacksonstacks.api;
 
+import com.tierzero.stacksonstacks.util.ConfigHandler;
 import com.tierzero.stacksonstacks.util.StackUtils;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,7 +10,6 @@ import net.minecraft.world.World;
 
 public class Pile {
 
-	private int MAX_STACK_SIZE = 64;
 	private static final String TAG_PILE_STACK = "inventory";
 	private static final String TAG_PILE_STACKSIZE = "stacksize";
 	private static final String TAG_TYPE = "pile_type";
@@ -115,12 +115,6 @@ public class Pile {
 	public void findType(ItemStack stack) {
 
 		type = PileItemRegistry.getPileType(stack);
-
-		if (type == 1)
-			MAX_STACK_SIZE = 256;
-		else
-			MAX_STACK_SIZE = 64;
-
 	}
 
 	public void readFromNBT(NBTTagCompound tag) {
@@ -128,15 +122,16 @@ public class Pile {
 		NBTTagCompound inventoryTag = tag.getCompoundTag(TAG_PILE_STACK);
 		type = tag.getInteger(TAG_TYPE);
 		pileStack = ItemStack.loadItemStackFromNBT(inventoryTag);
-		if (tag.getTag(TAG_PILE_STACKSIZE) != null)
+		if (tag.getTag(TAG_PILE_STACKSIZE) != null) {
 			pileStack.stackSize = tag.getInteger(TAG_PILE_STACKSIZE);
+		}
+		
 		// If null then its probably saved as the pre 0.9.5 nbt format
 		if (pileStack == null) {
 			// Will remove eventually, to stop breaking of existing ingot piles
 			pileStack = StackUtils.getStackFromInfo(tag.getInteger("ingot"), tag.getByte("stackSize"),
 					tag.getInteger("meta"));
 		}
-
 	}
 
 	public void writeToNBT(NBTTagCompound tag) {
@@ -144,28 +139,28 @@ public class Pile {
 		tag.setInteger(TAG_TYPE, this.type);
 		if (pileStack != null) {
 			pileStack.writeToNBT(inventoryTag);
-			if (inventoryTag.getByte("Count") != 0 && type == 0)
-				pileStack.stackSize = inventoryTag.getByte("Count");
 			tag.setInteger(TAG_PILE_STACKSIZE, pileStack.stackSize);
 			tag.setTag(TAG_PILE_STACK, inventoryTag);
 
 		}
 	}
 
-	public void setX(int xCoord) {
+	public void setPosition(int xCoord, int yCoord, int zCoord) {
 		this.x = xCoord;
-	}
-
-	public void setY(int yCoord) {
 		this.y = yCoord;
-	}
-
-	public void setZ(int zCoord) {
 		this.z = zCoord;
 	}
 
 	public int getMaxStored() {
-		return MAX_STACK_SIZE;
+		switch(type) {
+		case 0: 
+			return ConfigHandler.maxIngotStackSize;
+		case 1:
+			return ConfigHandler.maxGemStackSize;
+		case 2:
+			return ConfigHandler.maxDustStackSize;
+		}
+		
+		return 64;
 	}
-
 }
