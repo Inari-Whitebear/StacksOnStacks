@@ -144,13 +144,19 @@ public class BlockPile extends BlockContainer {
 				} else if (type == 1) {
 					width = .5f;
 					length = .5f;
-					if (amountStored < 64)
-						height += amountStored / 64f;
+					int maxStored = pile.getMaxStored();
+					
+					if(maxStored < 256) {
+						maxStored = 256;
+					}
+					
+					if (amountStored < maxStored / 4)
+						height += amountStored / pile.getMaxStored();
 					else
 						height = 1;
-					if (amountStored > 64)
+					if (amountStored > maxStored / 4)
 						width = 1;
-					if (amountStored > 128)
+					if (amountStored > maxStored / 2)
 						length = 1;
 
 				} else
