@@ -18,7 +18,7 @@ public class ConfigHandler {
 
 	public static Configuration config;
 
-	public static final String CATEGORY_VISUAL = "cisual changes";
+	public static final String CATEGORY_VISUAL = "visual changes";
 
 	private static final String CATEGORY_GENERAL = "general";
 	private static final String CATEGORY_BLACKLIST = "blacklist";
