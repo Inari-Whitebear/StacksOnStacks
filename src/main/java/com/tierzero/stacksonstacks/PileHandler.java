@@ -11,6 +11,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -23,33 +24,39 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
 public class PileHandler {
 
-	@SubscribeEvent
+	private static Class[] blockedBlocks = { Blocks.crafting_table.getClass(), Blocks.wooden_door.getClass(), Blocks.trapdoor.getClass(), Blocks.bed.getClass(), Blocks.fence_gate.getClass() };
+	
+	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void handleBlockPlacement(PlayerInteractEvent event) {
 		if (event.action == Action.RIGHT_CLICK_BLOCK) {
 			ItemStack heldItemStack = event.entityPlayer.getCurrentEquippedItem();
-			if (heldItemStack != null) {
-				if (!PileItemRegistry.isValidPileItem(heldItemStack))
-					return;
+			if (heldItemStack != null && PileItemRegistry.isValidPileItem(heldItemStack)) {
 				int clickedX = event.x;
 				int clickedY = event.y;
 				int clickedZ = event.z;
 				boolean playerSneaking = event.entityPlayer.isSneaking();
 
+				Block blockAtClickedPosition = event.world.getBlock(clickedX, clickedY, clickedZ);
 				TileEntity tileAtClickedPosition = event.world.getTileEntity(clickedX, clickedY, clickedZ);
 
 				if (tileAtClickedPosition != null) {
-					if (!playerSneaking) {
+					if (tileAtClickedPosition instanceof TilePile) {
+						((TilePile) tileAtClickedPosition).onRightClicked(event.entityPlayer, heldItemStack);
 						return;
-					} else {
-						if (tileAtClickedPosition instanceof TilePile) {
-							((TilePile) tileAtClickedPosition).onRightClicked(event.entityPlayer, heldItemStack);
-							return;
-						}
-
-						if (tileAtClickedPosition instanceof TileEntityBeacon
-								&& Loader.isModLoaded(GeneralCompat.MOD_BOTANIA)) {
-							return;
-						}
+					}
+					
+					return;
+				}
+				
+				
+				boolean isBlockedBlock = false;
+				
+				for(Class blockedBlock : blockedBlocks) {
+					isBlockedBlock = blockAtClickedPosition.getClass().isAssignableFrom(blockedBlock);
+					System.out.println(blockAtClickedPosition.getClass().getName() + " " + isBlockedBlock + " " + blockedBlock.getName());
+					
+					if(isBlockedBlock) {
+						break;
 					}
 				}
 
@@ -61,15 +68,17 @@ public class PileHandler {
 
 				Block blockAtPlacementPosition = event.world.getBlock(placementX, placementY, placementZ);
 				TileEntity tileAtPlacementPosition = event.world.getTileEntity(placementX, placementY, placementZ);
-
+			
 				if (blockAtPlacementPosition.isAir(event.world, placementX, placementY, placementZ)) {
 
 					Block blockBelowPlacementPosition = event.world.getBlock(placementX, placementY - 1, placementZ);
-					if (blockBelowPlacementPosition.getMaterial().isSolid()
-							&& (blockBelowPlacementPosition != Blocks.crafting_table
-									|| blockBelowPlacementPosition != Blocks.bed)) {
-						if (heldItemStack.getItem().equals(Items.redstone) && (!playerSneaking))
+
+					
+					if (blockBelowPlacementPosition.getMaterial().isSolid() && !isBlockedBlock) {
+						if (heldItemStack.getItem().equals(Items.redstone) && (!playerSneaking)) {
 							return;
+						}
+						
 						event.world.setBlock(placementX, placementY, placementZ, SoS.blockPile);
 						event.world.getBlock(placementX, placementY, placementZ).onBlockPlacedBy(event.world,
 								placementX, placementY, placementZ, event.entityPlayer, heldItemStack);
@@ -78,8 +87,7 @@ public class PileHandler {
 						// stack
 						if (playerSneaking) {
 							ItemStack comparatorFixer = StackUtils.getItemsFromStack(heldItemStack, 0);
-							event.world.getBlock(placementX, placementY, placementZ).onBlockPlacedBy(event.world,
-									placementX, placementY, placementZ, event.entityPlayer, comparatorFixer);
+							event.world.getBlock(placementX, placementY, placementZ).onBlockPlacedBy(event.world, placementX, placementY, placementZ, event.entityPlayer, comparatorFixer);
 						}
 
 					}
