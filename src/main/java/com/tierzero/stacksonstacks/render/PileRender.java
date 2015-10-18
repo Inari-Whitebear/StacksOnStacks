@@ -21,10 +21,6 @@ public abstract class PileRender {
 		if(this.count < renderPerItem) {
 			this.count++;
 		}
-		
-		System.out.println(item.stackSize);
-		System.out.println(this.count);
-
 		this.maxStackSize = maxStackSize;
 	}
 

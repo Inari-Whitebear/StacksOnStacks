@@ -3,7 +3,14 @@ package com.tierzero.stacksonstacks.api;
 import com.tierzero.stacksonstacks.util.ConfigHandler;
 import com.tierzero.stacksonstacks.util.StackUtils;
 
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundHandler;
+import net.minecraft.client.audio.SoundPoolEntry;
+import net.minecraft.client.audio.SoundList.SoundEntry;
+import net.minecraft.client.audio.SoundRegistry;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -84,6 +91,12 @@ public class Pile {
 			}
 			pileStack.stackSize += amountToAdd;
 			StackUtils.decrementStack(player, stack, amountToAdd);
+			
+			if(type == 2) {
+				player.worldObj.playSoundEffect(x, y, z, "dig.sand", .75f, player.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+			} else {
+				player.worldObj.playSoundEffect(x, y, z, "dig.stone", .75f, player.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+			}
 		}
 	}
 
@@ -102,6 +115,11 @@ public class Pile {
 
 			if (!addedToPlayer) {
 				StackUtils.spawnItemInWorld(world, (int) x, (int) y, (int) z, stackToDrop);
+			}
+			if(type == 2) {
+				world.playSoundEffect(x, y, z, "dig.sand", .75f, player.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+			} else {
+				world.playSoundEffect(x, y, z, "random.pop", .25f, player.worldObj.rand.nextFloat() * 0.1F + 0.9F);
 			}
 		}
 	}

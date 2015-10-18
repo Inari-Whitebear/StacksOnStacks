@@ -49,8 +49,7 @@ public class TilePile extends TileEntity {
 		if (worldObj.isAirBlock(xCoord, yCoord + 1, zCoord)) {
 			if (pile.getAmountStored() >= pile.getMaxStored() && stack != null && PileItemRegistry.isValidPileItem(stack) && stack.stackSize > 0 && pile.getType() != 2) {
 				worldObj.setBlock(xCoord, yCoord + 1, zCoord, SoS.blockPile);
-				worldObj.getBlock(xCoord, yCoord + 1, zCoord).onBlockPlacedBy(worldObj, xCoord, yCoord, zCoord, player,
-						stack);
+				worldObj.getBlock(xCoord, yCoord + 1, zCoord).onBlockPlacedBy(worldObj, xCoord, yCoord, zCoord, player, stack);
 			} else {
 				pile.onRightClicked(player, stack);
 			}
