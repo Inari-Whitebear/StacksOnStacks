@@ -85,10 +85,8 @@ public class ConfigHandler {
 		
 		//Have to figure out how to do these renders fist
 		
-		maxGemStackSize = 256;
-		maxDustStackSize = 64;
-		//maxGemStackSize = config.getInt("maxGemStackSize", CATEGORY_GENERAL, 256, 1, Integer.MAX_VALUE, "The number of gems that a pile can hold, WARNING: causes render to scale according to number of ingots, may be laggy with larger numbers");
-		//maxDustStackSize = config.getInt("maxDustStackSize", CATEGORY_GENERAL, 64, 1, Integer.MAX_VALUE, "The amount of dust that a pile can hold, WARNING: causes render to scale according to number of ingots, may be laggy with larger numbers");
+		maxGemStackSize = config.getInt("maxGemStackSize", CATEGORY_GENERAL, 256, 1, Integer.MAX_VALUE, "The number of gems that a pile can hold, WARNING: causes render to scale according to number of ingots, may be laggy with larger numbers");
+		maxDustStackSize = config.getInt("maxDustStackSize", CATEGORY_GENERAL, 64, 1, Integer.MAX_VALUE, "The amount of dust that a pile can hold, WARNING: causes render to scale according to number of ingots, may be laggy with larger numbers");
 
 		
 		if (config.hasChanged()) {

@@ -47,8 +47,6 @@ public class StackUtils {
 		if (!world.isRemote) {
 			EntityItem item = new EntityItem(world);
 			item.setEntityItemStack(stack);
-			System.out.println(item.toString());
-
 			item.setPosition(x, y, z);
 			world.spawnEntityInWorld(item);
 		}

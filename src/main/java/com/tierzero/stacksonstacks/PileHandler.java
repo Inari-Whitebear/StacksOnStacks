@@ -48,15 +48,9 @@ public class PileHandler {
 					return;
 				}
 				
-				
-				boolean isBlockedBlock = false;
-				
 				for(Class blockedBlock : blockedBlocks) {
-					isBlockedBlock = blockAtClickedPosition.getClass().isAssignableFrom(blockedBlock);
-					System.out.println(blockAtClickedPosition.getClass().getName() + " " + isBlockedBlock + " " + blockedBlock.getName());
-					
-					if(isBlockedBlock) {
-						break;
+					if(blockAtClickedPosition.getClass().isAssignableFrom(blockedBlock)) {
+						return;
 					}
 				}
 
@@ -72,16 +66,14 @@ public class PileHandler {
 				if (blockAtPlacementPosition.isAir(event.world, placementX, placementY, placementZ)) {
 
 					Block blockBelowPlacementPosition = event.world.getBlock(placementX, placementY - 1, placementZ);
-
 					
-					if (blockBelowPlacementPosition.getMaterial().isSolid() && !isBlockedBlock) {
+					if (blockBelowPlacementPosition.getMaterial().isSolid() && blockBelowPlacementPosition != SoS.blockPile) {
 						if (heldItemStack.getItem().equals(Items.redstone) && (!playerSneaking)) {
 							return;
 						}
 						
 						event.world.setBlock(placementX, placementY, placementZ, SoS.blockPile);
-						event.world.getBlock(placementX, placementY, placementZ).onBlockPlacedBy(event.world,
-								placementX, placementY, placementZ, event.entityPlayer, heldItemStack);
+						event.world.getBlock(placementX, placementY, placementZ).onBlockPlacedBy(event.world, placementX, placementY, placementZ, event.entityPlayer, heldItemStack);
 
 						// Fix the comparator output after placing down a full
 						// stack
@@ -92,8 +84,7 @@ public class PileHandler {
 
 					}
 				} else if (tileAtPlacementPosition instanceof TilePile) {
-					blockAtPlacementPosition.onBlockActivated(event.world, placementX, placementY, placementZ,
-							event.entityPlayer, 0, 0, 0, 0);
+					blockAtPlacementPosition.onBlockActivated(event.world, placementX, placementY, placementZ, event.entityPlayer, 0, 0, 0, 0);
 				}
 			}
 		}

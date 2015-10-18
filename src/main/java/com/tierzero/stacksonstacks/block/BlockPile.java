@@ -209,15 +209,9 @@ public class BlockPile extends BlockContainer {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_,
-			float p_149727_7_, float p_149727_8_, float p_149727_9_) {
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile != null) {
-			return ((TilePile) tile).onRightClicked(player, player.getCurrentEquippedItem());
-
-		}
-
-		return false;
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_,	float p_149727_7_, float p_149727_8_, float p_149727_9_) {
+			//This is already handled in the pile handler
+			return false;
 	}
 
 	@Override
@@ -233,7 +227,6 @@ public class BlockPile extends BlockContainer {
 
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
 			((TilePile) tile).onRightClicked((EntityPlayer) player, stack);

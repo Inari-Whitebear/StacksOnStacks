@@ -14,6 +14,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import scala.actors.threadpool.Arrays;
 
 public class Pile {
 
@@ -58,7 +59,6 @@ public class Pile {
 
 	public boolean onRightClicked(EntityPlayer player, ItemStack stack) {
 		if (stack != null) {
-
 			if (pileStack == null && (getType() != -1 && PileItemRegistry.isValidPileItem(stack))) {
 				createPile(player, stack, shouldUseEntireStack(player));
 				return true;
