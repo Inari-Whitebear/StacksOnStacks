@@ -55,7 +55,6 @@ public class PileItemFinder {
 
 			if (name.indexOf(':') != -1) {
 				searcher = name.substring(name.indexOf(':'));
-				System.out.println(searcher);
 			} else {
 				searcher = name;
 			}

@@ -3,6 +3,7 @@ package com.tierzero.stacksonstacks.render;
 import com.tierzero.stacksonstacks.api.PileItem;
 import com.tierzero.stacksonstacks.api.PileItemRegistry;
 import com.tierzero.stacksonstacks.util.ClientUtils;
+import com.tierzero.stacksonstacks.util.ConfigHandler;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -15,8 +16,8 @@ public class PileRenderIngot extends PileRender {
 	private static final double SLANT_LENGTH = 0.025;
 	private PileItem pileitem = PileItemRegistry.getPileItem(item);
 
-	public PileRenderIngot(ItemStack item, int maxStackSize) {
-		super(item, item.stackSize, maxStackSize, 64);
+	public PileRenderIngot(ItemStack item) {
+		super(item, item.stackSize, ConfigHandler.maxIngotStackSize, 64);
 	}
 
 	@Override

@@ -39,7 +39,7 @@ public class ConfigHandler {
 	public static int maxIngotStackSize;
 	public static int maxGemStackSize;
 	public static int maxDustStackSize;
-
+	
 	public static void loadConfig(File configFile) {
 		config = new Configuration(configFile);
 		load();
@@ -81,14 +81,10 @@ public class ConfigHandler {
 		invalidGems = config.getStringList("invalidGems", CATEGORY_BLACKLIST, new String[] { "color_lightgem" }, "List for disabling gems, put a string that is inside the name or oredictionaryof the item");
 		invalidDusts = config.getStringList("invalidDusts", CATEGORY_BLACKLIST, new String[] { "small", "tiny", "Tiny", "Small", "indust", "gendustry", "Indust", "mold" }, "List for disabling dusts, put a string that is inside the name or oredictionary of the item"); 
 		
-		maxIngotStackSize = config.getInt("maxIngotStackSize", CATEGORY_GENERAL, 64, 1, Integer.MAX_VALUE, "The number of ingots that a pile can hold, WARNING: causes render to scale according to number of ingots, may be laggy with larger numbers");
-		
-		//Have to figure out how to do these renders fist
-		
-		maxGemStackSize = config.getInt("maxGemStackSize", CATEGORY_GENERAL, 256, 1, Integer.MAX_VALUE, "The number of gems that a pile can hold, WARNING: causes render to scale according to number of ingots, may be laggy with larger numbers");
-		maxDustStackSize = config.getInt("maxDustStackSize", CATEGORY_GENERAL, 64, 1, Integer.MAX_VALUE, "The amount of dust that a pile can hold, WARNING: causes render to scale according to number of ingots, may be laggy with larger numbers");
+		maxIngotStackSize = config.getInt("maxIngotStackSize", CATEGORY_GENERAL, 64, 1, Integer.MAX_VALUE, "The number of ingots that a pile can hold");	
+		maxGemStackSize = config.getInt("maxGemStackSize", CATEGORY_GENERAL, 256, 1, Integer.MAX_VALUE, "The number of gems that a pile can hold");
+		maxDustStackSize = config.getInt("maxDustStackSize", CATEGORY_GENERAL, 64, 1, Integer.MAX_VALUE, "The amount of dust that a pile can hold, renders at half height for amounts > 64 for some reason");
 
-		
 		if (config.hasChanged()) {
 			config.save();
 		}

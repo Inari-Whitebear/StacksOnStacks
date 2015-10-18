@@ -24,7 +24,6 @@ public class PileColorizer {
 		for (List<PileItem> list : PileItemRegistry.registeredPileItems) {
 			for (PileItem pileitem : list) {
 				pileitem.setColor(getColor(pileitem.getPileStack()));
-				System.out.println(pileitem.getColor());
 			}
 		}
 	}

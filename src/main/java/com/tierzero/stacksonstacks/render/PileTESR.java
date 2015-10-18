@@ -38,7 +38,7 @@ public class PileTESR extends TileEntitySpecialRenderer {
 			blockOrItem = false;
 			break;
 		case 0:
-			render = new PileRenderIngot(item, pile.getMaxStored());
+			render = new PileRenderIngot(item);
 			break;
 		default:
 			return;

@@ -8,6 +8,7 @@ import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.api.PileItem;
 import com.tierzero.stacksonstacks.api.PileItemRegistry;
 import com.tierzero.stacksonstacks.util.ClientUtils;
+import com.tierzero.stacksonstacks.util.ConfigHandler;
 
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
@@ -16,7 +17,7 @@ import net.minecraft.util.IIcon;
 public class PileRenderGem extends PileRender {
 
 	public PileRenderGem(ItemStack item) {
-		super(item, item.stackSize, 256, 256);
+		super(item, item.stackSize, ConfigHandler.maxGemStackSize, 256);
 
 	}
 
