@@ -138,4 +138,12 @@ public class PileHandler {
 		}
 		return new int[] { x1, y1, z1 };
 	}
+	
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
+	public void onEvent(GuiOpenEvent event) {
+		if (event.gui instanceof GuiIngameModOptions) {
+			event.gui = new GuiModList(new GuiIngameMenu());
+		}
+	}
 }
