@@ -24,8 +24,7 @@ public class PileColorizer {
 		for (List<PileItem> list : PileItemRegistry.registeredPileItems) {
 			for (PileItem pileitem : list) {
 				pileitem.setColor(getColor(pileitem.getPileStack()));
-				// SoS.gson.toJson(pileitem, SoS.jsonwriter);
-				// SoS.gson.toJson(pileitem, System.out);
+
 			}
 		}
 

@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import com.tierzero.stacksonstacks.util.BlockStack;
 
+import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -37,7 +38,7 @@ public class PileItem {
 	}
 
 	public String getItemName() {
-		return PileUtils.findStringFromItem(getItem());
+		return findStringFromItem(getItem());
 	}
 
 	public int getMeta() {
@@ -78,6 +79,10 @@ public class PileItem {
 	@Override
 	public String toString() {
 		return String.format("Registered %s as valid pile item", getPileStack().getDisplayName());
+	}
+
+	private static String findStringFromItem(Item item) {
+		return GameData.getItemRegistry().getNameForObject(item);
 	}
 
 }
