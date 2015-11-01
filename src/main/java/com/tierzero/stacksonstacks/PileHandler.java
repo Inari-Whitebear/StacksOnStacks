@@ -17,8 +17,8 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
 public class PileHandler {
 
-	private static Class[] blockedBlocks = { Blocks.crafting_table.getClass(), Blocks.wooden_door.getClass(),
-			Blocks.trapdoor.getClass(), Blocks.bed.getClass(), Blocks.fence_gate.getClass() };
+	private static Block[] blockedBlocks = { Blocks.crafting_table, Blocks.wooden_door, Blocks.trapdoor, Blocks.bed,
+			Blocks.fence_gate };
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void handleBlockPlacement(PlayerInteractEvent event) {
@@ -43,8 +43,8 @@ public class PileHandler {
 					return;
 				}
 
-				for (Class blockedBlock : blockedBlocks) {
-					if (blockAtClickedPosition.getClass().isAssignableFrom(blockedBlock)) {
+				for (Block blockedBlock : blockedBlocks) {
+					if (blockAtClickedPosition.equals(blockedBlock)) {
 						return;
 					}
 				}

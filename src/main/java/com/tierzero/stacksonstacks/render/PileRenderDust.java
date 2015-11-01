@@ -37,7 +37,6 @@ public class PileRenderDust extends PileRender {
 			xz += 1 / 16d;
 			y += 1 / 8d;
 		}
-
 	}
 
 }
