@@ -1,5 +1,12 @@
 package com.tierzero.stacksonstacks;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.tierzero.stacksonstacks.api.PileItemFinder;
 import com.tierzero.stacksonstacks.block.BlockPile;
 import com.tierzero.stacksonstacks.compat.CompatHandler;
@@ -14,6 +21,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -29,11 +37,19 @@ public class SoS {
 
 	@SidedProxy(serverSide = "com.tierzero.stacksonstacks.CommonProxy", clientSide = "com.tierzero.stacksonstacks.ClientProxy", modId = MODID)
 	public static CommonProxy proxy;
+	public static Writer jsonwriter;
+	public static Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().serializeNulls().create();
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		ConfigHandler.loadConfig(event.getSuggestedConfigurationFile());
 
+		try {
+			jsonwriter = new FileWriter(
+					new File(event.getSuggestedConfigurationFile().getCanonicalPath().replace(".cfg", ".json")));
+		} catch (IOException e) {
+
+		}
 		proxy.registerEntities();
 		proxy.registerTiles();
 
@@ -56,6 +72,16 @@ public class SoS {
 		if (Loader.isModLoaded("NotEnoughItems")) {
 			codechicken.nei.api.API.hideItem(new ItemStack(blockPile));
 		}
+		try {
+			jsonwriter.close();
+		} catch (IOException err) {
+
+		}
+	}
+
+	@EventHandler
+	public void serverLoad(FMLServerStartingEvent e) {
+		e.registerServerCommand(new RegisterPileItemCommand());
 	}
 
 }

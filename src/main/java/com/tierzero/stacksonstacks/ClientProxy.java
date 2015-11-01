@@ -7,6 +7,10 @@ import com.tierzero.stacksonstacks.render.PileTESR;
 import cpw.mods.fml.client.registry.ClientRegistry;
 
 public class ClientProxy extends CommonProxy {
+	@Override
+	public boolean isClient() {
+		return true;
+	}
 
 	public void registerRenders() {
 		// RenderingRegistry.registerBlockHandler(SoS.blockPile.getRenderType(),
@@ -19,6 +23,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void postInit() {
 		PileColorizer.registerPileColors();
-		// CompatHandler.clientSide();
+
 	}
 }

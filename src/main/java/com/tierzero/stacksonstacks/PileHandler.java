@@ -2,33 +2,29 @@ package com.tierzero.stacksonstacks;
 
 import com.tierzero.stacksonstacks.api.PileItemRegistry;
 import com.tierzero.stacksonstacks.block.tile.TilePile;
-import com.tierzero.stacksonstacks.compat.GeneralCompat;
 import com.tierzero.stacksonstacks.util.StackUtils;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityBeacon;
-import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
 public class PileHandler {
 
-	private static Class[] blockedBlocks = { Blocks.crafting_table.getClass(), Blocks.wooden_door.getClass(), Blocks.trapdoor.getClass(), Blocks.bed.getClass(), Blocks.fence_gate.getClass() };
-	
+	private static Class[] blockedBlocks = { Blocks.crafting_table.getClass(), Blocks.wooden_door.getClass(),
+			Blocks.trapdoor.getClass(), Blocks.bed.getClass(), Blocks.fence_gate.getClass() };
+
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void handleBlockPlacement(PlayerInteractEvent event) {
+
 		if (event.action == Action.RIGHT_CLICK_BLOCK) {
+
 			ItemStack heldItemStack = event.entityPlayer.getCurrentEquippedItem();
 			if (heldItemStack != null && PileItemRegistry.isValidPileItem(heldItemStack)) {
 				int clickedX = event.x;
@@ -44,12 +40,11 @@ public class PileHandler {
 						((TilePile) tileAtClickedPosition).onRightClicked(event.entityPlayer, heldItemStack);
 						return;
 					}
-					
 					return;
 				}
-				
-				for(Class blockedBlock : blockedBlocks) {
-					if(blockAtClickedPosition.getClass().isAssignableFrom(blockedBlock)) {
+
+				for (Class blockedBlock : blockedBlocks) {
+					if (blockAtClickedPosition.getClass().isAssignableFrom(blockedBlock)) {
 						return;
 					}
 				}
@@ -62,29 +57,33 @@ public class PileHandler {
 
 				Block blockAtPlacementPosition = event.world.getBlock(placementX, placementY, placementZ);
 				TileEntity tileAtPlacementPosition = event.world.getTileEntity(placementX, placementY, placementZ);
-			
+
 				if (blockAtPlacementPosition.isAir(event.world, placementX, placementY, placementZ)) {
 
 					Block blockBelowPlacementPosition = event.world.getBlock(placementX, placementY - 1, placementZ);
-					
-					if (blockBelowPlacementPosition.getMaterial().isSolid() && blockBelowPlacementPosition != SoS.blockPile) {
+
+					if (blockBelowPlacementPosition.getMaterial().isSolid()
+							&& blockBelowPlacementPosition != SoS.blockPile) {
 						if (heldItemStack.getItem().equals(Items.redstone) && (!playerSneaking)) {
 							return;
 						}
-						
+
 						event.world.setBlock(placementX, placementY, placementZ, SoS.blockPile);
-						event.world.getBlock(placementX, placementY, placementZ).onBlockPlacedBy(event.world, placementX, placementY, placementZ, event.entityPlayer, heldItemStack);
+						event.world.getBlock(placementX, placementY, placementZ).onBlockPlacedBy(event.world,
+								placementX, placementY, placementZ, event.entityPlayer, heldItemStack);
 
 						// Fix the comparator output after placing down a full
 						// stack
 						if (playerSneaking) {
 							ItemStack comparatorFixer = StackUtils.getItemsFromStack(heldItemStack, 0);
-							event.world.getBlock(placementX, placementY, placementZ).onBlockPlacedBy(event.world, placementX, placementY, placementZ, event.entityPlayer, comparatorFixer);
+							event.world.getBlock(placementX, placementY, placementZ).onBlockPlacedBy(event.world,
+									placementX, placementY, placementZ, event.entityPlayer, comparatorFixer);
 						}
 
 					}
 				} else if (tileAtPlacementPosition instanceof TilePile) {
-					blockAtPlacementPosition.onBlockActivated(event.world, placementX, placementY, placementZ, event.entityPlayer, 0, 0, 0, 0);
+					blockAtPlacementPosition.onBlockActivated(event.world, placementX, placementY, placementZ,
+							event.entityPlayer, 0, 0, 0, 0);
 				}
 			}
 		}
@@ -138,12 +137,5 @@ public class PileHandler {
 		}
 		return new int[] { x1, y1, z1 };
 	}
-	
-	@SideOnly(Side.CLIENT)
-	@SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
-	public void onEvent(GuiOpenEvent event) {
-		if (event.gui instanceof GuiIngameModOptions) {
-			event.gui = new GuiModList(new GuiIngameMenu());
-		}
-	}
+
 }

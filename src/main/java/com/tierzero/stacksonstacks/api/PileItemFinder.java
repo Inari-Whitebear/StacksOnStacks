@@ -28,6 +28,7 @@ public class PileItemFinder {
 		for (int type = 0; type < validKeyWord.length; type++) {
 			registerPileItem(type);
 		}
+
 	}
 
 	public static void registerPileItem(int type) {
@@ -39,12 +40,12 @@ public class PileItemFinder {
 
 		for (String validName : validOredictNames) {
 			for (ItemStack stack : OreDictionary.getOres(validName)) {
-				PileItemRegistry.registerPileItem(stack, validName, type);
+				PileItemRegistry.registerPileItem(stack, type);
 			}
 		}
 		for (String validName : validRegisteredNames) {
 			ItemStack stack = new ItemStack(itemRegistry.getObject(validName));
-			PileItemRegistry.registerPileItem(stack, validName, type);
+			PileItemRegistry.registerPileItem(stack, type);
 		}
 	}
 

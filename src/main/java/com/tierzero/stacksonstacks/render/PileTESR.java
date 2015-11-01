@@ -24,7 +24,7 @@ public class PileTESR extends TileEntitySpecialRenderer {
 		PileRender render = null;
 
 		boolean blockOrItem = true;
-		
+
 		ItemStack item = pile.getPileStack();
 
 		if (item == null || PileItemRegistry.getPileItem(item) == null)

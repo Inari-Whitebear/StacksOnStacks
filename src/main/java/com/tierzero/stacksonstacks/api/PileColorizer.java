@@ -24,12 +24,16 @@ public class PileColorizer {
 		for (List<PileItem> list : PileItemRegistry.registeredPileItems) {
 			for (PileItem pileitem : list) {
 				pileitem.setColor(getColor(pileitem.getPileStack()));
+				// SoS.gson.toJson(pileitem, SoS.jsonwriter);
+				// SoS.gson.toJson(pileitem, System.out);
 			}
 		}
+
 	}
 
 	@SideOnly(Side.CLIENT)
 	public static int getStackColour(ItemStack stack, int pass) {
+
 		return stack.getItem().getColorFromItemStack(stack, pass);
 	}
 
@@ -49,7 +53,6 @@ public class PileColorizer {
 				colors.add(new Color(stackColor));
 			}
 		}
-
 		if (Loader.isModLoaded("gregtech")) {
 			try {
 				Color gregColor = getGregtechColor(stack);
@@ -60,7 +63,6 @@ public class PileColorizer {
 			} catch (Exception e) {
 			}
 		}
-
 		float red = 0;
 		float green = 0;
 		float blue = 0;
@@ -78,6 +80,12 @@ public class PileColorizer {
 			pileitemColor = new Color(156, 156, 156);
 		}
 
+		if (PileItemRegistry.getPileType(stack) == 0) {
+			float[] hsb = new float[3];
+			Color.RGBtoHSB(pileitemColor.getRed(), pileitemColor.getGreen(), pileitemColor.getBlue(), hsb);
+
+			pileitemColor = new Color(Color.HSBtoRGB(((float) hsb[0]), ((float) (hsb[1] * 4) % 1), ((float) hsb[2])));
+		}
 		return pileitemColor;
 	}
 
@@ -94,7 +102,6 @@ public class PileColorizer {
 			Method m = itemCls.getMethod("getRGBa", ItemStack.class);
 			short[] rgba = (short[]) m.invoke(stack.getItem(), stack);
 			return new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
-
 		}
 		return null;
 	}

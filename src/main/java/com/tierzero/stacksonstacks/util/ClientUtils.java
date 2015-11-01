@@ -54,17 +54,11 @@ public class ClientUtils {
 
 		if (resource == null) {
 			PileItem pileItem = PileItemRegistry.getPileItem(stack);
-			String registeredName = pileItem.getRegisteredName();
+			String registeredName = pileItem.getItemName();
 			String unlocalizedName = pileItem.getName();
 
 			resource = fromNames(registeredName, unlocalizedName);
 
-			if (resource == null) {
-				String capitalizedIngotName = pileItem.getRegisteredName().replaceFirst("[i]", "I");
-
-				resource = fromNames(capitalizedIngotName, unlocalizedName);
-
-			}
 		}
 
 		return resource;
@@ -139,53 +133,56 @@ public class ClientUtils {
 		drawQuad(Umin, Vmin, Umax, Vmax, scale);
 	}
 
-	public static void drawRectangularPrism(double width, double length, double height, double slantX, double slantZ,
-			double Umin, double Vmin, double Umax, double Vmax, Color color) {
+	public static void drawRectangularPrism(double x, double y, double z, double x1, double y1, double z1,
+			double slantX, double slantZ, double Umin, double Vmin, double Umax, double Vmax, Color color) {
 
 		tes.startDrawingQuads();
 		tes.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
-		tes.addVertexWithUV(width, 0, 0, Umin, Vmax);
-		tes.addVertexWithUV(width, 0, length, Umin, Vmin);
-		tes.addVertexWithUV(0, 0, length, Umax, Vmin);
-		tes.addVertexWithUV(0, 0, 0, Umax, Vmax);
+		tes.addVertexWithUV(x1, y, z, Umin, Vmax);
+		tes.addVertexWithUV(x1, y, z1, Umin, Vmin);
+		tes.addVertexWithUV(x, y, z1, Umax, Vmin);
+		tes.addVertexWithUV(x, y, z, Umax, Vmax);
 
 		// Render side 1(up)
 
-		tes.addVertexWithUV(width - slantX, height, length - slantZ, Umax, Vmax);
-		tes.addVertexWithUV(width - slantX, height, 0 + slantZ, Umax, Vmin);
-		tes.addVertexWithUV(0 + slantX, height, 0 + slantZ, Umin, Vmin);
-		tes.addVertexWithUV(0 + slantX, height, length - slantZ, Umin, Vmax);
+		tes.addVertexWithUV(x1 - slantX, y1, z1 - slantZ, Umax, Vmax);
+		tes.addVertexWithUV(x1 - slantX, y1, z + slantZ, Umax, Vmin);
+		tes.addVertexWithUV(x + slantX, y1, z + slantZ, Umin, Vmin);
+		tes.addVertexWithUV(x + slantX, y1, z1 - slantZ, Umin, Vmax);
 
 		// Render side 2 (north)
 
-		tes.addVertexWithUV(0, 0, 0, Umin, Vmin);
-		tes.addVertexWithUV(0 + slantX, height, 0 + slantZ, Umin, Vmax);
-		tes.addVertexWithUV(width - slantX, height, 0 + slantZ, Umax, Vmax);
-		tes.addVertexWithUV(width, 0, 0, Umax, Vmin);
+		tes.addVertexWithUV(x, y, z, Umin, Vmin);
+		tes.addVertexWithUV(x + slantX, y1, z + slantZ, Umin, Vmax);
+		tes.addVertexWithUV(x1 - slantX, y1, z + slantZ, Umax, Vmax);
+		tes.addVertexWithUV(x1, y, z, Umax, Vmin);
 
 		// Render side 3 (south)
-
-		tes.addVertexWithUV(width, 0, length, Umax, Vmin);
-		tes.addVertexWithUV(width - slantX, height, length - slantZ, Umax, Vmax);
-		tes.addVertexWithUV(0 + slantX, height, length - slantZ, Umin, Vmax);
-		tes.addVertexWithUV(0, 0, length, Umin, Vmin);
+		tes.addVertexWithUV(x1, y, z1, Umax, Vmin);
+		tes.addVertexWithUV(x1 - slantX, y1, z1 - slantZ, Umax, Vmax);
+		tes.addVertexWithUV(x + slantX, y1, z1 - slantZ, Umin, Vmax);
+		tes.addVertexWithUV(x, y, z1, Umin, Vmin);
 
 		// Render side 4 (west)
 
-		tes.addVertexWithUV(0, 0, 0, Umin, Vmax);
-		tes.addVertexWithUV(0, 0, length, Umax, Vmax);
-		tes.addVertexWithUV(0 + slantX, height, length - slantZ, Umax, Vmin);
-		tes.addVertexWithUV(0 + slantX, height, 0 + slantZ, Umin, Vmin);
+		tes.addVertexWithUV(x, y, z, Umin, Vmax);
+		tes.addVertexWithUV(x, y, z1, Umax, Vmax);
+		tes.addVertexWithUV(x + slantX, y1, z1 - slantZ, Umax, Vmin);
+		tes.addVertexWithUV(x + slantX, y1, z + slantZ, Umin, Vmin);
 
 		// Render side 5 (east)
 
-		tes.addVertexWithUV(width, 0, 0, Umax, Vmin);
-		tes.addVertexWithUV(width - slantX, height, 0 + slantZ, Umax, Vmax);
-		tes.addVertexWithUV(width - slantX, height, length - slantZ, Umin, Vmax);
-		tes.addVertexWithUV(width, 0, length, Umin, Vmin);
+		tes.addVertexWithUV(x1, y, z, Umax, Vmin);
+		tes.addVertexWithUV(x1 - slantX, y1, z + slantZ, Umax, Vmax);
+		tes.addVertexWithUV(x1 - slantX, y1, z1 - slantZ, Umin, Vmax);
+		tes.addVertexWithUV(x1, y, z1, Umin, Vmin);
 		tes.draw();
 		// Render side 6 (Down)
+	}
 
+	public static void drawRectangularPrism(double width, double length, double height, double slantX, double slantZ,
+			double Umin, double Vmin, double Umax, double Vmax, Color color) {
+		drawRectangularPrism(0, 0, 0, width, height, length, slantX, slantZ, Umin, Vmin, Umax, Vmax, color);
 	}
 
 	public static void enableTexture2D() {
@@ -345,8 +342,8 @@ public class ClientUtils {
 		colour(r, g, b, a / 255F);
 	}
 
-	public static void viewport(int x, int y, int width, int height) {
-		GL11.glViewport(x, y, width, height);
+	public static void viewport(int x, int y, int x1, int height) {
+		GL11.glViewport(x, y, x1, height);
 	}
 
 	public static void normal(float x, float y, float z) {

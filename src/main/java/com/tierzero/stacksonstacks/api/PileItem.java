@@ -2,36 +2,30 @@ package com.tierzero.stacksonstacks.api;
 
 import java.awt.Color;
 
+import com.tierzero.stacksonstacks.util.BlockStack;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
 public class PileItem {
-	private static IIcon icon[] = new IIcon[2];
-
-	private Item item;
+	private static IIcon icons[] = new IIcon[2];
+	private ItemStack item;
 	private int type;
-	private int meta;
 	private Color colour;
-	private String registeredName;
+	public BlockStack blockoverride;
 
-	public PileItem(ItemStack stack, int type, String registeredName) {
-		this(stack.getItem(), stack.getItemDamage(), type, registeredName);
+	public PileItem(ItemStack stack, int type) {
+		this(stack.getItem(), stack.getItemDamage(), type);
 	}
 
-	public PileItem(Item item, int meta, int type, String registeredName) {
-		this.item = item;
-		this.meta = meta;
+	public PileItem(Item item, int meta, int type) {
+		this.item = new ItemStack(item, 1, meta);
 		this.type = type;
-		this.registeredName = registeredName;
 	}
 
 	public static IIcon getIcon(int type) {
-		return icon[type];
-	}
-
-	public static void setIcon(IIcon iconToUse, int type) {
-		icon[type] = iconToUse;
+		return icons[type];
 	}
 
 	public Color getColor() {
@@ -39,37 +33,51 @@ public class PileItem {
 	}
 
 	public String getName() {
-		return this.item.getUnlocalizedName();
+		return getItem().getUnlocalizedName();
+	}
+
+	public String getItemName() {
+		return PileUtils.findStringFromItem(getItem());
 	}
 
 	public int getMeta() {
-		return this.meta;
+		return this.item.getItemDamage();
 	}
 
 	public Item getItem() {
-		return item;
+		return item.getItem();
 	}
 
 	public ItemStack getPileStack() {
-		return new ItemStack(item, 1, meta);
+		return item;
 	}
 
-	public void setColor(Color colour) {
+	public IIcon getOverride() {
+		if (blockoverride != null)
+			return blockoverride.getIcon();
+		return null;
+	}
+
+	public PileItem setColor(Color colour) {
 		this.colour = colour;
-		// FMLLog.info("Coloring " + getPileStack().getDisplayName() + " to " +
-		// colour);
+		return this;
 	}
 
-	@Override
-	public String toString() {
-		return String.format("Registered %s as valid pile item", new ItemStack(item, 1, meta).getDisplayName());
-	}
-
-	public String getRegisteredName() {
-		return this.registeredName;
+	public static void setIcon(IIcon iconToUse, int type) {
+		icons[type] = iconToUse;
 	}
 
 	public int getType() {
 		return type;
 	}
+
+	public void setIconOverride(BlockStack override) {
+		blockoverride = override;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Registered %s as valid pile item", getPileStack().getDisplayName());
+	}
+
 }

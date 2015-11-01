@@ -1,5 +1,7 @@
 package com.tierzero.stacksonstacks.render;
 
+import java.awt.Color;
+
 import com.tierzero.stacksonstacks.api.PileItem;
 import com.tierzero.stacksonstacks.api.PileItemRegistry;
 import com.tierzero.stacksonstacks.util.ClientUtils;
@@ -26,14 +28,14 @@ public class PileRenderIngot extends PileRender {
 		if (pileitem == null) {
 			return;
 		}
-			
+
 		float x = 0, y = 0, z = 0;
-		boolean rotate = false;	
-		
+		boolean rotate = false;
+
 		for (int i = 0; i < count; i++) {
 			if (i != 0) {
 				if (i % 4 == 0) {
-					x += .5 ;
+					x += .5;
 					z = 0;
 				}
 				if (i % 8 == 0) {
@@ -49,16 +51,21 @@ public class PileRenderIngot extends PileRender {
 
 			ClientUtils.translate(rotate ? z : x, y, rotate ? x : z);
 			ClientUtils.disableLighting();
-
+			Color color = pileitem.getColor();
 			IIcon icon = pileitem.getIcon(0);
+			if (pileitem.getOverride() != null) {
+				icon = pileitem.getOverride();
+				color = Color.white;
+			}
 			double Umin = icon.getMinU();
 			double Vmax = icon.getMaxV();
 			double Vmin = icon.getMinV();
 			double Umax = icon.getMaxU();
-			ClientUtils.drawRectangularPrism(rotate ? WIDTH : LENGTH, rotate ? LENGTH : WIDTH, HEIGHT, SLANT_WIDTH, SLANT_LENGTH, Umin, Vmin, Umax, Vmax, pileitem.getColor());
+			ClientUtils.drawRectangularPrism(rotate ? WIDTH : LENGTH, rotate ? LENGTH : WIDTH, HEIGHT, SLANT_WIDTH,
+					SLANT_LENGTH, Umin, Vmin, Umax, Vmax, color);
 			ClientUtils.disableBlend();
 			ClientUtils.enableLighting();
-			
+
 			ClientUtils.scale(1, 1, 1);
 
 			ClientUtils.popMatrix();

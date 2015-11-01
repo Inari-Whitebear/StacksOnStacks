@@ -33,9 +33,7 @@ public class BlockPile extends BlockContainer {
 	private int renderID;
 
 	public static String[][] textureNames = {
-			{ "VanillaGold", "VanillaIron", "ThermalFoundation", "Metallurgy4", "Mekanism" }, 
-			{ "VanillaSand" } 		
-	};
+			{ "VanillaGold", "VanillaIron", "ThermalFoundation", "Metallurgy4", "Mekanism" }, { "VanillaSand" } };
 
 	public BlockPile(String name) {
 		super(Material.iron);
@@ -126,7 +124,7 @@ public class BlockPile extends BlockContainer {
 		TilePile tile = (TilePile) world.getTileEntity(x, y, z);
 		if (tile != null) {
 			Pile pile = tile.getPile();
-			
+
 			ItemStack pileStack = pile.getPileStack();
 			int type = pile.getType();
 			if (pileStack != null) {
@@ -145,11 +143,11 @@ public class BlockPile extends BlockContainer {
 					width = .5f;
 					length = .5f;
 					int maxStored = pile.getMaxStored();
-					
-					if(maxStored < 256) {
+
+					if (maxStored < 256) {
 						maxStored = 256;
 					}
-					
+
 					if (amountStored < maxStored / 4)
 						height += amountStored / pile.getMaxStored();
 					else
@@ -171,14 +169,13 @@ public class BlockPile extends BlockContainer {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
 			ItemStack pileStack = ((TilePile) tile).getPile().getPileStack();
-			
+
 			int stackSize = pileStack.stackSize;
-			
-			if(stackSize > 64) {
+
+			if (stackSize > 64) {
 				stackSize = 64;
 			}
-			
-			
+
 			return StackUtils.getItemsFromStack(pileStack, stackSize);
 		}
 
@@ -215,9 +212,10 @@ public class BlockPile extends BlockContainer {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_,	float p_149727_7_, float p_149727_8_, float p_149727_9_) {
-			//This is already handled in the pile handler
-			return false;
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_,
+			float p_149727_7_, float p_149727_8_, float p_149727_9_) {
+		// This is already handled in the pile handler
+		return false;
 	}
 
 	@Override
