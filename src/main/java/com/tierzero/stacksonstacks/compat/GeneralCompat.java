@@ -93,7 +93,7 @@ public class GeneralCompat extends ModCompat {
 					new BlockStack(MOD_AVARITIA + ":Resource_Block:1"));
 		}
 		if (Loader.isModLoaded(MOD_ROTARYCRAFT)) {
-			PileItemRegistry.registerIngot(getItemStack(MOD_ROTARYCRAFT, "rotarycraft_item_shaftcraft", 1))
+			/*PileItemRegistry.registerIngot(getItemStack(MOD_ROTARYCRAFT, "rotarycraft_item_shaftcraft", 1))
 					.setColor(new Color(202, 203, 242));
 			PileItemRegistry.registerIngot(getItemStack("RotaryCraft", "rotarycraft_item_compacts", 1))
 					.setColor(new Color(202, 203, 242));
@@ -101,7 +101,7 @@ public class GeneralCompat extends ModCompat {
 					.setColor(new Color(140, 140, 140));
 			PileItemRegistry.registerIngot(getItemStack("RotaryCraft", "rotarycraft_item_compacts", 1));
 			PileItemRegistry.registerIngot(getItemStack("RotaryCraft", "rotarycraft_item_compacts", 1));
-			PileItemRegistry.registerIngot(getItemStack("RotaryCraft", "rotarycraft_item_compacts", 1));
+			PileItemRegistry.registerIngot(getItemStack("RotaryCraft", "rotarycraft_item_compacts", 1));*/
 		}
 	}
 
