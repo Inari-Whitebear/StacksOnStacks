@@ -20,7 +20,6 @@ public class PileRenderIngot extends PileRender {
 
 	@Override
 	public void render(ItemStack itemStack) {
-		System.out.println("gwegew");
 		setCount(itemStack.stackSize, ConfigHandler.maxIngotStackSize, 64);
 		PileItem pileitem = PileItemRegistry.getPileItem(itemStack);
 
