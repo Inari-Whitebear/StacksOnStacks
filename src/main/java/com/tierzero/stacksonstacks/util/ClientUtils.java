@@ -115,14 +115,10 @@ public class ClientUtils {
 	}
 
 	public static void drawQuad(double Umin, double Vmin, double Umax, double Vmax, double scale) {
-
-		tes.startDrawingQuads();
 		tes.addVertexWithUV(0.0D, 0.0D, 1.0D * scale, (double) Umax, (double) Vmin);
 		tes.addVertexWithUV(1.0D * scale, 0.0D, 1.0D * scale, (double) Umin, (double) Vmin);
 		tes.addVertexWithUV(1.0D * scale, 0.0D, 0.0D, (double) Umin, (double) Vmax);
 		tes.addVertexWithUV(0.0D, 0.0D, 0.0D, (double) Umax, (double) Vmax);
-		tes.draw();
-
 	}
 
 	public static void drawItem(IIcon icon, double scale) {
@@ -136,7 +132,6 @@ public class ClientUtils {
 	public static void drawRectangularPrism(double x, double y, double z, double x1, double y1, double z1,
 			double slantX, double slantZ, double Umin, double Vmin, double Umax, double Vmax, Color color) {
 
-		tes.startDrawingQuads();
 		tes.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
 		tes.addVertexWithUV(x1, y, z, Umin, Vmax);
 		tes.addVertexWithUV(x1, y, z1, Umin, Vmin);
@@ -176,7 +171,6 @@ public class ClientUtils {
 		tes.addVertexWithUV(x1 - slantX, y1, z + slantZ, Umax, Vmax);
 		tes.addVertexWithUV(x1 - slantX, y1, z1 - slantZ, Umin, Vmax);
 		tes.addVertexWithUV(x1, y, z1, Umin, Vmin);
-		tes.draw();
 		// Render side 6 (Down)
 	}
 

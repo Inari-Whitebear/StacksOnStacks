@@ -4,12 +4,9 @@ import net.minecraft.item.ItemStack;
 
 public abstract class PileRender {
 	public float count;
-	public ItemStack item;
 	public int maxStackSize;
 
-	public PileRender(ItemStack item, int count, int maxStackSize, int baseStackSize) {
-		this.item = item;
-		
+	public void setCount(int count, int maxStackSize, int baseStackSize) {
 		int renderPerItem = maxStackSize / baseStackSize;
 		
 		if(renderPerItem < 1) {
@@ -24,5 +21,5 @@ public abstract class PileRender {
 		this.maxStackSize = maxStackSize;
 	}
 
-	public abstract void render();
+	public abstract void render(ItemStack itemStack);
 }

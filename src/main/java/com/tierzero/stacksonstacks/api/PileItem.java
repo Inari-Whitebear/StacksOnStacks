@@ -14,7 +14,7 @@ public class PileItem {
 	private ItemStack item;
 	private int type;
 	private Color colour;
-	public BlockStack blockoverride;
+	public BlockStack blockOverride;
 
 	public PileItem(ItemStack stack, int type) {
 		this(stack.getItem(), stack.getItemDamage(), type);
@@ -54,8 +54,10 @@ public class PileItem {
 	}
 
 	public IIcon getOverride() {
-		if (blockoverride != null)
-			return blockoverride.getIcon();
+		if (blockOverride != null) {
+			return blockOverride.getIcon();
+		}
+		
 		return null;
 	}
 
@@ -73,7 +75,7 @@ public class PileItem {
 	}
 
 	public void setIconOverride(BlockStack override) {
-		blockoverride = override;
+		blockOverride = override;
 	}
 
 	@Override

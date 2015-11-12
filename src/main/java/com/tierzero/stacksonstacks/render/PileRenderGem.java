@@ -16,28 +16,28 @@ import net.minecraft.util.IIcon;
 
 public class PileRenderGem extends PileRender {
 
-	public PileRenderGem(ItemStack item) {
-		super(item, item.stackSize, ConfigHandler.maxGemStackSize, 256);
-
-	}
 
 	@Override
-	public void render() {
-		double x = 0, y = 0, z = 0;
-		IIcon icon = item.getIconIndex();
+	public void render(ItemStack itemStack) {
+		setCount(itemStack.stackSize, ConfigHandler.maxGemStackSize, 256);
+
+		float x = 0;
+		float y = 0;
+		float z = 0;
+		IIcon icon = itemStack.getIconIndex();
 		for (int i = 0; i < count; i++) {
 			if (i != 0) {
 				double c = i / 64d;
 				if (c % 1 == 0) {
 					y = 0;
 					if (c == 1) {
-						x = .5d;
+						x = .5f;
 					} else if (c == 2) {
-						x = .5d;
-						z = .5d;
+						x = .5f;
+						z = .5f;
 					} else if (c == 3) {
 						x = 0;
-						z = .5d;
+						z = .5f;
 					} else {
 						x = 0;
 						y = 0;
@@ -45,10 +45,10 @@ public class PileRenderGem extends PileRender {
 				}
 			}
 			y += 0.015625d;
-			ClientUtils.pushMatrix();
-			ClientUtils.translate(x, y, z);
+			Tessellator.instance.addTranslation(x, y, z);
 			ClientUtils.drawItem(icon, .5d);
-			ClientUtils.popMatrix();
+			Tessellator.instance.addTranslation(-x, -y, -z);
+
 		}
 	}
 }

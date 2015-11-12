@@ -7,6 +7,8 @@ import com.tierzero.stacksonstacks.util.StackUtils;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockStone;
+import net.minecraft.block.BlockWorkbench;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -22,9 +24,7 @@ public class PileHandler {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void handleBlockPlacement(PlayerInteractEvent event) {
-
 		if (event.action == Action.RIGHT_CLICK_BLOCK) {
-
 			ItemStack heldItemStack = event.entityPlayer.getCurrentEquippedItem();
 			if (heldItemStack != null && PileItemRegistry.isValidPileItem(heldItemStack)) {
 				int clickedX = event.x;
