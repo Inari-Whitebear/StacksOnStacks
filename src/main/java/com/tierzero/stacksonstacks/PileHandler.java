@@ -62,8 +62,7 @@ public class PileHandler {
 
 					if (blockBelowPlacementPosition.getMaterial().isSolid()
 							&& blockBelowPlacementPosition != SoS.blockPile) {
-						if (heldItemStack.getItem().equals(Items.redstone)
-								&& blockAtPlacementPosition != Blocks.redstone_wire) {
+						if (heldItemStack.getItem().equals(Items.redstone) && blockAtPlacementPosition != Blocks.redstone_wire) {
 							return;
 						}
 
