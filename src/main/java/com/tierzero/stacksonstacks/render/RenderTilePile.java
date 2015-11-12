@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 
 public class RenderTilePile implements ISimpleBlockRenderingHandler {
@@ -25,33 +26,36 @@ public class RenderTilePile implements ISimpleBlockRenderingHandler {
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
 		TilePile tilePile = (TilePile) world.getTileEntity(x, y, z);
-		Pile pile = tilePile.getPile();
+		Pile pile = tilePile.getPile();	
 		if(pile != null) {
 			
-			Tessellator tessellator = Tessellator.instance;
-			
-			ClientUtils.pushMatrix();
-			
-				tessellator.addTranslation(x, y, z);
-				switch(pile.getType()) {
-				case 0:
-					ingotRender.render(pile.getPileStack());
-					break;
-				case 1:
-					tessellator.draw();
-					Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationItemsTexture);
-					tessellator.startDrawingQuads();
-					gemRender.render(pile.getPileStack());
-					tessellator.draw();
-					Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
-					tessellator.startDrawingQuads();
-					break;
-				case 2:
-					dustRender.render(pile.getPileStack());
-					break;
-				}
-				tessellator.addTranslation(-x, -y, -z);
-			ClientUtils.popMatrix();
+			ItemStack itemStack = pile.getPileStack();
+			if(itemStack != null) {
+				Tessellator tessellator = Tessellator.instance;
+				
+				ClientUtils.pushMatrix();
+				
+					tessellator.addTranslation(x, y, z);
+					switch(pile.getType()) {
+					case 0:
+						ingotRender.render(pile.getPileStack());
+						break;
+					case 1:
+						tessellator.draw();
+						Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationItemsTexture);
+						tessellator.startDrawingQuads();
+						gemRender.render(pile.getPileStack());
+						tessellator.draw();
+						Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
+						tessellator.startDrawingQuads();
+						break;
+					case 2:
+						dustRender.render(pile.getPileStack());
+						break;
+					}
+					tessellator.addTranslation(-x, -y, -z);
+				ClientUtils.popMatrix();
+			}
 		}
 		return false;
 	}

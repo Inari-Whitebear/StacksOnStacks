@@ -7,8 +7,6 @@ import com.tierzero.stacksonstacks.util.StackUtils;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockStone;
-import net.minecraft.block.BlockWorkbench;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -89,29 +87,7 @@ public class PileHandler {
 			}
 		}
 	}
-
-	/*
-	 * @SubscribeEvent public void handleMinecartPlacement(EntityInteractEvent
-	 * event) {
-	 * 
-	 * Entity targetCart = event.target; EntityPlayer player =
-	 * event.entityPlayer; ItemStack stackInHand =
-	 * player.getCurrentEquippedItem();
-	 * 
-	 * if (!player.worldObj.isRemote) { if (event.target instanceof
-	 * EntityMinecartEmpty && PileItemRegistry.isValidPileItem(stackInHand)) {
-	 * EntityMinecartIngotPile ingotPileCart = new
-	 * EntityMinecartIngotPile(player.worldObj, targetCart.posX,
-	 * targetCart.posY, targetCart.posZ); ingotPileCart.motionX =
-	 * targetCart.motionX; ingotPileCart.motionY = targetCart.motionY;
-	 * ingotPileCart.motionZ = targetCart.motionZ;
-	 * 
-	 * player.worldObj.spawnEntityInWorld(ingotPileCart); targetCart.setDead();
-	 * } else if (event.target instanceof EntityMinecartIngotPile) { // Check to
-	 * see if pile is empty // If so then replace with regular minecart } }
-	 * 
-	 * }
-	 */
+	 
 	public static int[] getPlacementCoords(int x, int y, int z, int side) {
 		int x1 = x, y1 = y, z1 = z;
 		switch (ForgeDirection.getOrientation(side)) {

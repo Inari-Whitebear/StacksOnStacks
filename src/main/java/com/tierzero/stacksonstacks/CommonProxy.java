@@ -14,9 +14,6 @@ public class CommonProxy {
 	}
 
 	public void registerEntities() {
-		// EntityRegistry.registerModEntity(EntityMinecartIngotPile.class,
-		// "IngotPileCart", EntityRegistry.findGlobalUniqueEntityId(),
-		// SoS.instance, 256, 3, true);
 	}
 
 	public void registerRenders() {

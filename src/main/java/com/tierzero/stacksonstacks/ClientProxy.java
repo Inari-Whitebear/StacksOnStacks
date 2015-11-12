@@ -13,8 +13,6 @@ public class ClientProxy extends CommonProxy {
 
 	public void registerRenders() {
 		 RenderingRegistry.registerBlockHandler(SoS.blockPile.getRenderType(), new RenderTilePile());
-		// RenderingRegistry.registerEntityRenderingHandler(EntityMinecartIngotPile.class,
-		// new RenderEntityMinecartIngotPile());
 	}
 
 	@Override
