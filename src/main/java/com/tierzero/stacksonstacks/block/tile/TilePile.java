@@ -79,13 +79,14 @@ public class TilePile extends TileEntity {
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 
-		pile.readFromNBT(tag);
+		if(pile != null) {
+			pile.readFromNBT(tag);
 
-		if (pile.getPileStack() != null && pile.getPileStack().getItem() == null
-				|| PileItemRegistry.getPileItem(pile.getPileStack()) == null) {
-			this.worldObj.setBlockToAir(xCoord, yCoord, zCoord);
+			if (pile.getPileStack() != null && pile.getPileStack().getItem() == null
+					|| PileItemRegistry.getPileItem(pile.getPileStack()) == null) {
+				this.worldObj.setBlockToAir(xCoord, yCoord, zCoord);
+			}
 		}
-
 	}
 
 	@Override
