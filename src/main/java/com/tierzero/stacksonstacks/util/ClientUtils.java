@@ -122,6 +122,8 @@ public class ClientUtils {
 	}
 
 	public static void drawItem(IIcon icon, double scale) {
+		if(icon == null)
+			return
 		float Umin = icon.getMinU();
 		float Vmax = icon.getMaxV();
 		float Vmin = icon.getMinV();
