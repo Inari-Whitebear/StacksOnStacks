@@ -65,6 +65,11 @@ public class PileHandler {
 						if (heldItemStack.getItem().equals(Items.redstone) && blockAtPlacementPosition != Blocks.redstone_wire) {
 							return;
 						}
+						
+						//Prevent placing bonemeal on grass to avoid getting free plants/long grass.
+						if (heldItemStack.getItem().equals(Items.dye) && heldItemStack.getItemDamage() == 15 && blockAtPlacementPosition.equals(Blocks.grass) {
+							return;
+						}
 
 						event.world.setBlock(placementX, placementY, placementZ, SoS.blockPile);
 						event.world.getBlock(placementX, placementY, placementZ).onBlockPlacedBy(event.world,
