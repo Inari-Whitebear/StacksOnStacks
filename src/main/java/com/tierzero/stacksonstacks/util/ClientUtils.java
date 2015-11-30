@@ -122,13 +122,13 @@ public class ClientUtils {
 	}
 
 	public static void drawItem(IIcon icon, double scale) {
-		if(icon == null)
-			return
-		float Umin = icon.getMinU();
-		float Vmax = icon.getMaxV();
-		float Vmin = icon.getMinV();
-		float Umax = icon.getMaxU();
-		drawQuad(Umin, Vmin, Umax, Vmax, scale);
+		if(icon != null) {
+			float Umin = icon.getMinU();
+			float Vmax = icon.getMaxV();
+			float Vmin = icon.getMinV();
+			float Umax = icon.getMaxU();
+			drawQuad(Umin, Vmin, Umax, Vmax, scale);
+		}
 	}
 
 	public static void drawRectangularPrism(double x, double y, double z, double x1, double y1, double z1,

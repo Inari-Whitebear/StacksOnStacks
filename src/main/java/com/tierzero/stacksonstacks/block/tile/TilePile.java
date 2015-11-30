@@ -44,24 +44,25 @@ public class TilePile extends TileEntity {
 
 	public boolean onRightClicked(EntityPlayer player, ItemStack stack) {
 		update();
-		if (stack == null)
-			return false;
-		Block blockAbove = worldObj.getBlock(xCoord, yCoord + 1, zCoord);
-		if (worldObj.isAirBlock(xCoord, yCoord + 1, zCoord)) {
-			if (pile.getAmountStored() == pile.getMaxStored() && pile.getType() != 2) {
-				worldObj.setBlock(xCoord, yCoord + 1, zCoord, SoS.blockPile);
-				worldObj.getBlock(xCoord, yCoord + 1, zCoord).onBlockPlacedBy(worldObj, xCoord, yCoord + 1, zCoord,
-						player, stack);
+		if (stack != null) {
+			Block blockAbove = worldObj.getBlock(xCoord, yCoord + 1, zCoord);
+			if (worldObj.isAirBlock(xCoord, yCoord + 1, zCoord)) {
+				if (pile.getAmountStored() == pile.getMaxStored() && pile.getType() != 2 && stack.stackSize > 0) {
+					worldObj.setBlock(xCoord, yCoord + 1, zCoord, SoS.blockPile);
+					worldObj.getBlock(xCoord, yCoord + 1, zCoord).onBlockPlacedBy(worldObj, xCoord, yCoord + 1, zCoord,
+							player, stack);
+				} else {
+					pile.onRightClicked(player, stack);
+
+				}
+				return true;
+			} else if (blockAbove instanceof BlockPile) {
+				return ((TilePile) worldObj.getTileEntity(xCoord, yCoord + 1, zCoord)).onRightClicked(player, stack);
 			} else {
 				pile.onRightClicked(player, stack);
-
 			}
-			return true;
-		} else if (blockAbove instanceof BlockPile) {
-			return ((TilePile) worldObj.getTileEntity(xCoord, yCoord + 1, zCoord)).onRightClicked(player, stack);
-		} else {
-			pile.onRightClicked(player, stack);
 		}
+
 		return false;
 	}
 
