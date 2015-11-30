@@ -60,14 +60,16 @@ public class PileHandler {
 
 					Block blockBelowPlacementPosition = event.world.getBlock(placementX, placementY - 1, placementZ);
 
-					if (blockBelowPlacementPosition.getMaterial().isSolid()
-							&& blockBelowPlacementPosition != SoS.blockPile) {
+					if (blockBelowPlacementPosition.getMaterial().isSolid() && blockBelowPlacementPosition != SoS.blockPile) {
+						
+						//TODO - Properly fix both of these
+						//Prevent placing redstone as it causes a dupe bug
 						if (heldItemStack.getItem().equals(Items.redstone) && blockAtPlacementPosition != Blocks.redstone_wire) {
 							return;
 						}
 						
 						//Prevent placing bonemeal on grass to avoid getting free plants/long grass.
-						if (heldItemStack.getItem().equals(Items.dye) && heldItemStack.getItemDamage() == 15 && blockAtPlacementPosition.equals(Blocks.grass) {
+						if (heldItemStack.getItem().equals(Items.dye) && heldItemStack.getItemDamage() == 15 && blockAtPlacementPosition.equals(Blocks.grass)) {
 							return;
 						}
 
