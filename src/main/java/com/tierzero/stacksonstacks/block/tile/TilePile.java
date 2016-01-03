@@ -1,9 +1,9 @@
 package com.tierzero.stacksonstacks.block.tile;
 
 import com.tierzero.stacksonstacks.SoS;
-import com.tierzero.stacksonstacks.api.Pile;
-import com.tierzero.stacksonstacks.api.PileItemRegistry;
 import com.tierzero.stacksonstacks.block.BlockPile;
+import com.tierzero.stacksonstacks.pile.Pile;
+import com.tierzero.stacksonstacks.pile.PileItemRegistry;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;

@@ -1,4 +1,4 @@
-package com.tierzero.stacksonstacks.render;
+package com.tierzero.stacksonstacks.client.render;
 
 import net.minecraft.item.ItemStack;
 

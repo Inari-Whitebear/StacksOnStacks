@@ -1,7 +1,8 @@
-package com.tierzero.stacksonstacks;
+package com.tierzero.stacksonstacks.core;
 
-import com.tierzero.stacksonstacks.api.PileColorizer;
-import com.tierzero.stacksonstacks.render.RenderTilePile;
+import com.tierzero.stacksonstacks.SoS;
+import com.tierzero.stacksonstacks.client.render.RenderTilePile;
+import com.tierzero.stacksonstacks.pile.PileColorizer;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
 

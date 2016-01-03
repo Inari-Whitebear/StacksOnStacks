@@ -1,6 +1,6 @@
-package com.tierzero.stacksonstacks;
+package com.tierzero.stacksonstacks.pile;
 
-import com.tierzero.stacksonstacks.api.PileItemRegistry;
+import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.block.tile.TilePile;
 import com.tierzero.stacksonstacks.util.StackUtils;
 

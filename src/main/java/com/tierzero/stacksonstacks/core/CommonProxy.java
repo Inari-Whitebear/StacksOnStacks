@@ -1,4 +1,4 @@
-package com.tierzero.stacksonstacks;
+package com.tierzero.stacksonstacks.core;
 
 import com.tierzero.stacksonstacks.block.tile.TilePile;
 

@@ -1,5 +1,6 @@
-package com.tierzero.stacksonstacks;
+package com.tierzero.stacksonstacks.client;
 
+import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.util.ConfigHandler;
 
 import cpw.mods.fml.client.config.GuiConfig;

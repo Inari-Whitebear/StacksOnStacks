@@ -1,4 +1,4 @@
-package com.tierzero.stacksonstacks.api;
+package com.tierzero.stacksonstacks.pile;
 
 import com.tierzero.stacksonstacks.util.ConfigHandler;
 import com.tierzero.stacksonstacks.util.StackUtils;

@@ -1,8 +1,8 @@
-package com.tierzero.stacksonstacks.render;
+package com.tierzero.stacksonstacks.client.render;
 
 import com.tierzero.stacksonstacks.SoS;
-import com.tierzero.stacksonstacks.api.Pile;
 import com.tierzero.stacksonstacks.block.tile.TilePile;
+import com.tierzero.stacksonstacks.pile.Pile;
 import com.tierzero.stacksonstacks.util.ClientUtils;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;

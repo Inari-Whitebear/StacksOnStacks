@@ -3,9 +3,9 @@ package com.tierzero.stacksonstacks;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tierzero.stacksonstacks.api.PileItem;
-import com.tierzero.stacksonstacks.api.PileItemRegistry;
 import com.tierzero.stacksonstacks.block.BlockPile;
+import com.tierzero.stacksonstacks.pile.PileItem;
+import com.tierzero.stacksonstacks.pile.PileItemRegistry;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;

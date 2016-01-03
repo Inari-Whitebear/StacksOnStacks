@@ -1,12 +1,12 @@
-package com.tierzero.stacksonstacks.render;
+package com.tierzero.stacksonstacks.client.render;
 
 import java.awt.Color;
 
 import org.lwjgl.opengl.GL11;
 
 import com.tierzero.stacksonstacks.SoS;
-import com.tierzero.stacksonstacks.api.PileItem;
-import com.tierzero.stacksonstacks.api.PileItemRegistry;
+import com.tierzero.stacksonstacks.pile.PileItem;
+import com.tierzero.stacksonstacks.pile.PileItemRegistry;
 import com.tierzero.stacksonstacks.util.ClientUtils;
 import com.tierzero.stacksonstacks.util.ConfigHandler;
 

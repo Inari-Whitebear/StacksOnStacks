@@ -1,4 +1,4 @@
-package com.tierzero.stacksonstacks;
+package com.tierzero.stacksonstacks.client;
 
 import java.util.Set;
 

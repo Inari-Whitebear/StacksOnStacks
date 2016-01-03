@@ -3,9 +3,9 @@ package com.tierzero.stacksonstacks.block;
 import java.util.List;
 
 import com.tierzero.stacksonstacks.SoS;
-import com.tierzero.stacksonstacks.api.Pile;
-import com.tierzero.stacksonstacks.api.PileItem;
 import com.tierzero.stacksonstacks.block.tile.TilePile;
+import com.tierzero.stacksonstacks.pile.Pile;
+import com.tierzero.stacksonstacks.pile.PileItem;
 import com.tierzero.stacksonstacks.util.ConfigHandler;
 import com.tierzero.stacksonstacks.util.StackUtils;
 

@@ -2,7 +2,7 @@ package com.tierzero.stacksonstacks.compat;
 
 import java.awt.Color;
 
-import com.tierzero.stacksonstacks.api.PileItemRegistry;
+import com.tierzero.stacksonstacks.pile.PileItemRegistry;
 import com.tierzero.stacksonstacks.util.BlockStack;
 
 import cpw.mods.fml.common.Loader;

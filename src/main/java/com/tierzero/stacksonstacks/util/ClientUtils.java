@@ -6,8 +6,8 @@ import java.io.IOException;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import com.tierzero.stacksonstacks.api.PileItem;
-import com.tierzero.stacksonstacks.api.PileItemRegistry;
+import com.tierzero.stacksonstacks.pile.PileItem;
+import com.tierzero.stacksonstacks.pile.PileItemRegistry;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
