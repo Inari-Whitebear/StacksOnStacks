@@ -21,154 +21,88 @@ public class Pile {
 	private static final String TAG_PILE_STACK = "inventory";
 	private static final String TAG_PILE_STACKSIZE = "stacksize";
 	private static final String TAG_TYPE = "pile_type";
-	private ItemStack pileStack;
+	private ItemStack itemStack;
 	private int type;
-	private float x;
-	private float y;
-	private float z;
 
-	public Pile(float x, float y, float z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+	public void onLeftClicked(World world, EntityPlayer player, int pilePosX, int pilePosY, int pilePosZ) {
+		removeFromPile(world, player, pilePosX, pilePosY, pilePosZ);
 	}
-
-	public int getType() {
-		return type;
-	}
-
-	public ItemStack getPileStack() {
-		return pileStack;
-	}
-
-	public int getAmountStored() {
-		if (pileStack != null) {
-			return pileStack.stackSize;
-		}
-
-		return 0;
-	}
-
-	private boolean shouldUseEntireStack(EntityPlayer player) {
-		return player.isSneaking();
-	}
-
-	public void onLeftClicked(World world, EntityPlayer player) {
-		removeFromPile(world, player, shouldUseEntireStack(player));
-	}
-
+	
 	public boolean onRightClicked(EntityPlayer player, ItemStack stack) {
 		if (stack != null) {
-			if (pileStack == null && (getType() != -1 && PileItemRegistry.isValidPileItem(stack))) {
-				createPile(player, stack, shouldUseEntireStack(player));
+			if (itemStack == null && (getType() != -1 && PileItemRegistry.isValidPileItem(stack))) {
+				createPile(player, stack);
 				return true;
-			} else if (pileStack != null && pileStack.getItem() != null && pileStack.isItemEqual(stack)) {
-				addToPile(player, stack, shouldUseEntireStack(player));
+			} else if (itemStack != null && itemStack.getItem() != null && itemStack.isItemEqual(stack)) {
+				addToPile(player, stack);
 				return true;
 			}
-
-			return false;
 		}
 
 		return false;
-
 	}
 
-	public void createPile(EntityPlayer player, ItemStack stack, boolean entireStack) {
-		int initialAmount = entireStack ? stack.stackSize : 1;
-		pileStack = StackUtils.getItemsFromStack(stack, initialAmount);
+	private void createPile(EntityPlayer player, ItemStack stack) {
+		int initialAmount = shouldUseEntireStack(player) ? stack.stackSize : 1;
+		itemStack = StackUtils.getItemsFromStack(stack, initialAmount);
 		findType(stack);
 		StackUtils.decrementStack(player, stack, initialAmount);
+		playSoundPlaced(player);
 	}
 
-	public void addToPile(EntityPlayer player, ItemStack stack, boolean entireStack) {
-		int remainingSpace = getMaxStored() - pileStack.stackSize;
+	private void addToPile(EntityPlayer player, ItemStack stack) {
+		int remainingSpace = getMaxStored() - itemStack.stackSize;
 		if (remainingSpace != 0) {
-			int amountToAdd = 1;
+			int amountToAdd = shouldUseEntireStack(player) ? Math.min(remainingSpace, stack.stackSize) : 1;
 
-			if (entireStack) {
-				amountToAdd = Math.min(remainingSpace, stack.stackSize);
-			}
-			pileStack.stackSize += amountToAdd;
+			itemStack.stackSize += amountToAdd;
 			StackUtils.decrementStack(player, stack, amountToAdd);
 			
-			if(type == 2) {
-				player.worldObj.playSoundEffect(x, y, z, "dig.sand", .75f, player.worldObj.rand.nextFloat() * 0.1F + 0.9F);
-			} else {
-				player.worldObj.playSoundEffect(x, y, z, "dig.stone", .75f, player.worldObj.rand.nextFloat() * 0.1F + 0.9F);
-			}
+			playSoundPlaced(player);
 		}
 	}
+	
+	private void removeFromPile(World world, EntityPlayer player, int pilePosX, int pilePosY, int pilePosZ) {
+		if (itemStack != null) {
+			int amountToRemove = shouldUseEntireStack(player) ? itemStack.stackSize : 1;
 
-	public void removeFromPile(World world, EntityPlayer player, boolean entireStack) {
-		if (pileStack != null) {
-			int amountToRemove = 1;
+			ItemStack stackToDrop = StackUtils.getItemsFromStack(itemStack, amountToRemove);
+			StackUtils.decrementStack(itemStack, amountToRemove);
 
-			if (entireStack) {
-				amountToRemove = pileStack.stackSize;
+			boolean couldPlaceStackInPlayerInventory = player.inventory.addItemStackToInventory(stackToDrop);
+
+			if (!couldPlaceStackInPlayerInventory) {
+				StackUtils.spawnItemInWorld(world, pilePosX, pilePosY, pilePosZ, stackToDrop);
 			}
-
-			ItemStack stackToDrop = StackUtils.getItemsFromStack(pileStack, amountToRemove);
-			StackUtils.decrementStack(pileStack, amountToRemove);
-
-			boolean addedToPlayer = player.inventory.addItemStackToInventory(stackToDrop);
-
-			if (!addedToPlayer) {
-				StackUtils.spawnItemInWorld(world, (int) x, (int) y, (int) z, stackToDrop);
-			}
-			if(type == 2) {
-				world.playSoundEffect(x, y, z, "dig.sand", .75f, player.worldObj.rand.nextFloat() * 0.1F + 0.9F);
-			} else {
-				world.playSoundEffect(x, y, z, "random.pop", .25f, player.worldObj.rand.nextFloat() * 0.1F + 0.9F);
-			}
+			
+			playSoundRemoved(player);
 		}
 	}
-
-	public void debugCreatePile(ItemStack stack) {
-		findType(stack);
-		pileStack = stack;
-		pileStack.stackSize = getMaxStored() / 2;
+	
+	private void playSoundPlaced(EntityPlayer player) {
+		if(type == 2) {
+			player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, "dig.sand", .75f, player.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+		} else {
+			player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, "dig.stone", .75f, player.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+		}
 	}
-
-	public void findType(ItemStack stack) {
-
+	
+	private void playSoundRemoved(EntityPlayer player) {
+		if(type == 2) {
+			player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, "dig.sand", .75f, player.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+		} else {
+			player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, "random.pop", .25f, player.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+		}
+	}
+	
+	private boolean shouldUseEntireStack(EntityPlayer player) {
+		return player.isSneaking();
+	}
+		
+	private void findType(ItemStack stack) {
 		type = PileItemRegistry.getPileType(stack);
 	}
-
-	public void readFromNBT(NBTTagCompound tag) {
-
-		NBTTagCompound inventoryTag = tag.getCompoundTag(TAG_PILE_STACK);
-		type = tag.getInteger(TAG_TYPE);
-		pileStack = ItemStack.loadItemStackFromNBT(inventoryTag);
-		if (tag.getTag(TAG_PILE_STACKSIZE) != null) {
-			pileStack.stackSize = tag.getInteger(TAG_PILE_STACKSIZE);
-		}
-		
-		// If null then its probably saved as the pre 0.9.5 nbt format
-		if (pileStack == null) {
-			// Will remove eventually, to stop breaking of existing ingot piles
-			pileStack = StackUtils.getStackFromInfo(tag.getInteger("ingot"), tag.getByte("stackSize"),
-					tag.getInteger("meta"));
-		}
-	}
-
-	public void writeToNBT(NBTTagCompound tag) {
-		NBTTagCompound inventoryTag = new NBTTagCompound();
-		tag.setInteger(TAG_TYPE, this.type);
-		if (pileStack != null) {
-			pileStack.writeToNBT(inventoryTag);
-			tag.setInteger(TAG_PILE_STACKSIZE, pileStack.stackSize);
-			tag.setTag(TAG_PILE_STACK, inventoryTag);
-
-		}
-	}
-
-	public void setPosition(int xCoord, int yCoord, int zCoord) {
-		this.x = xCoord;
-		this.y = yCoord;
-		this.z = zCoord;
-	}
-
+	
 	public int getMaxStored() {
 		switch(type) {
 		case 0: 
@@ -177,8 +111,49 @@ public class Pile {
 			return ConfigHandler.maxGemStackSize;
 		case 2:
 			return ConfigHandler.maxDustStackSize;
+		default:
+			return 64;
+		}
+	}
+	
+	public void readFromNBT(NBTTagCompound tag) {
+		NBTTagCompound inventoryTag = tag.getCompoundTag(TAG_PILE_STACK);
+		
+		this.type = tag.getInteger(TAG_TYPE);
+		this.itemStack = ItemStack.loadItemStackFromNBT(inventoryTag);
+		this.itemStack.stackSize = tag.getInteger(TAG_PILE_STACKSIZE);
+	}
+
+	public void writeToNBT(NBTTagCompound tag) {
+		NBTTagCompound inventoryTag = new NBTTagCompound();
+		if (itemStack != null) {
+			itemStack.writeToNBT(inventoryTag);
+			tag.setInteger(TAG_PILE_STACKSIZE, itemStack.stackSize);
+			tag.setTag(TAG_PILE_STACK, inventoryTag);
 		}
 		
-		return 64;
+		tag.setInteger(TAG_TYPE, this.type);
+	}
+
+	public void debugCreatePile(ItemStack stack) {
+		findType(stack);
+		itemStack = stack;
+		itemStack.stackSize = getMaxStored() / 2;
+	}
+
+	public int getAmountStored() {
+		if (itemStack != null) {
+			return itemStack.stackSize;
+		}
+
+		return 0;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public ItemStack getItemStack() {
+		return itemStack;
 	}
 }

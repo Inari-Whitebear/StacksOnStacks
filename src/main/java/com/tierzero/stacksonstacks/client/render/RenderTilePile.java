@@ -29,7 +29,7 @@ public class RenderTilePile implements ISimpleBlockRenderingHandler {
 		Pile pile = tilePile.getPile();	
 		if(pile != null) {
 			
-			ItemStack itemStack = pile.getPileStack();
+			ItemStack itemStack = pile.getItemStack();
 			if(itemStack != null) {
 				Tessellator tessellator = Tessellator.instance;
 				
@@ -38,19 +38,19 @@ public class RenderTilePile implements ISimpleBlockRenderingHandler {
 					tessellator.addTranslation(x, y, z);
 					switch(pile.getType()) {
 					case 0:
-						ingotRender.render(pile.getPileStack());
+						ingotRender.render(itemStack);
 						break;
 					case 1:
 						tessellator.draw();
 						Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationItemsTexture);
 						tessellator.startDrawingQuads();
-						gemRender.render(pile.getPileStack());
+						gemRender.render(itemStack);
 						tessellator.draw();
 						Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 						tessellator.startDrawingQuads();
 						break;
 					case 2:
-						dustRender.render(pile.getPileStack());
+						dustRender.render(itemStack);
 						break;
 					}
 					tessellator.addTranslation(-x, -y, -z);

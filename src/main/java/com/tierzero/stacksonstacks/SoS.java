@@ -29,7 +29,7 @@ public class SoS {
 	@Instance
 	public static SoS instance;
 
-	@SidedProxy(serverSide = "com.tierzero.stacksonstacks.CommonProxy", clientSide = "com.tierzero.stacksonstacks.ClientProxy", modId = MODID)
+	@SidedProxy(serverSide = "com.tierzero.stacksonstacks.core.CommonProxy", clientSide = "com.tierzero.stacksonstacks.core.ClientProxy", modId = MODID)
 	public static CommonProxy proxy;
 
 	@EventHandler

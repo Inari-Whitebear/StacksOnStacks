@@ -21,7 +21,7 @@ public class TilePile extends TileEntity {
 	private Pile pile;
 
 	public TilePile() {
-		this.pile = new Pile(this.xCoord, this.yCoord, this.zCoord);
+		this.pile = new Pile();
 
 	}
 
@@ -32,7 +32,7 @@ public class TilePile extends TileEntity {
 		if (blockAbove instanceof BlockPile) {
 			blockAbove.onBlockClicked(worldObj, xCoord, yCoord + 1, zCoord, player);
 		} else {
-			pile.onLeftClicked(this.worldObj, player);
+			pile.onLeftClicked(this.worldObj, player, xCoord, yCoord, zCoord);
 
 			if (pile.getAmountStored() <= 0) {
 				this.worldObj.setBlockToAir(xCoord, yCoord, zCoord);
@@ -73,7 +73,6 @@ public class TilePile extends TileEntity {
 	public void update() {
 		markDirty();
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		pile.setPosition(this.xCoord, this.yCoord, this.zCoord);
 	}
 
 	@Override
@@ -83,8 +82,8 @@ public class TilePile extends TileEntity {
 		if(pile != null) {
 			pile.readFromNBT(tag);
 
-			if (pile.getPileStack() != null && pile.getPileStack().getItem() == null
-					|| PileItemRegistry.getPileItem(pile.getPileStack()) == null) {
+			if (pile.getItemStack() != null && pile.getItemStack().getItem() == null
+					|| PileItemRegistry.getPileItem(pile.getItemStack()) == null) {
 				this.worldObj.setBlockToAir(xCoord, yCoord, zCoord);
 			}
 		}

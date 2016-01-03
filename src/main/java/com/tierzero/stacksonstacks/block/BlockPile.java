@@ -125,7 +125,7 @@ public class BlockPile extends BlockContainer {
 		if (tile != null) {
 			Pile pile = tile.getPile();
 
-			ItemStack pileStack = pile.getPileStack();
+			ItemStack pileStack = pile.getItemStack();
 			int type = pile.getType();
 			if (pileStack != null) {
 
@@ -154,7 +154,7 @@ public class BlockPile extends BlockContainer {
 	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			ItemStack pileStack = ((TilePile) tile).getPile().getPileStack();
+			ItemStack pileStack = ((TilePile) tile).getPile().getItemStack();
 
 			int stackSize = pileStack.stackSize;
 
@@ -184,10 +184,10 @@ public class BlockPile extends BlockContainer {
 	public void onBlockPreDestroy(World world, int x, int y, int z, int meta) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile != null) {
-			ItemStack stackToDrop = ((TilePile) tile).getPile().getPileStack();
+			ItemStack stackToDrop = ((TilePile) tile).getPile().getItemStack();
 
 			if (stackToDrop != null && stackToDrop.getItem() != null) {
-				dropBlockAsItem(world, x, y, z, ((TilePile) tile).getPile().getPileStack());
+				dropBlockAsItem(world, x, y, z, ((TilePile) tile).getPile().getItemStack());
 			}
 		}
 	}
@@ -227,10 +227,11 @@ public class BlockPile extends BlockContainer {
 	public int getLightValue(IBlockAccess world, int x, int y, int z) {
 
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile != null && ((TilePile) tile).getPile().getPileStack() != null) {
-			Item item = ((TilePile) tile).getPile().getPileStack().getItem();
-			if (item != null && item == Items.glowstone_dust)
+		if (tile != null && ((TilePile) tile).getPile().getItemStack() != null) {
+			Item item = ((TilePile) tile).getPile().getItemStack().getItem();
+			if (item != null && item == Items.glowstone_dust) {
 				return 15;
+			}
 		}
 		return 0;
 	}
