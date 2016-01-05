@@ -2,8 +2,6 @@ package com.tierzero.stacksonstacks.pile;
 
 import java.awt.Color;
 
-import com.tierzero.stacksonstacks.util.BlockStack;
-
 import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -14,7 +12,6 @@ public class PileItem {
 	private ItemStack item;
 	private int type;
 	private Color colour;
-	public BlockStack blockOverride;
 
 	public PileItem(ItemStack stack, int type) {
 		this(stack.getItem(), stack.getItemDamage(), type);
@@ -53,14 +50,6 @@ public class PileItem {
 		return item;
 	}
 
-	public IIcon getOverride() {
-		if (blockOverride != null) {
-			return blockOverride.getIcon();
-		}
-		
-		return null;
-	}
-
 	public PileItem setColor(Color colour) {
 		this.colour = colour;
 		return this;
@@ -73,11 +62,7 @@ public class PileItem {
 	public int getType() {
 		return type;
 	}
-
-	public void setIconOverride(BlockStack override) {
-		blockOverride = override;
-	}
-
+	
 	@Override
 	public String toString() {
 		return String.format("Registered %s as valid pile item", getPileStack().getDisplayName());

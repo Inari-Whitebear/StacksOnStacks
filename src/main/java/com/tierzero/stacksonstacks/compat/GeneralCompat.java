@@ -1,9 +1,6 @@
 package com.tierzero.stacksonstacks.compat;
 
-import java.awt.Color;
-
 import com.tierzero.stacksonstacks.pile.PileItemRegistry;
-import com.tierzero.stacksonstacks.util.BlockStack;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
@@ -85,12 +82,9 @@ public class GeneralCompat extends ModCompat {
 		}
 
 		if (Loader.isModLoaded(MOD_AVARITIA)) {
-			PileItemRegistry.registerIngot(getItemStack(MOD_AVARITIA, "Resource", 1),
-					new BlockStack(MOD_AVARITIA + ":Crystal_Matrix"));
-			PileItemRegistry.registerIngot(getItemStack(MOD_AVARITIA, "Resource", 4),
-					new BlockStack(MOD_AVARITIA + ":Resource_Block"));
-			PileItemRegistry.registerIngot(getItemStack(MOD_AVARITIA, "Resource", 6),
-					new BlockStack(MOD_AVARITIA + ":Resource_Block:1"));
+			PileItemRegistry.registerIngot(getItemStack(MOD_AVARITIA, "Resource", 1));
+			PileItemRegistry.registerIngot(getItemStack(MOD_AVARITIA, "Resource", 4));
+			PileItemRegistry.registerIngot(getItemStack(MOD_AVARITIA, "Resource", 6));
 		}
 		if (Loader.isModLoaded(MOD_ROTARYCRAFT)) {
 			/*PileItemRegistry.registerIngot(getItemStack(MOD_ROTARYCRAFT, "rotarycraft_item_shaftcraft", 1))

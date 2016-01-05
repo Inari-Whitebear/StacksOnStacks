@@ -47,10 +47,6 @@ public class PileRenderIngot extends PileRender {
 
 			Color color = pileitem.getColor();
 			IIcon icon = pileitem.getIcon(0);
-			if (pileitem.getOverride() != null) {
-				icon = pileitem.getOverride();
-				color = Color.white;
-			}
 			double Umin = icon.getMinU();
 			double Vmax = icon.getMaxV();
 			double Vmin = icon.getMinV();
