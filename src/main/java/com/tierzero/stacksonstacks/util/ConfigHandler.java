@@ -88,10 +88,10 @@ public class ConfigHandler {
 		invalidIngots = config.getStringList("invalidIngots", CATEGORY_BLACKLIST,
 				new String[] { "ingotPile", "ingotDouble", "ingotTriple", "ingotQuad", "ingotQuin" },
 				"List for disabling ingots, put a string that is inside the name or oredictionary of the item");
-		invalidGems = config.getStringList("invalidGems", CATEGORY_BLACKLIST, new String[] { "color_lightgem" },
-				"List for disabling gems, put a string that is inside the name or oredictionaryof the item");
+		invalidGems = config.getStringList("invalidGems", CATEGORY_BLACKLIST, new String[] { "color_lightgem", "gemOre" },
+				"List for disabling gems, put a string that is inside the name or oredictionary of the item");
 		invalidDusts = config.getStringList("invalidDusts", CATEGORY_BLACKLIST,
-				new String[] { "small", "tiny", "Tiny", "Small", "indust", "gendustry", "Indust", "mold" },
+				new String[] { "small", "tiny", "Tiny", "Small", "indust", "gendustry", "Indust", "mold"},
 				"List for disabling dusts, put a string that is inside the name or oredictionary of the item");
 
 		maxIngotStackSize = config.getInt("maxIngotStackSize", CATEGORY_GENERAL, 64, 1, Integer.MAX_VALUE,
