@@ -79,12 +79,6 @@ public class PileColorizer {
 			pileitemColor = new Color(156, 156, 156);
 		}
 
-		if (PileItemRegistry.getPileType(stack) == 0) {
-			float[] hsb = new float[3];
-			Color.RGBtoHSB(pileitemColor.getRed(), pileitemColor.getGreen(), pileitemColor.getBlue(), hsb);
-
-			pileitemColor = new Color(Color.HSBtoRGB(((float) hsb[0]), ((float) (hsb[1] * 4) % 1), ((float) hsb[2])));
-		}
 		return pileitemColor;
 	}
 
