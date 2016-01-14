@@ -3,18 +3,11 @@ package com.tierzero.stacksonstacks.pile;
 import com.tierzero.stacksonstacks.util.ConfigHandler;
 import com.tierzero.stacksonstacks.util.StackUtils;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.audio.SoundPoolEntry;
-import net.minecraft.client.audio.SoundList.SoundEntry;
-import net.minecraft.client.audio.SoundRegistry;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-import scala.actors.threadpool.Arrays;
 
 public class Pile {
 
@@ -24,8 +17,8 @@ public class Pile {
 	private ItemStack itemStack;
 	private int type;
 
-	public void onLeftClicked(World world, EntityPlayer player, int pilePosX, int pilePosY, int pilePosZ) {
-		removeFromPile(world, player, pilePosX, pilePosY, pilePosZ);
+	public void onLeftClicked(World world, EntityPlayer player, BlockPos position) {
+		removeFromPile(world, player, position);
 	}
 	
 	public boolean onRightClicked(EntityPlayer player, ItemStack stack) {
@@ -62,7 +55,7 @@ public class Pile {
 		}
 	}
 	
-	private void removeFromPile(World world, EntityPlayer player, int pilePosX, int pilePosY, int pilePosZ) {
+	private void removeFromPile(World world, EntityPlayer player, BlockPos position) {
 		if (itemStack != null) {
 			int amountToRemove = shouldUseEntireStack(player) ? itemStack.stackSize : 1;
 
@@ -72,7 +65,7 @@ public class Pile {
 			boolean couldPlaceStackInPlayerInventory = player.inventory.addItemStackToInventory(stackToDrop);
 
 			if (!couldPlaceStackInPlayerInventory) {
-				StackUtils.spawnItemInWorld(world, pilePosX, pilePosY, pilePosZ, stackToDrop);
+				StackUtils.spawnItemInWorld(world, position, stackToDrop);
 			}
 			
 			playSoundRemoved(player);

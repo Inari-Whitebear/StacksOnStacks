@@ -4,6 +4,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 public class StackUtils {
@@ -43,11 +44,11 @@ public class StackUtils {
 		removeStackIfEmpty(player, stack);
 	}
 
-	public static void spawnItemInWorld(World world, int x, int y, int z, ItemStack stack) {
+	public static void spawnItemInWorld(World world, BlockPos position, ItemStack stack) {
 		if (!world.isRemote) {
 			EntityItem item = new EntityItem(world);
 			item.setEntityItemStack(stack);
-			item.setPosition(x, y, z);
+			item.setPosition(position.getX(), position.getY(), position.getZ());
 			world.spawnEntityInWorld(item);
 		}
 	}

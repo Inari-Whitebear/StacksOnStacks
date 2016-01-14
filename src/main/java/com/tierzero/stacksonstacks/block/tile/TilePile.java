@@ -6,6 +6,7 @@ import com.tierzero.stacksonstacks.pile.Pile;
 import com.tierzero.stacksonstacks.pile.PileItemRegistry;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,6 +14,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 
 public class TilePile extends TileEntity {
 
@@ -25,17 +27,39 @@ public class TilePile extends TileEntity {
 
 	}
 
+	public void debugCreatePile(ItemStack stack) {
+
+		pile.debugCreatePile(stack);
+	}
+
+	@Override
+	public Packet getDescriptionPacket() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		this.writeToNBT(nbt);
+		return new S35PacketUpdateTileEntity(this.pos, -999, nbt);
+	}
+
+	public Pile getPile() {
+		return this.pile;
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
+		this.readFromNBT(packet.getNbtCompound());
+	}
+
 	public void onLeftClicked(EntityPlayer player) {
 
-		Block blockAbove = worldObj.getBlock(xCoord, yCoord + 1, zCoord);
+		BlockPos positionAbove = pos.up();
+		Block blockAbove = worldObj.getBlockState(positionAbove).getBlock();
 
 		if (blockAbove instanceof BlockPile) {
-			blockAbove.onBlockClicked(worldObj, xCoord, yCoord + 1, zCoord, player);
+			blockAbove.onBlockClicked(worldObj, positionAbove, player);
 		} else {
-			pile.onLeftClicked(this.worldObj, player, xCoord, yCoord, zCoord);
+			pile.onLeftClicked(this.worldObj, player, pos);
 
 			if (pile.getAmountStored() <= 0) {
-				this.worldObj.setBlockToAir(xCoord, yCoord, zCoord);
+				this.worldObj.setBlockToAir(pos);
 			}
 		}
 		update();
@@ -44,35 +68,27 @@ public class TilePile extends TileEntity {
 
 	public boolean onRightClicked(EntityPlayer player, ItemStack stack) {
 		update();
+		BlockPos positionAbove = pos.up();
 		if (stack != null) {
-			Block blockAbove = worldObj.getBlock(xCoord, yCoord + 1, zCoord);
-			if (worldObj.isAirBlock(xCoord, yCoord + 1, zCoord)) {
+			Block blockAbove = worldObj.getBlockState(positionAbove).getBlock();
+			if (worldObj.isAirBlock(positionAbove)) {
 				if (pile.getAmountStored() == pile.getMaxStored() && pile.getType() != 2 && stack.stackSize > 0) {
-					worldObj.setBlock(xCoord, yCoord + 1, zCoord, SoS.blockPile);
-					worldObj.getBlock(xCoord, yCoord + 1, zCoord).onBlockPlacedBy(worldObj, xCoord, yCoord + 1, zCoord,
-							player, stack);
+					worldObj.setBlockState(positionAbove, SoS.blockPile.getDefaultState());
+					
+					IBlockState state = worldObj.getBlockState(positionAbove);
+					state.getBlock().onBlockPlacedBy(worldObj, positionAbove, state, player, stack);
 				} else {
 					pile.onRightClicked(player, stack);
-
 				}
 				return true;
 			} else if (blockAbove instanceof BlockPile) {
-				return ((TilePile) worldObj.getTileEntity(xCoord, yCoord + 1, zCoord)).onRightClicked(player, stack);
+				return ((TilePile) worldObj.getTileEntity(positionAbove)).onRightClicked(player, stack);
 			} else {
 				pile.onRightClicked(player, stack);
 			}
 		}
 
 		return false;
-	}
-
-	private boolean shouldUseEntireStack(EntityPlayer player) {
-		return player.isSneaking();
-	}
-
-	public void update() {
-		markDirty();
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
 	@Override
@@ -84,9 +100,18 @@ public class TilePile extends TileEntity {
 
 			if (pile.getItemStack() != null && pile.getItemStack().getItem() == null
 					|| PileItemRegistry.getPileItem(pile.getItemStack()) == null) {
-				this.worldObj.setBlockToAir(xCoord, yCoord, zCoord);
+				this.worldObj.setBlockToAir(pos);
 			}
 		}
+	}
+
+	private boolean shouldUseEntireStack(EntityPlayer player) {
+		return player.isSneaking();
+	}
+
+	public void update() {
+		markDirty();
+		worldObj.markBlockForUpdate(pos);
 	}
 
 	@Override
@@ -94,26 +119,5 @@ public class TilePile extends TileEntity {
 		super.writeToNBT(tag);
 
 		pile.writeToNBT(tag);
-	}
-
-	@Override
-	public Packet getDescriptionPacket() {
-		NBTTagCompound nbt = new NBTTagCompound();
-		this.writeToNBT(nbt);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, -999, nbt);
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.func_148857_g());
-	}
-
-	public void debugCreatePile(ItemStack stack) {
-
-		pile.debugCreatePile(stack);
-	}
-
-	public Pile getPile() {
-		return this.pile;
 	}
 }

@@ -12,10 +12,10 @@ import javax.imageio.ImageIO;
 
 import com.tierzero.stacksonstacks.util.ClientUtils;
 
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PileColorizer {
 

@@ -19,7 +19,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 public class ClientUtils {
-	private static Tessellator tes = Tessellator.instance;
+	private static Tessellator tes = Tessellator.getInstance();
 
 	@SideOnly(Side.CLIENT)
 	private static String getIconName(ItemStack stack) {

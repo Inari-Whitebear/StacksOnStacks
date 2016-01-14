@@ -1,7 +1,0 @@
-eclipse/
-bin/
-.gradle/
-.classpath
-.project
-.settings/org.eclipse.jdt.core.prefs
-.metadata
