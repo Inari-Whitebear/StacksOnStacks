@@ -9,110 +9,17 @@ import org.lwjgl.opengl.GL12;
 import com.tierzero.stacksonstacks.pile.PileItem;
 import com.tierzero.stacksonstacks.pile.PileItemRegistry;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ClientUtils {
-	private static Tessellator tes = Tessellator.getInstance();
-
-	@SideOnly(Side.CLIENT)
-	private static String getIconName(ItemStack stack) {
-
-		IIcon icon = stack.getItem().getIconFromDamage(stack.getItemDamage());
-		if (icon != null) {
-			return icon.getIconName();
-		}
-		return null;
-	}
-
-	private static String[] splitString(String regex, String stringToSplit) {
-		return stringToSplit.split(regex);
-	}
-
-	private static String buildPath(String[] seperatedName) {
-		String iconName = "textures/items/";
-
-		for (int i = 1; i < seperatedName.length - 1; i++) {
-			iconName += seperatedName[i] + "/";
-		}
-
-		iconName += seperatedName[seperatedName.length - 1] + ".png";
-
-		return iconName;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public static IResource getIconResource(ItemStack stack) {
-
-		IResource resource = fromIconName(stack);
-
-		if (resource == null) {
-			PileItem pileItem = PileItemRegistry.getPileItem(stack);
-			String registeredName = pileItem.getItemName();
-			String unlocalizedName = pileItem.getName();
-
-			resource = fromNames(registeredName, unlocalizedName);
-
-		}
-
-		return resource;
-	}
-
-	private static IResource fromIconName(ItemStack stack) {
-
-		String iconName = getIconName(stack);
-
-		if (iconName != null) {
-			String[] seperatedIconName = splitString("[:/]+", iconName);
-			String domain = seperatedIconName[0].toLowerCase();
-
-			// Vanilla check
-			if (domain.equals(seperatedIconName[seperatedIconName.length - 1])) {
-				domain = "minecraft";
-			}
-
-			String path = buildPath(seperatedIconName);
-
-			return getResource(domain, path);
-		}
-
-		return null;
-	}
-
-	private static IResource fromNames(String registeredName, String unlocalizedName) {
-		registeredName = registeredName.replaceAll("item.", "");
-		unlocalizedName = unlocalizedName.replaceAll("item.", "");
-
-		String[] seperatedName;
-		if (registeredName.contains(":")) {
-			seperatedName = splitString("[':']+", registeredName);
-
-		} else if (unlocalizedName.contains(":")) {
-			seperatedName = splitString("[':']+", unlocalizedName);
-		} else {
-			unlocalizedName += "." + registeredName;
-
-			seperatedName = splitString("['.']+", unlocalizedName);
-		}
-
-		String domain = seperatedName[0];
-		String path = buildPath(seperatedName);
-		return getResource(domain, path);
-	}
-
-	private static IResource getResource(String domain, String path) {
-		try {
-			return Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(domain, path));
-		} catch (IOException e) {
-			return null;
-		}
-	}
+	private static WorldRenderer worldRenderer = Tessellator.getInstance().getWorldRenderer();
 
 	public static void drawQuad(double Umin, double Vmin, double Umax, double Vmax, double scale) {
 		tes.addVertexWithUV(0.0D, 0.0D, 1.0D * scale, (double) Umax, (double) Vmin);

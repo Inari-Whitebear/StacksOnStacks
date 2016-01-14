@@ -3,17 +3,17 @@ package com.tierzero.stacksonstacks.pile;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import com.tierzero.stacksonstacks.util.ClientUtils;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -44,7 +44,7 @@ public class PileColorizer {
 		} catch (Exception e) {
 		}
 
-		for (int pass = 0; pass < stack.getItem().getRenderPasses(stack.getItemDamage()); pass++) {
+		for (int pass = 0; pass < stack.getItem().getModel(stack, null, 0).g(stack.getItemDamage()); pass++) {
 
 			int stackColor = getStackColour(stack, pass);
 
@@ -52,16 +52,7 @@ public class PileColorizer {
 				colors.add(new Color(stackColor));
 			}
 		}
-		if (Loader.isModLoaded("gregtech")) {
-			try {
-				Color gregColor = getGregtechColor(stack);
-				if (gregColor != null) {
-					colors.clear();
-					colors.add(gregColor);
-				}
-			} catch (Exception e) {
-			}
-		}
+		
 		float red = 0;
 		float green = 0;
 		float blue = 0;
@@ -83,20 +74,11 @@ public class PileColorizer {
 	}
 
 	private static Color getColorFromTexture(ItemStack stack) throws IOException {
-		BufferedImage texture = ImageIO.read(ClientUtils.getIconResource(stack).getInputStream());
+		Item item = stack.getItem();
+		ModelResourceLocation modelResourceLocation = item.getModel(stack, null, 0);
+		IResource itemTexture = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(modelResourceLocation.getResourceDomain(), modelResourceLocation.getResourcePath()));
+		BufferedImage texture = ImageIO.read(itemTexture.getInputStream());
 		return getAverageColor(texture);
-	}
-
-	private static Color getGregtechColor(ItemStack stack) throws ClassNotFoundException, NoSuchMethodException,
-			SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		Class<?> cls = Class.forName("gregtech.api.items.GT_MetaGenerated_Item");
-		Class<?> itemCls = stack.getItem().getClass();
-		if (cls.isAssignableFrom(itemCls)) {
-			Method m = itemCls.getMethod("getRGBa", ItemStack.class);
-			short[] rgba = (short[]) m.invoke(stack.getItem(), stack);
-			return new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
-		}
-		return null;
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -3,9 +3,9 @@ package com.tierzero.stacksonstacks.client;
 import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.util.ConfigHandler;
 
-import cpw.mods.fml.client.config.GuiConfig;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.client.config.GuiConfig;
 
 public class GuiConfigSOS extends GuiConfig {
 
