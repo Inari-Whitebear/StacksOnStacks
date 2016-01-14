@@ -7,10 +7,10 @@ import java.util.Set;
 import com.google.common.collect.Lists;
 import com.tierzero.stacksonstacks.util.ConfigHandler;
 
-import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
-import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.FMLControlledNamespacedRegistry;
+import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class PileItemFinder {

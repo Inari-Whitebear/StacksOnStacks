@@ -44,13 +44,11 @@ public class PileColorizer {
 		} catch (Exception e) {
 		}
 
-		for (int pass = 0; pass < stack.getItem().getModel(stack, null, 0).g(stack.getItemDamage()); pass++) {
 
-			int stackColor = getStackColour(stack, pass);
+		int stackColor = getStackColour(stack, 1);
 
-			if (stackColor != 16777215) {
-				colors.add(new Color(stackColor));
-			}
+		if (stackColor != 16777215) {
+			colors.add(new Color(stackColor));
 		}
 		
 		float red = 0;

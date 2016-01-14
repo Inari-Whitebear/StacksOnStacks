@@ -22,10 +22,10 @@ public class ClientUtils {
 	private static WorldRenderer worldRenderer = Tessellator.getInstance().getWorldRenderer();
 
 	public static void drawQuad(double Umin, double Vmin, double Umax, double Vmax, double scale) {
-		tes.addVertexWithUV(0.0D, 0.0D, 1.0D * scale, (double) Umax, (double) Vmin);
-		tes.addVertexWithUV(1.0D * scale, 0.0D, 1.0D * scale, (double) Umin, (double) Vmin);
-		tes.addVertexWithUV(1.0D * scale, 0.0D, 0.0D, (double) Umin, (double) Vmax);
-		tes.addVertexWithUV(0.0D, 0.0D, 0.0D, (double) Umax, (double) Vmax);
+		worldRenderer.addVertexWithUV(0.0D, 0.0D, 1.0D * scale, (double) Umax, (double) Vmin);
+		worldRenderer.addVertexWithUV(1.0D * scale, 0.0D, 1.0D * scale, (double) Umin, (double) Vmin);
+		worldRenderer.addVertexWithUV(1.0D * scale, 0.0D, 0.0D, (double) Umin, (double) Vmax);
+		worldRenderer.addVertexWithUV(0.0D, 0.0D, 0.0D, (double) Umax, (double) Vmax);
 	}
 
 	public static void drawItem(IIcon icon, double scale) {
@@ -41,45 +41,45 @@ public class ClientUtils {
 	public static void drawRectangularPrism(double x, double y, double z, double x1, double y1, double z1,
 			double slantX, double slantZ, double Umin, double Vmin, double Umax, double Vmax, Color color) {
 
-		tes.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
-		tes.addVertexWithUV(x1, y, z, Umin, Vmax);
-		tes.addVertexWithUV(x1, y, z1, Umin, Vmin);
-		tes.addVertexWithUV(x, y, z1, Umax, Vmin);
-		tes.addVertexWithUV(x, y, z, Umax, Vmax);
+		worldRenderer.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
+		worldRenderer.addVertexWithUV(x1, y, z, Umin, Vmax);
+		worldRenderer.addVertexWithUV(x1, y, z1, Umin, Vmin);
+		worldRenderer.addVertexWithUV(x, y, z1, Umax, Vmin);
+		worldRenderer.addVertexWithUV(x, y, z, Umax, Vmax);
 
 		// Render side 1(up)
 
-		tes.addVertexWithUV(x1 - slantX, y1, z1 - slantZ, Umax, Vmax);
-		tes.addVertexWithUV(x1 - slantX, y1, z + slantZ, Umax, Vmin);
-		tes.addVertexWithUV(x + slantX, y1, z + slantZ, Umin, Vmin);
-		tes.addVertexWithUV(x + slantX, y1, z1 - slantZ, Umin, Vmax);
+		worldRenderer.addVertexWithUV(x1 - slantX, y1, z1 - slantZ, Umax, Vmax);
+		worldRenderer.addVertexWithUV(x1 - slantX, y1, z + slantZ, Umax, Vmin);
+		worldRenderer.addVertexWithUV(x + slantX, y1, z + slantZ, Umin, Vmin);
+		worldRenderer.addVertexWithUV(x + slantX, y1, z1 - slantZ, Umin, Vmax);
 
 		// Render side 2 (north)
 
-		tes.addVertexWithUV(x, y, z, Umin, Vmin);
-		tes.addVertexWithUV(x + slantX, y1, z + slantZ, Umin, Vmax);
-		tes.addVertexWithUV(x1 - slantX, y1, z + slantZ, Umax, Vmax);
-		tes.addVertexWithUV(x1, y, z, Umax, Vmin);
+		worldRenderer.addVertexWithUV(x, y, z, Umin, Vmin);
+		worldRenderer.addVertexWithUV(x + slantX, y1, z + slantZ, Umin, Vmax);
+		worldRenderer.addVertexWithUV(x1 - slantX, y1, z + slantZ, Umax, Vmax);
+		worldRenderer.addVertexWithUV(x1, y, z, Umax, Vmin);
 
 		// Render side 3 (south)
-		tes.addVertexWithUV(x1, y, z1, Umax, Vmin);
-		tes.addVertexWithUV(x1 - slantX, y1, z1 - slantZ, Umax, Vmax);
-		tes.addVertexWithUV(x + slantX, y1, z1 - slantZ, Umin, Vmax);
-		tes.addVertexWithUV(x, y, z1, Umin, Vmin);
+		worldRenderer.addVertexWithUV(x1, y, z1, Umax, Vmin);
+		worldRenderer.addVertexWithUV(x1 - slantX, y1, z1 - slantZ, Umax, Vmax);
+		worldRenderer.addVertexWithUV(x + slantX, y1, z1 - slantZ, Umin, Vmax);
+		worldRenderer.addVertexWithUV(x, y, z1, Umin, Vmin);
 
 		// Render side 4 (west)
 
-		tes.addVertexWithUV(x, y, z, Umin, Vmax);
-		tes.addVertexWithUV(x, y, z1, Umax, Vmax);
-		tes.addVertexWithUV(x + slantX, y1, z1 - slantZ, Umax, Vmin);
-		tes.addVertexWithUV(x + slantX, y1, z + slantZ, Umin, Vmin);
+		worldRenderer.addVertexWithUV(x, y, z, Umin, Vmax);
+		worldRenderer.addVertexWithUV(x, y, z1, Umax, Vmax);
+		worldRenderer.addVertexWithUV(x + slantX, y1, z1 - slantZ, Umax, Vmin);
+		worldRenderer.addVertexWithUV(x + slantX, y1, z + slantZ, Umin, Vmin);
 
 		// Render side 5 (east)
 
-		tes.addVertexWithUV(x1, y, z, Umax, Vmin);
-		tes.addVertexWithUV(x1 - slantX, y1, z + slantZ, Umax, Vmax);
-		tes.addVertexWithUV(x1 - slantX, y1, z1 - slantZ, Umin, Vmax);
-		tes.addVertexWithUV(x1, y, z1, Umin, Vmin);
+		worldRenderer.addVertexWithUV(x1, y, z, Umax, Vmin);
+		worldRenderer.addVertexWithUV(x1 - slantX, y1, z + slantZ, Umax, Vmax);
+		worldRenderer.addVertexWithUV(x1 - slantX, y1, z1 - slantZ, Umin, Vmax);
+		worldRenderer.addVertexWithUV(x1, y, z1, Umin, Vmin);
 		// Render side 6 (Down)
 	}
 

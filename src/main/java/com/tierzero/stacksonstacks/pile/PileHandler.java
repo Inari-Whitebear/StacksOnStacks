@@ -4,35 +4,32 @@ import com.tierzero.stacksonstacks.SoS;
 import com.tierzero.stacksonstacks.block.tile.TilePile;
 import com.tierzero.stacksonstacks.util.StackUtils;
 
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.BlockPos;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class PileHandler {
-
-	private static Block[] blockedBlocks = { Blocks.crafting_table, Blocks.wooden_door, Blocks.trapdoor, Blocks.bed,
-			Blocks.fence_gate };
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void handleBlockPlacement(PlayerInteractEvent event) {
 		if (event.action == Action.RIGHT_CLICK_BLOCK) {
 			ItemStack heldItemStack = event.entityPlayer.getCurrentEquippedItem();
 			if (heldItemStack != null && PileItemRegistry.isValidPileItem(heldItemStack)) {
-				int clickedX = event.x;
-				int clickedY = event.y;
-				int clickedZ = event.z;
+
 				boolean playerSneaking = event.entityPlayer.isSneaking();
 
-				Block blockAtClickedPosition = event.world.getBlock(clickedX, clickedY, clickedZ);
-				TileEntity tileAtClickedPosition = event.world.getTileEntity(clickedX, clickedY, clickedZ);
-
+				BlockPos clickedPosition = event.pos;
+				Block blockAtClickedPosition = event.world.getBlockState(clickedPosition).getBlock();
+				TileEntity tileAtClickedPosition = event.world.getTileEntity(clickedPosition);
+				
 				if (tileAtClickedPosition != null) {
 					if (tileAtClickedPosition instanceof TilePile) {
 						((TilePile) tileAtClickedPosition).onRightClicked(event.entityPlayer, heldItemStack);
@@ -41,24 +38,15 @@ public class PileHandler {
 					return;
 				}
 
-				for (Block blockedBlock : blockedBlocks) {
-					if (blockAtClickedPosition.equals(blockedBlock)) {
-						return;
-					}
-				}
+				BlockPos placementPosition = new BlockPos(clickedPosition.getX() + event.face.getFrontOffsetX(), clickedPosition.getY() + event.face.getFrontOffsetY(), clickedPosition.getZ() + event.face.getFrontOffsetZ());
 
-				int[] coords = getPlacementCoords(clickedX, clickedY, clickedZ, event.face);
 
-				int placementX = coords[0];
-				int placementY = coords[1];
-				int placementZ = coords[2];
+				Block blockAtPlacementPosition = event.world.getBlockState(placementPosition).getBlock();
+				TileEntity tileAtPlacementPosition = event.world.getTileEntity(placementPosition);
 
-				Block blockAtPlacementPosition = event.world.getBlock(placementX, placementY, placementZ);
-				TileEntity tileAtPlacementPosition = event.world.getTileEntity(placementX, placementY, placementZ);
+				if (blockAtPlacementPosition.isAir(event.world, placementPosition)) {
 
-				if (blockAtPlacementPosition.isAir(event.world, placementX, placementY, placementZ)) {
-
-					Block blockBelowPlacementPosition = event.world.getBlock(placementX, placementY - 1, placementZ);
+					Block blockBelowPlacementPosition = event.world.getBlockState(placementPosition.down()).getBlock();
 
 					if (blockBelowPlacementPosition.getMaterial().isSolid() && blockBelowPlacementPosition != SoS.blockPile) {
 						
@@ -73,52 +61,23 @@ public class PileHandler {
 							return;
 						}
 
-						event.world.setBlock(placementX, placementY, placementZ, SoS.blockPile);
-						event.world.getBlock(placementX, placementY, placementZ).onBlockPlacedBy(event.world,
-								placementX, placementY, placementZ, event.entityPlayer, heldItemStack);
+						event.world.setBlockState(placementPosition, SoS.blockPile.getDefaultState());
+						
+						IBlockState state = event.world.getBlockState(placementPosition);
+						state.getBlock().onBlockPlacedBy(event.world, placementPosition, state, event.entityPlayer, heldItemStack);
 
 						// Fix the comparator output after placing down a full
 						// stack
 						if (playerSneaking) {
 							ItemStack comparatorFixer = StackUtils.getItemsFromStack(heldItemStack, 0);
-							event.world.getBlock(placementX, placementY, placementZ).onBlockPlacedBy(event.world,
-									placementX, placementY, placementZ, event.entityPlayer, comparatorFixer);
+							state.getBlock().onBlockPlacedBy(event.world, placementPosition, state, event.entityPlayer, comparatorFixer);
 						}
 
 					}
 				} else if (tileAtPlacementPosition instanceof TilePile) {
-					blockAtPlacementPosition.onBlockActivated(event.world, placementX, placementY, placementZ,
-							event.entityPlayer, 0, 0, 0, 0);
+					blockAtPlacementPosition.onBlockPlacedBy(event.world, placementPosition, blockAtPlacementPosition.getDefaultState(), event.entityPlayer, heldItemStack);
 				}
 			}
 		}
 	}
-	 
-	public static int[] getPlacementCoords(int x, int y, int z, int side) {
-		int x1 = x, y1 = y, z1 = z;
-		switch (ForgeDirection.getOrientation(side)) {
-		case DOWN:
-			y1--;
-			break;
-		case EAST:
-			x1++;
-			break;
-		case NORTH:
-			z1--;
-			break;
-		case SOUTH:
-			z1++;
-			break;
-		case UP:
-			y1++;
-			break;
-		case WEST:
-			x1--;
-			break;
-		default:
-			break;
-		}
-		return new int[] { x1, y1, z1 };
-	}
-
 }
